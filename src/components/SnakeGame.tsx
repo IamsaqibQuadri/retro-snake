@@ -84,24 +84,24 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
         {gameState.snake.map((segment, index) => (
           <div
             key={index}
-            className={`absolute ${index === 0 ? 'bg-green-400' : 'bg-green-500'} border border-green-300`}
+            className={`absolute ${index === 0 ? 'bg-green-400' : 'bg-green-500'}`}
             style={{
               left: segment.x * GRID_SIZE,
               top: segment.y * GRID_SIZE,
-              width: GRID_SIZE - 1,
-              height: GRID_SIZE - 1,
+              width: GRID_SIZE,
+              height: GRID_SIZE,
             }}
           />
         ))}
 
         {/* Food */}
         <div
-          className="absolute bg-red-400 border border-red-300 rounded-full animate-pulse"
+          className="absolute bg-red-400 rounded-full animate-pulse"
           style={{
             left: gameState.food.x * GRID_SIZE,
             top: gameState.food.y * GRID_SIZE,
-            width: GRID_SIZE - 1,
-            height: GRID_SIZE - 1,
+            width: GRID_SIZE,
+            height: GRID_SIZE,
           }}
         />
 

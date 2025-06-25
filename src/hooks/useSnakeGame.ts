@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 type Position = { x: number; y: number };
@@ -53,7 +54,7 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
 
   // Check collision with walls or self
   const checkCollision = useCallback((head: Position, snake: Position[]): boolean => {
-    // Wall collision
+    // Wall collision - check if head is at or beyond boundaries
     if (head.x < 0 || head.x >= GRID_WIDTH || head.y < 0 || head.y >= GRID_HEIGHT) {
       return true;
     }
@@ -116,14 +117,20 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
 
         // Check if food is eaten
         if (head.x === food.x && head.y === food.y) {
-          const newScore = score + 10;
-          setScore(newScore);
-          
-          // Update high score
-          if (newScore > highScore) {
-            setHighScore(newScore);
-            localStorage.setItem('snake-high-score', newScore.toString());
-          }
+          setScore(prevScore => {
+            const newScore = prevScore + 10;
+            
+            // Update high score
+            setHighScore(prevHighScore => {
+              if (newScore > prevHighScore) {
+                localStorage.setItem('snake-high-score', newScore.toString());
+                return newScore;
+              }
+              return prevHighScore;
+            });
+            
+            return newScore;
+          });
 
           return {
             ...prevState,
@@ -150,7 +157,7 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
         clearInterval(gameLoopRef.current);
       }
     };
-  }, [isPlaying, gameOver, score, highScore, speed, checkCollision, generateFood]);
+  }, [isPlaying, gameOver, speed, checkCollision, generateFood]);
 
   // Reset game
   const resetGame = useCallback(() => {
