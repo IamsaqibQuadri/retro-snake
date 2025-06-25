@@ -26,14 +26,16 @@ export const useSnakeGame = (speed: GameSpeed) => {
     if (!isPlaying || gameOver) return;
 
     const gameLoop = () => {
-      const { snake, food } = gameState;
+      // Get fresh state values
+      const currentSnake = gameState.snake;
+      const currentFood = gameState.food;
       const direction = directionRef.current;
 
-      console.log('Game loop - Current food position:', food);
-      console.log('Game loop - Current snake:', snake);
+      console.log('Game loop - Current food position:', currentFood);
+      console.log('Game loop - Current snake:', currentSnake);
 
       // Calculate new head position
-      const newHead = getNewHeadPosition(snake[0], direction);
+      const newHead = getNewHeadPosition(currentSnake[0], direction);
       console.log('New head position:', newHead, 'Direction:', direction);
 
       // Check wall collision
@@ -44,17 +46,17 @@ export const useSnakeGame = (speed: GameSpeed) => {
       }
 
       // Check if food is eaten BEFORE checking self collision
-      const foodEaten = newHead.x === food.x && newHead.y === food.y;
-      console.log('Food eaten?', foodEaten, 'Head:', newHead, 'Food:', food);
+      const foodEaten = newHead.x === currentFood.x && newHead.y === currentFood.y;
+      console.log('Food eaten?', foodEaten, 'Head:', newHead, 'Food:', currentFood);
 
       if (foodEaten) {
         console.log('Food eaten! Score increasing...');
         
         // Create new snake with grown length (no tail removal)
-        const newSnake = [newHead, ...snake];
+        const newSnake = [newHead, ...currentSnake];
         
         // Check self collision with new snake (shouldn't happen when eating food)
-        if (checkSelfCollision(newHead, snake)) {
+        if (checkSelfCollision(newHead, currentSnake)) {
           console.log('Game over due to self collision while eating food');
           endGame();
           return;
@@ -65,7 +67,7 @@ export const useSnakeGame = (speed: GameSpeed) => {
         // Generate new food with the grown snake
         const newFood = generateFood(newSnake);
         console.log('Generated new food at:', newFood);
-        console.log('Returning new state with grown snake and new food');
+        console.log('Updating state with grown snake and new food');
 
         updateGameState({
           snake: newSnake,
@@ -74,7 +76,7 @@ export const useSnakeGame = (speed: GameSpeed) => {
         });
       } else {
         // No food eaten - check self collision against body (excluding tail)
-        const snakeBodyWithoutTail = snake.slice(0, -1);
+        const snakeBodyWithoutTail = currentSnake.slice(0, -1);
         if (checkSelfCollision(newHead, snakeBodyWithoutTail)) {
           console.log('Game over due to self collision');
           endGame();
@@ -87,7 +89,7 @@ export const useSnakeGame = (speed: GameSpeed) => {
         
         updateGameState({
           snake: newSnake,
-          food: food, // Keep same food position
+          food: currentFood, // Keep same food position
           direction,
         });
       }
@@ -98,7 +100,7 @@ export const useSnakeGame = (speed: GameSpeed) => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [isPlaying, gameOver, speed, gameState, directionRef, updateGameState, endGame, increaseScore]);
+  }, [isPlaying, gameOver, speed, gameState.snake, gameState.food, directionRef, updateGameState, endGame, increaseScore]);
 
   // Reset game with score reset
   const resetGame = useCallback(() => {

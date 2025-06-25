@@ -15,7 +15,13 @@ export const useGameState = () => {
   const directionRef = useRef<Direction>(INITIAL_DIRECTION);
 
   const updateGameState = (newState: Partial<GameState>) => {
-    setGameState(prev => ({ ...prev, ...newState }));
+    console.log('Updating game state with:', newState);
+    setGameState(prev => {
+      const updated = { ...prev, ...newState };
+      console.log('Previous state:', prev);
+      console.log('Updated state:', updated);
+      return updated;
+    });
   };
 
   const moveSnake = (newDirection: Direction) => {
