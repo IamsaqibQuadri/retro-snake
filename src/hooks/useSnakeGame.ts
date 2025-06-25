@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 type Position = { x: number; y: number };
@@ -14,9 +13,9 @@ const GRID_WIDTH = 15;
 const GRID_HEIGHT = 15;
 
 const SPEED_INTERVALS = {
-  slow: 200,
-  normal: 150,
-  fast: 100,
+  slow: 300,
+  normal: 180,
+  fast: 120,
 };
 
 export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
