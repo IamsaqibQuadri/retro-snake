@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import SnakeGame from '../components/SnakeGame';
 import GameMenu from '../components/GameMenu';
+import { GameSettingsProvider } from '../contexts/GameSettingsContext';
 
 const Index = () => {
   const [gameStarted, setGameStarted] = useState(false);
@@ -17,15 +18,17 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-green-400 font-mono overflow-hidden">
-      <div className="relative w-full h-screen">
-        {!gameStarted ? (
-          <GameMenu onStartGame={handleStartGame} />
-        ) : (
-          <SnakeGame speed={gameSpeed} onBackToMenu={handleBackToMenu} />
-        )}
+    <GameSettingsProvider>
+      <div className="min-h-screen bg-black text-green-400 font-mono overflow-hidden">
+        <div className="relative w-full h-screen">
+          {!gameStarted ? (
+            <GameMenu onStartGame={handleStartGame} />
+          ) : (
+            <SnakeGame speed={gameSpeed} onBackToMenu={handleBackToMenu} />
+          )}
+        </div>
       </div>
-    </div>
+    </GameSettingsProvider>
   );
 };
 

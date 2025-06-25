@@ -1,5 +1,4 @@
-
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { GameSpeed } from '../types/gameTypes';
 import { useGameState } from './useGameState';
 import { useGameScore } from './useGameScore';
@@ -20,19 +19,26 @@ export const useSnakeGame = (speed: GameSpeed) => {
   } = useGameState();
 
   const { score, highScore, increaseScore, resetScore } = useGameScore();
+  const gameStateRef = useRef(gameState);
 
-  // Game loop
+  // Keep gameStateRef up to date
+  useEffect(() => {
+    gameStateRef.current = gameState;
+  }, [gameState]);
+
+  // Game loop with proper state handling
   useEffect(() => {
     if (!isPlaying || gameOver) return;
 
     const gameLoop = () => {
-      // Get fresh state values
-      const currentSnake = gameState.snake;
-      const currentFood = gameState.food;
+      // Always get the latest state from ref
+      const currentGameState = gameStateRef.current;
+      const currentSnake = currentGameState.snake;
+      const currentFood = currentGameState.food;
       const direction = directionRef.current;
 
       console.log('Game loop - Current food position:', currentFood);
-      console.log('Game loop - Current snake:', currentSnake);
+      console.log('Game loop - Current snake length:', currentSnake.length);
 
       // Calculate new head position
       const newHead = getNewHeadPosition(currentSnake[0], direction);
@@ -100,7 +106,7 @@ export const useSnakeGame = (speed: GameSpeed) => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [isPlaying, gameOver, speed, gameState.snake, gameState.food, directionRef, updateGameState, endGame, increaseScore]);
+  }, [isPlaying, gameOver, speed, updateGameState, endGame, increaseScore]);
 
   // Reset game with score reset
   const resetGame = useCallback(() => {
