@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
-import { Trophy, Gamepad2 } from 'lucide-react';
+import { Trophy, Gamepad2, Palette } from 'lucide-react';
+import { useGameSettings } from '../contexts/GameSettingsContext';
 
 interface GameMenuProps {
   onStartGame: (speed: 'slow' | 'normal' | 'fast') => void;
@@ -8,6 +9,8 @@ interface GameMenuProps {
 
 const GameMenu = ({ onStartGame }: GameMenuProps) => {
   const [highScore, setHighScore] = useState(0);
+  const [showColorSelector, setShowColorSelector] = useState(false);
+  const { settings, setSnakeColors } = useGameSettings();
 
   useEffect(() => {
     const savedHighScore = localStorage.getItem('snake-high-score');
@@ -15,6 +18,15 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
       setHighScore(parseInt(savedHighScore));
     }
   }, []);
+
+  const colorPresets = [
+    { name: 'Classic Green', head: '#22c55e', body: '#16a34a' },
+    { name: 'Blue Ocean', head: '#3b82f6', body: '#1d4ed8' },
+    { name: 'Purple Magic', head: '#a855f7', body: '#7c3aed' },
+    { name: 'Red Fire', head: '#ef4444', body: '#dc2626' },
+    { name: 'Orange Sunset', head: '#f97316', body: '#ea580c' },
+    { name: 'Pink Rose', head: '#ec4899', body: '#db2777' },
+  ];
 
   return (
     <div className="flex flex-col items-center justify-center h-full px-6 text-center">
@@ -39,6 +51,48 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
           </div>
         </div>
       )}
+
+      {/* Snake Color Selector */}
+      <div className="mb-8 w-full max-w-md">
+        <button
+          onClick={() => setShowColorSelector(!showColorSelector)}
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 border-2 border-purple-400 bg-purple-400/10 text-purple-400 hover:bg-purple-400/20 transition-all duration-200 rounded-lg"
+        >
+          <Palette size={20} />
+          <span className="font-bold">CHOOSE SNAKE COLOR</span>
+        </button>
+        
+        {showColorSelector && (
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            {colorPresets.map((preset) => (
+              <button
+                key={preset.name}
+                onClick={() => {
+                  setSnakeColors(preset.head, preset.body);
+                  setShowColorSelector(false);
+                }}
+                className={`p-3 border-2 rounded-lg transition-colors text-left ${
+                  settings.snakeColor === preset.head
+                    ? 'border-green-400 bg-green-400/10'
+                    : 'border-gray-600 hover:border-green-400/50'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <div 
+                    className="w-4 h-4 rounded" 
+                    style={{ backgroundColor: preset.head }}
+                  />
+                  <div 
+                    className="w-4 h-4 rounded" 
+                    style={{ backgroundColor: preset.body }}
+                  />
+                </div>
+                <span className="text-xs text-green-300">{preset.name}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Speed Selection */}
       <div className="space-y-4 w-full max-w-md">

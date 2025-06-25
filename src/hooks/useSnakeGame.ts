@@ -1,3 +1,4 @@
+
 import { useEffect, useCallback, useRef } from 'react';
 import { GameSpeed } from '../types/gameTypes';
 import { useGameState } from './useGameState';
@@ -19,22 +20,15 @@ export const useSnakeGame = (speed: GameSpeed) => {
   } = useGameState();
 
   const { score, highScore, increaseScore, resetScore } = useGameScore();
-  const gameStateRef = useRef(gameState);
-
-  // Keep gameStateRef up to date
-  useEffect(() => {
-    gameStateRef.current = gameState;
-  }, [gameState]);
 
   // Game loop with proper state handling
   useEffect(() => {
     if (!isPlaying || gameOver) return;
 
     const gameLoop = () => {
-      // Always get the latest state from ref
-      const currentGameState = gameStateRef.current;
-      const currentSnake = currentGameState.snake;
-      const currentFood = currentGameState.food;
+      // Get the latest state directly from gameState
+      const currentSnake = gameState.snake;
+      const currentFood = gameState.food;
       const direction = directionRef.current;
 
       console.log('Game loop - Current food position:', currentFood);
@@ -70,11 +64,12 @@ export const useSnakeGame = (speed: GameSpeed) => {
         
         increaseScore();
 
-        // Generate new food with the grown snake
+        // Generate new food with the grown snake - THIS IS THE KEY FIX
         const newFood = generateFood(newSnake);
         console.log('Generated new food at:', newFood);
         console.log('Updating state with grown snake and new food');
 
+        // Update state with both new snake and new food
         updateGameState({
           snake: newSnake,
           food: newFood,
@@ -106,7 +101,7 @@ export const useSnakeGame = (speed: GameSpeed) => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [isPlaying, gameOver, speed, updateGameState, endGame, increaseScore]);
+  }, [isPlaying, gameOver, speed, gameState.snake, gameState.food, updateGameState, endGame, increaseScore]);
 
   // Reset game with score reset
   const resetGame = useCallback(() => {

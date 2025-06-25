@@ -120,29 +120,30 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
       <div className="flex items-center justify-between w-full max-w-md mb-6">
         <button
           onClick={onBackToMenu}
-          className="flex items-center gap-2 px-4 py-2 border border-green-400 text-green-400 hover:bg-green-400/10 transition-colors rounded"
+          className="flex items-center gap-2 px-3 py-2 border border-green-400 text-green-400 hover:bg-green-400/10 transition-colors rounded text-sm"
         >
-          <Home size={16} />
-          <span className="hidden sm:inline">Menu</span>
+          <Home size={14} />
+          <span className="hidden sm:inline text-xs">Menu</span>
         </button>
         
         <div className="text-center">
-          <div className="text-green-400 font-bold text-xl">SCORE: {score}</div>
-          <div className="text-green-300 text-sm">HIGH: {highScore}</div>
+          <div className="text-green-400 font-bold text-lg">SCORE: {score}</div>
+          <div className="text-green-300 text-xs">HIGH: {highScore}</div>
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex gap-1">
           <button
             onClick={() => setShowSettings(true)}
-            className="flex items-center gap-2 px-3 py-2 border border-blue-400 text-blue-400 hover:bg-blue-400/10 transition-colors rounded"
+            className="flex items-center gap-1 px-2 py-2 border border-blue-400 text-blue-400 hover:bg-blue-400/10 transition-colors rounded text-xs"
           >
-            <Settings size={16} />
+            <Settings size={14} />
           </button>
           <button
             onClick={takeScreenshot}
-            className="flex items-center gap-2 px-3 py-2 border border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 transition-colors rounded"
+            className="flex items-center gap-1 px-2 py-2 border border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 transition-colors rounded text-xs"
           >
-            <Camera size={16} />
+            <Camera size={14} />
+            <span className="text-xs">📸</span>
           </button>
         </div>
       </div>
