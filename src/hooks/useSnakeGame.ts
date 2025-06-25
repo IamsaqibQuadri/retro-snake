@@ -43,6 +43,7 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
   // Generate random food position - improved algorithm
   const generateFood = useCallback((snake: Position[]): Position => {
     console.log('Generating food, snake length:', snake.length);
+    console.log('Current snake positions:', snake);
     
     // Create array of all possible positions
     const allPositions: Position[] = [];
@@ -69,7 +70,7 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
     const randomIndex = Math.floor(Math.random() * availablePositions.length);
     const newFood = availablePositions[randomIndex];
     
-    console.log('New food position:', newFood);
+    console.log('New food position generated:', newFood);
     return newFood;
   }, []);
 
@@ -119,6 +120,9 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
         const { snake, food } = prevState;
         const direction = directionRef.current;
 
+        console.log('Game loop - Current food position:', food);
+        console.log('Game loop - Current snake:', snake);
+
         // Calculate new head position
         const head = { ...snake[0] };
         switch (direction) {
@@ -146,11 +150,15 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
           return prevState;
         }
 
-        const newSnake = [head, ...snake];
+        // Check if food is eaten BEFORE creating new snake
+        const foodEaten = head.x === food.x && head.y === food.y;
+        console.log('Food eaten?', foodEaten, 'Head:', head, 'Food:', food);
 
-        // Check if food is eaten
-        if (head.x === food.x && head.y === food.y) {
+        if (foodEaten) {
           console.log('Food eaten! Score increasing...');
+          
+          // Create new snake with grown length
+          const newSnake = [head, ...snake];
           
           setScore(prevScore => {
             const newScore = prevScore + 10;
@@ -168,22 +176,24 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
             return newScore;
           });
 
-          // Generate new food
+          // Generate new food with the grown snake
           const newFood = generateFood(newSnake);
           console.log('Generated new food at:', newFood);
+          console.log('Returning new state with grown snake and new food');
 
           return {
-            ...prevState,
             snake: newSnake,
             food: newFood,
             direction,
           };
         } else {
-          // Remove tail if no food eaten
-          newSnake.pop();
+          // No food eaten - move snake normally (remove tail)
+          const newSnake = [head, ...snake.slice(0, -1)];
+          console.log('No food eaten, normal movement');
+          
           return {
-            ...prevState,
             snake: newSnake,
+            food: food, // Keep same food position
             direction,
           };
         }
