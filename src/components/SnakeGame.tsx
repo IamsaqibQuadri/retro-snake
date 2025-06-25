@@ -117,13 +117,13 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
   return (
     <div ref={gameRef} className="flex flex-col items-center justify-center h-full px-4 bg-black">
       {/* Header */}
-      <div className="flex items-center justify-between w-full max-w-md mb-6">
+      <div className="flex items-center justify-between w-full max-w-md mb-4">
         <button
           onClick={onBackToMenu}
-          className="flex items-center gap-2 px-3 py-2 border border-green-400 text-green-400 hover:bg-green-400/10 transition-colors rounded text-sm"
+          className="flex items-center gap-1 px-2 py-2 border border-green-400 text-green-400 hover:bg-green-400/10 transition-colors rounded text-sm"
         >
-          <Home size={14} />
-          <span className="hidden sm:inline text-xs">Menu</span>
+          <Home size={16} />
+          <span className="text-xs">Menu</span>
         </button>
         
         <div className="text-center">
@@ -136,16 +136,20 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
             onClick={() => setShowSettings(true)}
             className="flex items-center gap-1 px-2 py-2 border border-blue-400 text-blue-400 hover:bg-blue-400/10 transition-colors rounded text-xs"
           >
-            <Settings size={14} />
-          </button>
-          <button
-            onClick={takeScreenshot}
-            className="flex items-center gap-1 px-2 py-2 border border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 transition-colors rounded text-xs"
-          >
-            <Camera size={14} />
-            <span className="text-xs">📸</span>
+            <Settings size={16} />
           </button>
         </div>
+      </div>
+
+      {/* Prominent Screenshot Button */}
+      <div className="mb-3">
+        <button
+          onClick={takeScreenshot}
+          className="flex items-center gap-2 px-4 py-2 border-2 border-yellow-400 bg-yellow-400/10 text-yellow-400 hover:bg-yellow-400/20 transition-colors rounded-lg font-bold text-sm"
+        >
+          <Camera size={18} />
+          <span>SCREENSHOT</span>
+        </button>
       </div>
 
       {/* Game Board */}
@@ -171,28 +175,28 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
         {/* Game Over Overlay */}
         {gameOver && (
           <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center p-4">
-            <h2 className="text-2xl font-bold text-red-400 mb-2">GAME OVER</h2>
+            <h2 className="text-xl font-bold text-red-400 mb-2">GAME OVER</h2>
             <p className="text-green-400 text-lg mb-2">Score: {score}</p>
             {score === highScore && score > 0 && (
-              <p className="text-yellow-400 text-md mb-3">🏆 NEW HIGH SCORE!</p>
+              <p className="text-yellow-400 text-sm mb-3">🏆 NEW HIGH SCORE!</p>
             )}
-            <p className="text-green-300 text-sm mb-4">You lost this time, Give up or try again?</p>
-            <div className="space-y-3">
+            <p className="text-green-300 text-xs mb-4">Try again or give up?</p>
+            <div className="space-y-2">
               <button
                 onClick={handleNewGame}
-                className="block w-full px-6 py-3 bg-green-400 text-black font-bold rounded hover:bg-green-300 transition-colors"
+                className="block w-full px-4 py-2 bg-green-400 text-black font-bold rounded hover:bg-green-300 transition-colors text-sm"
               >
                 TRY AGAIN
               </button>
               <button
                 onClick={onBackToMenu}
-                className="block w-full px-6 py-3 border border-red-400 text-red-400 font-bold rounded hover:bg-red-400/10 transition-colors"
+                className="block w-full px-4 py-2 border border-red-400 text-red-400 font-bold rounded hover:bg-red-400/10 transition-colors text-sm"
               >
                 GIVE UP
               </button>
               <button
                 onClick={takeScreenshot}
-                className="block w-full px-6 py-3 border border-yellow-400 text-yellow-400 font-bold rounded hover:bg-yellow-400/10 transition-colors"
+                className="block w-full px-4 py-2 border-2 border-yellow-400 bg-yellow-400/10 text-yellow-400 font-bold rounded hover:bg-yellow-400/20 transition-colors text-sm"
               >
                 📸 SAVE SCORE
               </button>
@@ -202,8 +206,8 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
       </div>
 
       {/* Speed Indicator */}
-      <div className="mt-4 text-center">
-        <span className="text-green-300 text-sm">
+      <div className="mt-3 text-center">
+        <span className="text-green-300 text-xs">
           {speed === 'slow' ? '🐌 SLOW' : speed === 'normal' ? '🏃 NORMAL' : '🚀 FAST'} MODE
         </span>
       </div>

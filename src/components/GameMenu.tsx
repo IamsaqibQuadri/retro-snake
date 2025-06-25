@@ -29,41 +29,72 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center h-full px-6 text-center">
-      {/* Retro Title */}
-      <div className="mb-12">
-        <h1 className="text-6xl md:text-8xl font-bold text-green-400 mb-4 tracking-wider pixelated">
+    <div className="flex flex-col items-center justify-center h-full px-4 py-4 text-center">
+      {/* Compact Title */}
+      <div className="mb-8">
+        <h1 className="text-4xl md:text-6xl font-bold text-green-400 mb-2 tracking-wider pixelated">
           SNAKE
         </h1>
         <div className="flex items-center justify-center gap-2 text-green-300">
-          <Gamepad2 size={24} />
-          <span className="text-xl tracking-widest">RETRO EDITION</span>
-          <Gamepad2 size={24} />
+          <Gamepad2 size={16} />
+          <span className="text-sm tracking-widest">RETRO EDITION</span>
+          <Gamepad2 size={16} />
         </div>
       </div>
 
       {/* High Score */}
       {highScore > 0 && (
-        <div className="mb-8 p-4 border-2 border-green-400 bg-green-400/10 rounded-lg">
+        <div className="mb-6 p-3 border-2 border-green-400 bg-green-400/10 rounded-lg">
           <div className="flex items-center justify-center gap-2 text-yellow-400">
-            <Trophy size={20} />
-            <span className="text-lg font-bold">HIGH SCORE: {highScore}</span>
+            <Trophy size={16} />
+            <span className="text-md font-bold">HIGH SCORE: {highScore}</span>
           </div>
         </div>
       )}
 
-      {/* Snake Color Selector */}
-      <div className="mb-8 w-full max-w-md">
+      {/* Compact Speed Selection - Square Buttons */}
+      <div className="mb-6 w-full max-w-md">
+        <h2 className="text-lg font-bold text-green-400 mb-4">SELECT SPEED</h2>
+        
+        <div className="flex justify-center gap-4">
+          <button
+            onClick={() => onStartGame('slow')}
+            className="w-20 h-20 text-sm font-bold border-2 border-green-400 bg-green-400/10 text-green-400 hover:bg-green-400/20 transition-all duration-200 rounded-lg flex flex-col items-center justify-center"
+          >
+            <span className="text-lg">🐌</span>
+            <span className="text-xs">SLOW</span>
+          </button>
+          
+          <button
+            onClick={() => onStartGame('normal')}
+            className="w-20 h-20 text-sm font-bold border-2 border-yellow-400 bg-yellow-400/10 text-yellow-400 hover:bg-yellow-400/20 transition-all duration-200 rounded-lg flex flex-col items-center justify-center"
+          >
+            <span className="text-lg">🏃</span>
+            <span className="text-xs">NORMAL</span>
+          </button>
+          
+          <button
+            onClick={() => onStartGame('fast')}
+            className="w-20 h-20 text-sm font-bold border-2 border-red-400 bg-red-400/10 text-red-400 hover:bg-red-400/20 transition-all duration-200 rounded-lg flex flex-col items-center justify-center"
+          >
+            <span className="text-lg">🚀</span>
+            <span className="text-xs">FAST</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Compact Snake Color Selector */}
+      <div className="mb-6 w-full max-w-md">
         <button
           onClick={() => setShowColorSelector(!showColorSelector)}
-          className="w-full flex items-center justify-center gap-2 py-3 px-4 border-2 border-purple-400 bg-purple-400/10 text-purple-400 hover:bg-purple-400/20 transition-all duration-200 rounded-lg"
+          className="w-full flex items-center justify-center gap-2 py-2 px-3 border-2 border-purple-400 bg-purple-400/10 text-purple-400 hover:bg-purple-400/20 transition-all duration-200 rounded-lg text-sm"
         >
-          <Palette size={20} />
-          <span className="font-bold">CHOOSE SNAKE COLOR</span>
+          <Palette size={16} />
+          <span className="font-bold">SNAKE COLOR</span>
         </button>
         
         {showColorSelector && (
-          <div className="mt-4 grid grid-cols-2 gap-2">
+          <div className="mt-3 grid grid-cols-2 gap-2">
             {colorPresets.map((preset) => (
               <button
                 key={preset.name}
@@ -71,7 +102,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
                   setSnakeColors(preset.head, preset.body);
                   setShowColorSelector(false);
                 }}
-                className={`p-3 border-2 rounded-lg transition-colors text-left ${
+                className={`p-2 border-2 rounded-lg transition-colors text-left ${
                   settings.snakeColor === preset.head
                     ? 'border-green-400 bg-green-400/10'
                     : 'border-gray-600 hover:border-green-400/50'
@@ -79,11 +110,11 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
               >
                 <div className="flex items-center gap-2 mb-1">
                   <div 
-                    className="w-4 h-4 rounded" 
+                    className="w-3 h-3 rounded" 
                     style={{ backgroundColor: preset.head }}
                   />
                   <div 
-                    className="w-4 h-4 rounded" 
+                    className="w-3 h-3 rounded" 
                     style={{ backgroundColor: preset.body }}
                   />
                 </div>
@@ -94,38 +125,12 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
         )}
       </div>
 
-      {/* Speed Selection */}
-      <div className="space-y-4 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-green-400 mb-6">SELECT SPEED</h2>
-        
-        <button
-          onClick={() => onStartGame('slow')}
-          className="w-full py-4 px-8 text-xl font-bold border-2 border-green-400 bg-green-400/10 text-green-400 hover:bg-green-400/20 transition-all duration-200 rounded-lg tracking-wide"
-        >
-          🐌 SLOW MODE
-        </button>
-        
-        <button
-          onClick={() => onStartGame('normal')}
-          className="w-full py-4 px-8 text-xl font-bold border-2 border-yellow-400 bg-yellow-400/10 text-yellow-400 hover:bg-yellow-400/20 transition-all duration-200 rounded-lg tracking-wide"
-        >
-          🏃 NORMAL MODE
-        </button>
-        
-        <button
-          onClick={() => onStartGame('fast')}
-          className="w-full py-4 px-8 text-xl font-bold border-2 border-red-400 bg-red-400/10 text-red-400 hover:bg-red-400/20 transition-all duration-200 rounded-lg tracking-wide"
-        >
-          🚀 FAST MODE
-        </button>
-      </div>
-
-      {/* Instructions */}
-      <div className="mt-12 text-green-300 text-sm space-y-2 max-w-md">
-        <p>🎮 Use SWIPE gestures or arrow buttons to control the snake</p>
-        <p>🍎 Eat food to grow and increase your score</p>
+      {/* Compact Instructions */}
+      <div className="text-green-300 text-xs space-y-1 max-w-md">
+        <p>🎮 Use SWIPE or arrow buttons to control</p>
+        <p>🍎 Eat food to grow and score</p>
         <p>💀 Don't hit walls or yourself!</p>
-        <p>📸 Screenshot your score when you finish</p>
+        <p>📸 Screenshot your score when done</p>
       </div>
     </div>
   );
