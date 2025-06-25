@@ -40,26 +40,56 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
     }
   }, []);
 
-  // Generate random food position
+  // Generate random food position - improved algorithm
   const generateFood = useCallback((snake: Position[]): Position => {
-    let food: Position;
-    do {
-      food = {
-        x: Math.floor(Math.random() * GRID_WIDTH),
-        y: Math.floor(Math.random() * GRID_HEIGHT),
-      };
-    } while (snake.some(segment => segment.x === food.x && segment.y === food.y));
-    return food;
+    console.log('Generating food, snake length:', snake.length);
+    
+    // Create array of all possible positions
+    const allPositions: Position[] = [];
+    for (let x = 0; x < GRID_WIDTH; x++) {
+      for (let y = 0; y < GRID_HEIGHT; y++) {
+        allPositions.push({ x, y });
+      }
+    }
+    
+    // Filter out positions occupied by snake
+    const availablePositions = allPositions.filter(pos => 
+      !snake.some(segment => segment.x === pos.x && segment.y === pos.y)
+    );
+    
+    console.log('Available positions for food:', availablePositions.length);
+    
+    // If no positions available (shouldn't happen in normal game), return a position
+    if (availablePositions.length === 0) {
+      console.log('No available positions! Game should end.');
+      return { x: 0, y: 0 };
+    }
+    
+    // Select random position from available ones
+    const randomIndex = Math.floor(Math.random() * availablePositions.length);
+    const newFood = availablePositions[randomIndex];
+    
+    console.log('New food position:', newFood);
+    return newFood;
   }, []);
 
   // Check collision with walls or self
   const checkCollision = useCallback((head: Position, snake: Position[]): boolean => {
+    console.log('Checking collision for head position:', head);
+    
     // Wall collision - check if head is at or beyond boundaries
     if (head.x < 0 || head.x >= GRID_WIDTH || head.y < 0 || head.y >= GRID_HEIGHT) {
+      console.log('Wall collision detected');
       return true;
     }
+    
     // Self collision
-    return snake.some(segment => segment.x === head.x && segment.y === head.y);
+    const selfCollision = snake.some(segment => segment.x === head.x && segment.y === head.y);
+    if (selfCollision) {
+      console.log('Self collision detected');
+    }
+    
+    return selfCollision;
   }, []);
 
   // Move snake
@@ -106,8 +136,11 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
             break;
         }
 
-        // Check collision
+        console.log('New head position:', head, 'Direction:', direction);
+
+        // Check collision BEFORE updating state
         if (checkCollision(head, snake)) {
+          console.log('Game over due to collision');
           setGameOver(true);
           setIsPlaying(false);
           return prevState;
@@ -117,8 +150,11 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
 
         // Check if food is eaten
         if (head.x === food.x && head.y === food.y) {
+          console.log('Food eaten! Score increasing...');
+          
           setScore(prevScore => {
             const newScore = prevScore + 10;
+            console.log('New score:', newScore);
             
             // Update high score
             setHighScore(prevHighScore => {
@@ -132,10 +168,14 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
             return newScore;
           });
 
+          // Generate new food
+          const newFood = generateFood(newSnake);
+          console.log('Generated new food at:', newFood);
+
           return {
             ...prevState,
             snake: newSnake,
-            food: generateFood(newSnake),
+            food: newFood,
             direction,
           };
         } else {
@@ -161,10 +201,13 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
 
   // Reset game
   const resetGame = useCallback(() => {
+    console.log('Resetting game...');
     const initialSnake = [{ x: 7, y: 7 }];
+    const initialFood = generateFood(initialSnake);
+    
     setGameState({
       snake: initialSnake,
-      food: generateFood(initialSnake),
+      food: initialFood,
       direction: 'RIGHT',
     });
     directionRef.current = 'RIGHT';
