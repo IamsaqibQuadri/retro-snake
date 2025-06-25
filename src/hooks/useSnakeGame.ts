@@ -1,122 +1,32 @@
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback } from 'react';
+import { GameSpeed } from '../types/gameTypes';
+import { useGameState } from './useGameState';
+import { useGameScore } from './useGameScore';
+import { generateFood, checkWallCollision, checkSelfCollision, getNewHeadPosition } from '../utils/gameUtils';
+import { SPEED_INTERVALS } from '../constants/gameConstants';
 
-type Position = { x: number; y: number };
-type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
+export const useSnakeGame = (speed: GameSpeed) => {
+  const {
+    gameState,
+    gameOver,
+    isPlaying,
+    directionRef,
+    updateGameState,
+    moveSnake,
+    resetGame: resetGameState,
+    togglePause,
+    endGame,
+  } = useGameState();
 
-interface GameState {
-  snake: Position[];
-  food: Position;
-  direction: Direction;
-}
-
-const GRID_WIDTH = 15;
-const GRID_HEIGHT = 15;
-
-const SPEED_INTERVALS = {
-  slow: 300,
-  normal: 180,
-  fast: 120,
-};
-
-export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
-  const [gameState, setGameState] = useState<GameState>({
-    snake: [{ x: 7, y: 7 }],
-    food: { x: 5, y: 5 },
-    direction: 'RIGHT',
-  });
-  const [score, setScore] = useState(0);
-  const [highScore, setHighScore] = useState(0);
-  const [gameOver, setGameOver] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const gameLoopRef = useRef<NodeJS.Timeout>();
-  const directionRef = useRef<Direction>('RIGHT');
-
-  // Load high score from localStorage
-  useEffect(() => {
-    const savedHighScore = localStorage.getItem('snake-high-score');
-    if (savedHighScore) {
-      setHighScore(parseInt(savedHighScore));
-    }
-  }, []);
-
-  // Generate random food position - improved algorithm
-  const generateFood = useCallback((snake: Position[]): Position => {
-    console.log('Generating food, snake length:', snake.length);
-    console.log('Current snake positions:', snake);
-    
-    // Create array of all possible positions
-    const allPositions: Position[] = [];
-    for (let x = 0; x < GRID_WIDTH; x++) {
-      for (let y = 0; y < GRID_HEIGHT; y++) {
-        allPositions.push({ x, y });
-      }
-    }
-    
-    // Filter out positions occupied by snake
-    const availablePositions = allPositions.filter(pos => 
-      !snake.some(segment => segment.x === pos.x && segment.y === pos.y)
-    );
-    
-    console.log('Available positions for food:', availablePositions.length);
-    
-    // If no positions available (shouldn't happen in normal game), return a position
-    if (availablePositions.length === 0) {
-      console.log('No available positions! Game should end.');
-      return { x: 0, y: 0 };
-    }
-    
-    // Select random position from available ones
-    const randomIndex = Math.floor(Math.random() * availablePositions.length);
-    const newFood = availablePositions[randomIndex];
-    
-    console.log('New food position generated:', newFood);
-    return newFood;
-  }, []);
-
-  // Check collision with walls or self
-  const checkCollision = useCallback((head: Position, snake: Position[]): boolean => {
-    console.log('Checking collision for head position:', head);
-    
-    // Wall collision - check if head is at or beyond boundaries
-    if (head.x < 0 || head.x >= GRID_WIDTH || head.y < 0 || head.y >= GRID_HEIGHT) {
-      console.log('Wall collision detected');
-      return true;
-    }
-    
-    // Self collision
-    const selfCollision = snake.some(segment => segment.x === head.x && segment.y === head.y);
-    if (selfCollision) {
-      console.log('Self collision detected');
-    }
-    
-    return selfCollision;
-  }, []);
-
-  // Move snake
-  const moveSnake = useCallback((newDirection: Direction) => {
-    if (gameOver) return;
-
-    // Prevent reverse direction
-    const opposites = {
-      UP: 'DOWN',
-      DOWN: 'UP',
-      LEFT: 'RIGHT',
-      RIGHT: 'LEFT',
-    };
-
-    if (opposites[newDirection] !== directionRef.current) {
-      directionRef.current = newDirection;
-      setGameState(prev => ({ ...prev, direction: newDirection }));
-    }
-  }, [gameOver]);
+  const { score, highScore, increaseScore, resetScore } = useGameScore();
 
   // Game loop
   useEffect(() => {
     if (!isPlaying || gameOver) return;
 
     const gameLoop = () => {
-      setGameState(prevState => {
+      updateGameState(prevState => {
         const { snake, food } = prevState;
         const direction = directionRef.current;
 
@@ -124,57 +34,34 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
         console.log('Game loop - Current snake:', snake);
 
         // Calculate new head position
-        const head = { ...snake[0] };
-        switch (direction) {
-          case 'UP':
-            head.y -= 1;
-            break;
-          case 'DOWN':
-            head.y += 1;
-            break;
-          case 'LEFT':
-            head.x -= 1;
-            break;
-          case 'RIGHT':
-            head.x += 1;
-            break;
-        }
+        const newHead = getNewHeadPosition(snake[0], direction);
+        console.log('New head position:', newHead, 'Direction:', direction);
 
-        console.log('New head position:', head, 'Direction:', direction);
-
-        // Check collision BEFORE updating state
-        if (checkCollision(head, snake)) {
-          console.log('Game over due to collision');
-          setGameOver(true);
-          setIsPlaying(false);
+        // Check wall collision
+        if (checkWallCollision(newHead)) {
+          console.log('Game over due to wall collision');
+          endGame();
           return prevState;
         }
 
-        // Check if food is eaten BEFORE creating new snake
-        const foodEaten = head.x === food.x && head.y === food.y;
-        console.log('Food eaten?', foodEaten, 'Head:', head, 'Food:', food);
+        // Check if food is eaten BEFORE checking self collision
+        const foodEaten = newHead.x === food.x && newHead.y === food.y;
+        console.log('Food eaten?', foodEaten, 'Head:', newHead, 'Food:', food);
 
         if (foodEaten) {
           console.log('Food eaten! Score increasing...');
           
-          // Create new snake with grown length
-          const newSnake = [head, ...snake];
+          // Create new snake with grown length (no tail removal)
+          const newSnake = [newHead, ...snake];
           
-          setScore(prevScore => {
-            const newScore = prevScore + 10;
-            console.log('New score:', newScore);
-            
-            // Update high score
-            setHighScore(prevHighScore => {
-              if (newScore > prevHighScore) {
-                localStorage.setItem('snake-high-score', newScore.toString());
-                return newScore;
-              }
-              return prevHighScore;
-            });
-            
-            return newScore;
-          });
+          // Check self collision with new snake (shouldn't happen when eating food)
+          if (checkSelfCollision(newHead, snake)) {
+            console.log('Game over due to self collision while eating food');
+            endGame();
+            return prevState;
+          }
+          
+          increaseScore();
 
           // Generate new food with the grown snake
           const newFood = generateFood(newSnake);
@@ -187,8 +74,16 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
             direction,
           };
         } else {
-          // No food eaten - move snake normally (remove tail)
-          const newSnake = [head, ...snake.slice(0, -1)];
+          // No food eaten - check self collision against body (excluding tail)
+          const snakeBodyWithoutTail = snake.slice(0, -1);
+          if (checkSelfCollision(newHead, snakeBodyWithoutTail)) {
+            console.log('Game over due to self collision');
+            endGame();
+            return prevState;
+          }
+
+          // Move snake normally (remove tail)
+          const newSnake = [newHead, ...snakeBodyWithoutTail];
           console.log('No food eaten, normal movement');
           
           return {
@@ -200,38 +95,18 @@ export const useSnakeGame = (speed: 'slow' | 'normal' | 'fast') => {
       });
     };
 
-    gameLoopRef.current = setInterval(gameLoop, SPEED_INTERVALS[speed]);
+    const intervalId = setInterval(gameLoop, SPEED_INTERVALS[speed]);
 
     return () => {
-      if (gameLoopRef.current) {
-        clearInterval(gameLoopRef.current);
-      }
+      clearInterval(intervalId);
     };
-  }, [isPlaying, gameOver, speed, checkCollision, generateFood]);
+  }, [isPlaying, gameOver, speed, updateGameState, endGame, increaseScore]);
 
-  // Reset game
+  // Reset game with score reset
   const resetGame = useCallback(() => {
-    console.log('Resetting game...');
-    const initialSnake = [{ x: 7, y: 7 }];
-    const initialFood = generateFood(initialSnake);
-    
-    setGameState({
-      snake: initialSnake,
-      food: initialFood,
-      direction: 'RIGHT',
-    });
-    directionRef.current = 'RIGHT';
-    setScore(0);
-    setGameOver(false);
-    setIsPlaying(true);
-  }, [generateFood]);
-
-  // Pause/Resume game
-  const togglePause = useCallback(() => {
-    if (!gameOver) {
-      setIsPlaying(prev => !prev);
-    }
-  }, [gameOver]);
+    resetGameState();
+    resetScore();
+  }, [resetGameState, resetScore]);
 
   return {
     gameState,
