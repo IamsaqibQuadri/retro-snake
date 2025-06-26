@@ -30,16 +30,17 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 py-4 text-center">
-      {/* Compact Title */}
+      {/* Updated Title Section */}
       <div className="mb-8">
         <h1 className="text-4xl md:text-6xl font-bold text-green-400 mb-2 tracking-wider pixelated">
-          SNAKE
+          FLAKY
         </h1>
-        <div className="flex items-center justify-center gap-2 text-green-300">
+        <div className="flex items-center justify-center gap-2 text-green-300 mb-2">
           <Gamepad2 size={16} />
-          <span className="text-sm tracking-widest">RETRO EDITION</span>
+          <span className="text-sm tracking-widest">SNAKE RETRO EDITION</span>
           <Gamepad2 size={16} />
         </div>
+        <p className="text-green-200 text-xs tracking-wide">Fast. Offline. Classic fun</p>
       </div>
 
       {/* High Score */}
