@@ -39,6 +39,26 @@ export const checkWallCollision = (head: Position): boolean => {
   return head.x < 0 || head.x >= GRID_WIDTH || head.y < 0 || head.y >= GRID_HEIGHT;
 };
 
+export const wrapAroundWalls = (head: Position): Position => {
+  const wrappedHead = { ...head };
+  
+  // Wrap horizontally
+  if (wrappedHead.x < 0) {
+    wrappedHead.x = GRID_WIDTH - 1;
+  } else if (wrappedHead.x >= GRID_WIDTH) {
+    wrappedHead.x = 0;
+  }
+  
+  // Wrap vertically
+  if (wrappedHead.y < 0) {
+    wrappedHead.y = GRID_HEIGHT - 1;
+  } else if (wrappedHead.y >= GRID_HEIGHT) {
+    wrappedHead.y = 0;
+  }
+  
+  return wrappedHead;
+};
+
 export const checkSelfCollision = (head: Position, snakeBody: Position[]): boolean => {
   // Only check against the body (excluding the tail that will be removed)
   return snakeBody.some(segment => segment.x === head.x && segment.y === head.y);

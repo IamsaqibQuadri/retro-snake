@@ -3,10 +3,10 @@ import { useEffect, useCallback, useRef } from 'react';
 import { GameSpeed } from '../types/gameTypes';
 import { useGameState } from './useGameState';
 import { useGameScore } from './useGameScore';
-import { generateFood, checkWallCollision, checkSelfCollision, getNewHeadPosition } from '../utils/gameUtils';
+import { generateFood, checkWallCollision, checkSelfCollision, getNewHeadPosition, wrapAroundWalls } from '../utils/gameUtils';
 import { SPEED_INTERVALS } from '../constants/gameConstants';
 
-export const useSnakeGame = (speed: GameSpeed) => {
+export const useSnakeGame = (speed: GameSpeed, gameMode: 'classic' | 'modern' = 'classic') => {
   const {
     gameState,
     gameOver,
@@ -21,28 +21,35 @@ export const useSnakeGame = (speed: GameSpeed) => {
 
   const { score, highScore, increaseScore, resetScore } = useGameScore();
 
-  // Game loop with proper state handling
+  // Game loop with proper state handling and game mode support
   useEffect(() => {
     if (!isPlaying || gameOver) return;
 
     const gameLoop = () => {
-      // Get the latest state directly from gameState
       const currentSnake = gameState.snake;
       const currentFood = gameState.food;
       const direction = directionRef.current;
 
       console.log('Game loop - Current food position:', currentFood);
       console.log('Game loop - Current snake length:', currentSnake.length);
+      console.log('Game mode:', gameMode);
 
       // Calculate new head position
-      const newHead = getNewHeadPosition(currentSnake[0], direction);
-      console.log('New head position:', newHead, 'Direction:', direction);
+      let newHead = getNewHeadPosition(currentSnake[0], direction);
+      console.log('New head position before wall check:', newHead, 'Direction:', direction);
 
-      // Check wall collision
-      if (checkWallCollision(newHead)) {
-        console.log('Game over due to wall collision');
-        endGame();
-        return;
+      // Handle wall collision based on game mode
+      if (gameMode === 'classic') {
+        // Classic mode: end game on wall collision
+        if (checkWallCollision(newHead)) {
+          console.log('Game over due to wall collision (Classic mode)');
+          endGame();
+          return;
+        }
+      } else {
+        // Modern mode: wrap around walls
+        newHead = wrapAroundWalls(newHead);
+        console.log('Wrapped head position:', newHead);
       }
 
       // Check if food is eaten BEFORE checking self collision
@@ -64,7 +71,7 @@ export const useSnakeGame = (speed: GameSpeed) => {
         
         increaseScore();
 
-        // Generate new food with the grown snake - THIS IS THE KEY FIX
+        // Generate new food with the grown snake
         const newFood = generateFood(newSnake);
         console.log('Generated new food at:', newFood);
         console.log('Updating state with grown snake and new food');
@@ -101,7 +108,7 @@ export const useSnakeGame = (speed: GameSpeed) => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [isPlaying, gameOver, speed, gameState.snake, gameState.food, updateGameState, endGame, increaseScore]);
+  }, [isPlaying, gameOver, speed, gameMode, gameState.snake, gameState.food, updateGameState, endGame, increaseScore]);
 
   // Reset game with score reset
   const resetGame = useCallback(() => {

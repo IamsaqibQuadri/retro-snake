@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { ArrowLeft, Camera, Home, Settings } from 'lucide-react';
 import { useSnakeGame } from '../hooks/useSnakeGame';
@@ -10,18 +9,29 @@ import { toast } from '@/hooks/use-toast';
 
 interface SnakeGameProps {
   speed: 'slow' | 'normal' | 'fast';
+  gameMode: 'classic' | 'modern';
   onBackToMenu: () => void;
 }
 
-const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
+const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
   const gameRef = useRef<HTMLDivElement>(null);
-  const { gameState, score, highScore, direction, gameOver, moveSnake, resetGame } = useSnakeGame(speed);
+  const { gameState, score, highScore, direction, gameOver, moveSnake, resetGame } = useSnakeGame(speed, gameMode);
   const { settings } = useGameSettings();
   const [showSettings, setShowSettings] = useState(false);
+  const [foodEaten, setFoodEaten] = useState(false);
 
   const GRID_SIZE = 20;
   const GAME_WIDTH = 300;
   const GAME_HEIGHT = 300;
+
+  // Watch for score changes to trigger food eaten effect
+  useEffect(() => {
+    if (score > 0) {
+      setFoodEaten(true);
+      const timer = setTimeout(() => setFoodEaten(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [score]);
 
   const takeScreenshot = async () => {
     if (gameRef.current) {
@@ -54,12 +64,11 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
     resetGame();
   };
 
-  // Snake head with tongue effect
+  // Snake head with tongue effect and eating glow
   const renderSnakeHead = (segment: any, index: number) => {
-    const tongueOffset = 8; // pixels
+    const tongueOffset = 8;
     let tongueStyle: React.CSSProperties = {};
     
-    // Position tongue based on direction
     switch (direction) {
       case 'UP':
         tongueStyle = { top: -4, left: '50%', transform: 'translateX(-50%)', width: 2, height: 6 };
@@ -78,7 +87,7 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
     return (
       <div
         key={index}
-        className="absolute"
+        className={`absolute transition-all duration-300 ${foodEaten ? 'animate-pulse scale-110' : ''}`}
         style={{
           left: segment.x * GRID_SIZE,
           top: segment.y * GRID_SIZE,
@@ -87,9 +96,9 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
           backgroundColor: settings.snakeColor,
           position: 'relative',
           background: `linear-gradient(45deg, ${settings.snakeColor} 0%, ${settings.snakeColor} 40%, #000 45%, ${settings.snakeColor} 50%, #000 55%, ${settings.snakeColor} 60%, ${settings.snakeColor} 100%)`,
+          boxShadow: foodEaten ? `0 0 10px ${settings.snakeColor}` : 'none',
         }}
       >
-        {/* Snake tongue */}
         <div
           className="absolute bg-red-500 animate-pulse"
           style={tongueStyle}
@@ -98,11 +107,11 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
     );
   };
 
-  // Snake body with tattoo pattern
+  // Snake body with tattoo pattern and eating wiggle
   const renderSnakeBody = (segment: any, index: number) => (
     <div
       key={index}
-      className="absolute"
+      className={`absolute transition-all duration-200 ${foodEaten ? 'animate-bounce' : ''}`}
       style={{
         left: segment.x * GRID_SIZE,
         top: segment.y * GRID_SIZE,
@@ -110,6 +119,7 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
         height: GRID_SIZE,
         backgroundColor: settings.snakeBodyColor,
         background: `linear-gradient(45deg, ${settings.snakeBodyColor} 0%, ${settings.snakeBodyColor} 30%, #000 35%, ${settings.snakeBodyColor} 40%, #000 45%, ${settings.snakeBodyColor} 50%, #000 55%, ${settings.snakeBodyColor} 60%, #000 65%, ${settings.snakeBodyColor} 70%, ${settings.snakeBodyColor} 100%)`,
+        animationDelay: `${index * 50}ms`,
       }}
     />
   );
@@ -141,7 +151,18 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
         </div>
       </div>
 
-      {/* Prominent Screenshot Button */}
+      {/* Game Mode Indicator */}
+      <div className="mb-2">
+        <span className={`text-xs font-bold px-2 py-1 rounded border ${
+          gameMode === 'classic' 
+            ? 'border-green-400 text-green-400 bg-green-400/10' 
+            : 'border-blue-400 text-blue-400 bg-blue-400/10'
+        }`}>
+          {gameMode === 'classic' ? '🏛️ CLASSIC MODE' : '🚀 MODERN MODE'}
+        </span>
+      </div>
+
+      {/* Screenshot Button */}
       <div className="mb-3">
         <button
           onClick={takeScreenshot}
@@ -161,7 +182,7 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
           index === 0 ? renderSnakeHead(segment, index) : renderSnakeBody(segment, index)
         )}
 
-        {/* Food */}
+        {/* Food with enhanced animation */}
         <div
           className="absolute bg-red-400 rounded-full animate-pulse"
           style={{
@@ -169,6 +190,7 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
             top: gameState.food.y * GRID_SIZE,
             width: GRID_SIZE,
             height: GRID_SIZE,
+            boxShadow: '0 0 8px #f87171',
           }}
         />
 
@@ -205,10 +227,13 @@ const SnakeGame = ({ speed, onBackToMenu }: SnakeGameProps) => {
         )}
       </div>
 
-      {/* Speed Indicator */}
-      <div className="mt-3 text-center">
-        <span className="text-green-300 text-xs">
+      {/* Speed and Mode Indicators */}
+      <div className="mt-3 text-center space-y-1">
+        <span className="text-green-300 text-xs block">
           {speed === 'slow' ? '🐌 SLOW' : speed === 'normal' ? '🏃 NORMAL' : '🚀 FAST'} MODE
+        </span>
+        <span className="text-gray-400 text-xs">
+          {gameMode === 'classic' ? 'Wall collision enabled' : 'Wall wrap-around enabled'}
         </span>
       </div>
 
