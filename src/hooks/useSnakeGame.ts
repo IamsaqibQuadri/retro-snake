@@ -3,6 +3,7 @@ import { useEffect, useCallback, useRef } from 'react';
 import { GameSpeed } from '../types/gameTypes';
 import { useGameState } from './useGameState';
 import { useGameScore } from './useGameScore';
+import { useGameSounds } from './useGameSounds';
 import { generateFood, checkWallCollision, checkSelfCollision, getNewHeadPosition, wrapAroundWalls } from '../utils/gameUtils';
 import { SPEED_INTERVALS } from '../constants/gameConstants';
 
@@ -20,8 +21,9 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: 'classic' | 'modern' = 
   } = useGameState();
 
   const { score, highScore, increaseScore, resetScore } = useGameScore();
+  const { playEatSound, playGameOverSound } = useGameSounds();
 
-  // Game loop with proper state handling and game mode support
+  // Game loop with proper state handling, game mode support, and sound effects
   useEffect(() => {
     if (!isPlaying || gameOver) return;
 
@@ -43,6 +45,7 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: 'classic' | 'modern' = 
         // Classic mode: end game on wall collision
         if (checkWallCollision(newHead)) {
           console.log('Game over due to wall collision (Classic mode)');
+          playGameOverSound();
           endGame();
           return;
         }
@@ -59,12 +62,16 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: 'classic' | 'modern' = 
       if (foodEaten) {
         console.log('Food eaten! Score increasing...');
         
+        // Play eat sound
+        playEatSound();
+        
         // Create new snake with grown length (no tail removal)
         const newSnake = [newHead, ...currentSnake];
         
         // Check self collision with new snake (shouldn't happen when eating food)
         if (checkSelfCollision(newHead, currentSnake)) {
           console.log('Game over due to self collision while eating food');
+          playGameOverSound();
           endGame();
           return;
         }
@@ -87,6 +94,7 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: 'classic' | 'modern' = 
         const snakeBodyWithoutTail = currentSnake.slice(0, -1);
         if (checkSelfCollision(newHead, snakeBodyWithoutTail)) {
           console.log('Game over due to self collision');
+          playGameOverSound();
           endGame();
           return;
         }
@@ -108,7 +116,7 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: 'classic' | 'modern' = 
     return () => {
       clearInterval(intervalId);
     };
-  }, [isPlaying, gameOver, speed, gameMode, gameState.snake, gameState.food, updateGameState, endGame, increaseScore]);
+  }, [isPlaying, gameOver, speed, gameMode, gameState.snake, gameState.food, updateGameState, endGame, increaseScore, playEatSound, playGameOverSound]);
 
   // Reset game with score reset
   const resetGame = useCallback(() => {
