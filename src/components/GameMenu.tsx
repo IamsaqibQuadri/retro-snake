@@ -30,12 +30,18 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 py-4 text-center">
-      {/* Updated Title Section */}
-      <div className="mb-8">
-        <h1 className="text-4xl md:text-6xl font-bold text-green-400 mb-2 tracking-wider pixelated">
-          FLAKY
-        </h1>
-        <div className="flex items-center justify-center gap-2 text-green-300 mb-2">
+      {/* Updated Title Section with Snake Graphic */}
+      <div className="mb-8 relative">
+        {/* Snake graphic wrapping around FLAKY */}
+        <div className="relative">
+          <img 
+            src="/lovable-uploads/44193645-44f1-4e15-a2e2-d159c9d14367.png" 
+            alt="FLAKY Snake Logo" 
+            className="w-80 md:w-96 h-auto mx-auto"
+          />
+        </div>
+        
+        <div className="flex items-center justify-center gap-2 text-green-300 mb-2 mt-4">
           <Gamepad2 size={16} />
           <span className="text-sm tracking-widest">SNAKE RETRO EDITION</span>
           <Gamepad2 size={16} />
