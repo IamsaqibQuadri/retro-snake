@@ -1,5 +1,4 @@
-
-import React, { useeffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Trophy, Gamepad2, Palette, Play } from 'lucide-react';
 import { useGameSettings } from '../contexts/GameSettingsContext';
 
