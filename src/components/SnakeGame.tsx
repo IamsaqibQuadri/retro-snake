@@ -1,6 +1,5 @@
 
 import React, { useRef, useEffect, useState } from 'react';
-import { Camera } from 'lucide-react';
 import { useSnakeGame } from '../hooks/useSnakeGame';
 import GameControls from './GameControls';
 import GameSettingsPanel from './GameSettingsPanel';
@@ -76,17 +75,6 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
         onBackToMenu={onBackToMenu}
         onShowSettings={() => setShowSettings(true)}
       />
-
-      {/* Screenshot Button */}
-      <div className="mb-3">
-        <button
-          onClick={takeScreenshot}
-          className="flex items-center gap-2 px-4 py-2 border-2 border-yellow-400 bg-yellow-400/10 text-yellow-400 hover:bg-yellow-400/20 transition-colors rounded-lg font-bold text-sm"
-        >
-          <Camera size={18} />
-          <span>SCREENSHOT</span>
-        </button>
-      </div>
 
       {/* Game Board with Overlay */}
       <div className="relative">

@@ -43,14 +43,33 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
         <div className="relative">
           <img 
             src="/lovable-uploads/44193645-44f1-4e15-a2e2-d159c9d14367.png" 
-            alt="FLAKY Snake Logo" 
+            alt="FLAKY Logo" 
             className="w-80 md:w-96 h-auto mx-auto"
+            style={{
+              filter: 'drop-shadow(1px 1px 0 #000) drop-shadow(2px 2px 0 #000) drop-shadow(3px 3px 0 #000)',
+              textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
+            }}
           />
+          {/* Add black dots overlay for sprinkling effect */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="w-full h-full relative">
+              <div className="absolute top-[20%] left-[15%] w-1 h-1 bg-black rounded-full opacity-60"></div>
+              <div className="absolute top-[35%] left-[25%] w-1 h-1 bg-black rounded-full opacity-50"></div>
+              <div className="absolute top-[45%] left-[18%] w-1 h-1 bg-black rounded-full opacity-70"></div>
+              <div className="absolute top-[25%] left-[45%] w-1 h-1 bg-black rounded-full opacity-60"></div>
+              <div className="absolute top-[55%] left-[35%] w-1 h-1 bg-black rounded-full opacity-50"></div>
+              <div className="absolute top-[30%] left-[65%] w-1 h-1 bg-black rounded-full opacity-70"></div>
+              <div className="absolute top-[50%] left-[70%] w-1 h-1 bg-black rounded-full opacity-60"></div>
+              <div className="absolute top-[40%] left-[80%] w-1 h-1 bg-black rounded-full opacity-50"></div>
+              <div className="absolute top-[20%] left-[75%] w-1 h-1 bg-black rounded-full opacity-70"></div>
+              <div className="absolute top-[60%] left-[55%] w-1 h-1 bg-black rounded-full opacity-60"></div>
+            </div>
+          </div>
         </div>
         
         <div className="flex items-center justify-center gap-2 text-green-300 mb-2 mt-4">
           <Gamepad2 size={16} />
-          <span className="text-sm tracking-widest">SNAKE RETRO EDITION</span>
+          <span className="text-sm tracking-widest">RETRO EDITION</span>
           <Gamepad2 size={16} />
         </div>
         <p className="text-green-200 text-xs tracking-wide">Fast. Offline. Classic fun</p>
@@ -79,7 +98,6 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
             }`}
           >
             🏛️ CLASSIC
-            <div className="text-xs mt-1">Wall collision ON</div>
           </button>
           <button
             onClick={() => setGameMode('modern')}
@@ -89,8 +107,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
                 : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-blue-400/50'
             }`}
           >
-            🚀 MODERN
-            <div className="text-xs mt-1">Wall wrap-around</div>
+            🌐 MODERN
           </button>
         </div>
       </div>
@@ -198,7 +215,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
         <p>🎮 Use SWIPE or arrow buttons to control</p>
         <p>🍎 Eat food to grow and score</p>
         <p>💀 Don't hit walls or yourself!</p>
-        <p>📸 Screenshot your score when done</p>
+        <p>📸 Take screenshot to save your score</p>
       </div>
     </div>
   );
