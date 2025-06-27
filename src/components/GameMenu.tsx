@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Trophy, Gamepad2, Palette, Play } from 'lucide-react';
 import { useGameSettings } from '../contexts/GameSettingsContext';
@@ -36,7 +37,26 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full px-4 py-4 text-center">
+    <div className="flex flex-col items-center justify-center h-full px-4 py-4 text-center relative">
+      {/* Developer Stamp - Bottom Left */}
+      <div className="absolute bottom-4 left-4 z-10">
+        <div className="relative">
+          {/* Stamp border */}
+          <div className="border-2 border-green-400/60 border-dashed rounded-lg p-3 bg-black/80 backdrop-blur-sm transform rotate-[-2deg]">
+            <div className="text-center">
+              <div className="text-xs font-bold text-green-400 tracking-wider">MADE BY</div>
+              <div className="text-lg font-bold text-green-300 tracking-wide">SAQIB</div>
+              <div className="text-xs text-green-400/80 mt-1">★ 2024 ★</div>
+            </div>
+          </div>
+          {/* Stamp perforations effect */}
+          <div className="absolute -top-1 -left-1 w-2 h-2 border border-green-400/40 rounded-full bg-black"></div>
+          <div className="absolute -top-1 -right-1 w-2 h-2 border border-green-400/40 rounded-full bg-black"></div>
+          <div className="absolute -bottom-1 -left-1 w-2 h-2 border border-green-400/40 rounded-full bg-black"></div>
+          <div className="absolute -bottom-1 -right-1 w-2 h-2 border border-green-400/40 rounded-full bg-black"></div>
+        </div>
+      </div>
+
       {/* Title Section with Snake Graphic */}
       <div className="mb-8 relative">
         <div className="relative">
@@ -76,10 +96,6 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
               <div className="absolute top-[38%] left-[38%] w-1 h-1 bg-black rounded-full opacity-55"></div>
               <div className="absolute top-[62%] left-[72%] w-1 h-1 bg-black rounded-full opacity-60"></div>
             </div>
-          </div>
-          {/* Made by Saqib stamp */}
-          <div className="absolute bottom-2 right-2 text-xs text-gray-400 opacity-70 font-mono">
-            made by saqib
           </div>
         </div>
         
