@@ -1,7 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
-import { Trophy, Gamepad2, Palette, Play } from 'lucide-react';
+import { Trophy, Gamepad2, Palette, Play, Crown } from 'lucide-react';
 import { useGameSettings } from '../contexts/GameSettingsContext';
+import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
+import { useLeaderboard } from '../hooks/useLeaderboard';
+import BackgroundSnake from './BackgroundSnake';
+import Leaderboard from './Leaderboard';
 
 interface GameMenuProps {
   onStartGame: (speed: 'slow' | 'normal' | 'fast', gameMode: 'classic' | 'modern') => void;
@@ -10,9 +13,14 @@ interface GameMenuProps {
 const GameMenu = ({ onStartGame }: GameMenuProps) => {
   const [highScore, setHighScore] = useState(0);
   const [showColorSelector, setShowColorSelector] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [selectedSpeed, setSelectedSpeed] = useState<'slow' | 'normal' | 'fast' | null>(null);
   const [gameMode, setGameMode] = useState<'classic' | 'modern'>('classic');
   const { settings, setSnakeColors } = useGameSettings();
+  const { leaderboard, clearLeaderboard } = useLeaderboard();
+
+  // Background music
+  useBackgroundMusic(true);
 
   useEffect(() => {
     const savedHighScore = localStorage.getItem('snake-high-score');
@@ -38,6 +46,9 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 py-4 text-center relative">
+      {/* Animated Background Snake */}
+      <BackgroundSnake />
+
       {/* Watermark - Bottom Left */}
       <div className="absolute bottom-4 left-4 z-10">
         <img 
@@ -65,13 +76,35 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
         <p className="text-green-200 text-xs tracking-wide">Fast. Offline. Classic fun</p>
       </div>
 
-      {/* High Score */}
-      {highScore > 0 && (
-        <div className="mb-6 p-3 border-2 border-green-400 bg-green-400/10 rounded-lg">
-          <div className="flex items-center justify-center gap-2 text-yellow-400">
-            <Trophy size={16} />
-            <span className="text-md font-bold">HIGH SCORE: {highScore}</span>
+      {/* High Score and Leaderboard Toggle */}
+      <div className="mb-6 flex gap-2 w-full max-w-md">
+        {highScore > 0 && (
+          <div className="flex-1 p-3 border-2 border-green-400 bg-green-400/10 rounded-lg">
+            <div className="flex items-center justify-center gap-2 text-yellow-400">
+              <Trophy size={16} />
+              <span className="text-sm font-bold">HIGH: {highScore}</span>
+            </div>
           </div>
+        )}
+        
+        {leaderboard.length > 0 && (
+          <button
+            onClick={() => setShowLeaderboard(!showLeaderboard)}
+            className="px-3 py-2 border-2 border-purple-400 bg-purple-400/10 text-purple-400 hover:bg-purple-400/20 transition-all duration-200 rounded-lg"
+          >
+            <Crown size={16} />
+          </button>
+        )}
+      </div>
+
+      {/* Leaderboard */}
+      {showLeaderboard && (
+        <div className="mb-6 w-full max-w-md p-4 border-2 border-purple-400 bg-purple-400/10 rounded-lg">
+          <h3 className="text-lg font-bold text-purple-400 mb-3 flex items-center gap-2">
+            <Crown size={18} />
+            TOP 5 SCORES
+          </h3>
+          <Leaderboard entries={leaderboard} onClear={clearLeaderboard} />
         </div>
       )}
 

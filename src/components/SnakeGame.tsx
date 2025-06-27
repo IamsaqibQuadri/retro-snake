@@ -1,5 +1,4 @@
-
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useSnakeGame } from '../hooks/useSnakeGame';
 import GameControls from './GameControls';
 import GameSettingsPanel from './GameSettingsPanel';
@@ -25,6 +24,11 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
   const GRID_SIZE = 20;
   const GAME_WIDTH = 300;
   const GAME_HEIGHT = 300;
+
+  // Memoize callbacks to prevent unnecessary re-renders
+  const handleShowSettings = useCallback(() => setShowSettings(true), []);
+  const handleCloseSettings = useCallback(() => setShowSettings(false), []);
+  const handleNewGame = useCallback(() => resetGame(), [resetGame]);
 
   // Watch for score changes to trigger food eaten effect
   useEffect(() => {
@@ -62,10 +66,6 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
     }
   };
 
-  const handleNewGame = () => {
-    resetGame();
-  };
-
   return (
     <div ref={gameRef} className="flex flex-col items-center justify-center h-full px-4 bg-black">
       <GameHeader
@@ -73,7 +73,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
         highScore={highScore}
         gameMode={gameMode}
         onBackToMenu={onBackToMenu}
-        onShowSettings={() => setShowSettings(true)}
+        onShowSettings={handleShowSettings}
       />
 
       {/* Game Board with Overlay */}
@@ -106,10 +106,10 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
       {/* Settings Panel */}
       <GameSettingsPanel 
         isOpen={showSettings} 
-        onClose={() => setShowSettings(false)} 
+        onClose={handleCloseSettings} 
       />
     </div>
   );
 };
 
-export default SnakeGame;
+export default React.memo(SnakeGame);
