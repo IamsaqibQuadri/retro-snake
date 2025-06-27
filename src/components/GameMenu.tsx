@@ -38,30 +38,20 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 py-4 text-center relative">
-      {/* Developer Stamp - Bottom Left */}
+      {/* Watermark - Bottom Left */}
       <div className="absolute bottom-4 left-4 z-10">
-        <div className="relative">
-          {/* Stamp border */}
-          <div className="border-2 border-green-400/60 border-dashed rounded-lg p-3 bg-black/80 backdrop-blur-sm transform rotate-[-2deg]">
-            <div className="text-center">
-              <div className="text-xs font-bold text-green-400 tracking-wider">MADE BY</div>
-              <div className="text-lg font-bold text-green-300 tracking-wide">SAQIB</div>
-              <div className="text-xs text-green-400/80 mt-1">★ 2024 ★</div>
-            </div>
-          </div>
-          {/* Stamp perforations effect */}
-          <div className="absolute -top-1 -left-1 w-2 h-2 border border-green-400/40 rounded-full bg-black"></div>
-          <div className="absolute -top-1 -right-1 w-2 h-2 border border-green-400/40 rounded-full bg-black"></div>
-          <div className="absolute -bottom-1 -left-1 w-2 h-2 border border-green-400/40 rounded-full bg-black"></div>
-          <div className="absolute -bottom-1 -right-1 w-2 h-2 border border-green-400/40 rounded-full bg-black"></div>
-        </div>
+        <img 
+          src="/lovable-uploads/497fd7e1-4d9e-449f-8fd9-bc8c8c52ea9a.png" 
+          alt="Made by Saqib" 
+          className="w-16 h-16 opacity-80"
+        />
       </div>
 
       {/* Title Section with Snake Graphic */}
       <div className="mb-8 relative">
         <div className="relative">
           <img 
-            src="/lovable-uploads/44193645-44f1-4e15-a2e2-d159c9d14367.png" 
+            src="/lovable-uploads/7f6b57cf-df59-47e5-856f-6ecb6ab5f6b2.png" 
             alt="FLAKY Logo" 
             className="w-80 md:w-96 h-auto mx-auto"
             style={{
@@ -69,37 +59,10 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
               textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
             }}
           />
-          {/* Add more black dots overlay for enhanced sprinkling effect */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="w-full h-full relative">
-              <div className="absolute top-[20%] left-[15%] w-1 h-1 bg-black rounded-full opacity-60"></div>
-              <div className="absolute top-[35%] left-[25%] w-1 h-1 bg-black rounded-full opacity-50"></div>
-              <div className="absolute top-[45%] left-[18%] w-1 h-1 bg-black rounded-full opacity-70"></div>
-              <div className="absolute top-[25%] left-[45%] w-1 h-1 bg-black rounded-full opacity-60"></div>
-              <div className="absolute top-[55%] left-[35%] w-1 h-1 bg-black rounded-full opacity-50"></div>
-              <div className="absolute top-[30%] left-[65%] w-1 h-1 bg-black rounded-full opacity-70"></div>
-              <div className="absolute top-[50%] left-[70%] w-1 h-1 bg-black rounded-full opacity-60"></div>
-              <div className="absolute top-[40%] left-[80%] w-1 h-1 bg-black rounded-full opacity-50"></div>
-              <div className="absolute top-[20%] left-[75%] w-1 h-1 bg-black rounded-full opacity-70"></div>
-              <div className="absolute top-[60%] left-[55%] w-1 h-1 bg-black rounded-full opacity-60"></div>
-              {/* Additional dots for more sprinkling effect */}
-              <div className="absolute top-[15%] left-[35%] w-1 h-1 bg-black rounded-full opacity-55"></div>
-              <div className="absolute top-[65%] left-[25%] w-1 h-1 bg-black rounded-full opacity-65"></div>
-              <div className="absolute top-[10%] left-[55%] w-1 h-1 bg-black rounded-full opacity-60"></div>
-              <div className="absolute top-[70%] left-[45%] w-1 h-1 bg-black rounded-full opacity-50"></div>
-              <div className="absolute top-[32%] left-[85%] w-1 h-1 bg-black rounded-full opacity-65"></div>
-              <div className="absolute top-[58%] left-[80%] w-1 h-1 bg-black rounded-full opacity-55"></div>
-              <div className="absolute top-[12%] left-[22%] w-1 h-1 bg-black rounded-full opacity-60"></div>
-              <div className="absolute top-[68%] left-[65%] w-1 h-1 bg-black rounded-full opacity-70"></div>
-              <div className="absolute top-[28%] left-[12%] w-1 h-1 bg-black rounded-full opacity-50"></div>
-              <div className="absolute top-[52%] left-[88%] w-1 h-1 bg-black rounded-full opacity-65"></div>
-              <div className="absolute top-[38%] left-[38%] w-1 h-1 bg-black rounded-full opacity-55"></div>
-              <div className="absolute top-[62%] left-[72%] w-1 h-1 bg-black rounded-full opacity-60"></div>
-            </div>
-          </div>
         </div>
         
-        <p className="text-green-200 text-xs tracking-wide mt-4">Fast. Offline. Classic fun</p>
+        <p className="text-green-300 text-sm tracking-wide mt-2 mb-1">🎮 Snake Retro Edition 🎮</p>
+        <p className="text-green-200 text-xs tracking-wide">Fast. Offline. Classic fun</p>
       </div>
 
       {/* High Score */}
