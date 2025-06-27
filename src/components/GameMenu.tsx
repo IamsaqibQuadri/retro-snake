@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useeffect, useState } from 'react';
 import { Trophy, Gamepad2, Palette, Play } from 'lucide-react';
 import { useGameSettings } from '../contexts/GameSettingsContext';
 
@@ -50,7 +50,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
               textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
             }}
           />
-          {/* Add black dots overlay for sprinkling effect */}
+          {/* Add more black dots overlay for enhanced sprinkling effect */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="w-full h-full relative">
               <div className="absolute top-[20%] left-[15%] w-1 h-1 bg-black rounded-full opacity-60"></div>
@@ -63,16 +63,28 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
               <div className="absolute top-[40%] left-[80%] w-1 h-1 bg-black rounded-full opacity-50"></div>
               <div className="absolute top-[20%] left-[75%] w-1 h-1 bg-black rounded-full opacity-70"></div>
               <div className="absolute top-[60%] left-[55%] w-1 h-1 bg-black rounded-full opacity-60"></div>
+              {/* Additional dots for more sprinkling effect */}
+              <div className="absolute top-[15%] left-[35%] w-1 h-1 bg-black rounded-full opacity-55"></div>
+              <div className="absolute top-[65%] left-[25%] w-1 h-1 bg-black rounded-full opacity-65"></div>
+              <div className="absolute top-[10%] left-[55%] w-1 h-1 bg-black rounded-full opacity-60"></div>
+              <div className="absolute top-[70%] left-[45%] w-1 h-1 bg-black rounded-full opacity-50"></div>
+              <div className="absolute top-[32%] left-[85%] w-1 h-1 bg-black rounded-full opacity-65"></div>
+              <div className="absolute top-[58%] left-[80%] w-1 h-1 bg-black rounded-full opacity-55"></div>
+              <div className="absolute top-[12%] left-[22%] w-1 h-1 bg-black rounded-full opacity-60"></div>
+              <div className="absolute top-[68%] left-[65%] w-1 h-1 bg-black rounded-full opacity-70"></div>
+              <div className="absolute top-[28%] left-[12%] w-1 h-1 bg-black rounded-full opacity-50"></div>
+              <div className="absolute top-[52%] left-[88%] w-1 h-1 bg-black rounded-full opacity-65"></div>
+              <div className="absolute top-[38%] left-[38%] w-1 h-1 bg-black rounded-full opacity-55"></div>
+              <div className="absolute top-[62%] left-[72%] w-1 h-1 bg-black rounded-full opacity-60"></div>
             </div>
+          </div>
+          {/* Made by Saqib stamp */}
+          <div className="absolute bottom-2 right-2 text-xs text-gray-400 opacity-70 font-mono">
+            made by saqib
           </div>
         </div>
         
-        <div className="flex items-center justify-center gap-2 text-green-300 mb-2 mt-4">
-          <Gamepad2 size={16} />
-          <span className="text-sm tracking-widest">RETRO EDITION</span>
-          <Gamepad2 size={16} />
-        </div>
-        <p className="text-green-200 text-xs tracking-wide">Fast. Offline. Classic fun</p>
+        <p className="text-green-200 text-xs tracking-wide mt-4">Fast. Offline. Classic fun</p>
       </div>
 
       {/* High Score */}
