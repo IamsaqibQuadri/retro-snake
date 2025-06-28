@@ -24,10 +24,13 @@ const GameSettingsPanel = ({ isOpen, onClose }: GameSettingsPanelProps) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-      <div className="bg-black border-2 border-green-400 rounded-lg p-6 w-full max-w-md">
+      <div className="bg-black border-2 border-green-400 rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-green-400">Game Settings</h2>
+          <h2 className="text-xl font-bold text-green-400 flex items-center gap-2">
+            <Palette size={20} />
+            Game Settings
+          </h2>
           <button
             onClick={onClose}
             className="text-green-400 hover:text-green-300 transition-colors"
@@ -38,7 +41,10 @@ const GameSettingsPanel = ({ isOpen, onClose }: GameSettingsPanelProps) => {
 
         {/* Sound Settings */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold text-green-400 mb-3">Sound</h3>
+          <h3 className="text-lg font-semibold text-green-400 mb-3 flex items-center gap-2">
+            {settings.soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+            Sound
+          </h3>
           <button
             onClick={toggleSound}
             className={`flex items-center gap-3 w-full p-3 border-2 rounded-lg transition-colors ${
@@ -54,7 +60,10 @@ const GameSettingsPanel = ({ isOpen, onClose }: GameSettingsPanelProps) => {
 
         {/* Snake Colors */}
         <div>
-          <h3 className="text-lg font-semibold text-green-400 mb-3">Snake Colors</h3>
+          <h3 className="text-lg font-semibold text-green-400 mb-3 flex items-center gap-2">
+            <Palette size={18} />
+            Snake Colors
+          </h3>
           <div className="grid grid-cols-2 gap-3">
             {colorPresets.map((preset) => (
               <button
@@ -79,6 +88,27 @@ const GameSettingsPanel = ({ isOpen, onClose }: GameSettingsPanelProps) => {
                 <span className="text-sm text-green-300">{preset.name}</span>
               </button>
             ))}
+          </div>
+          
+          {/* Current Selection Indicator */}
+          <div className="mt-4 p-3 border border-green-400/30 bg-green-400/5 rounded-lg">
+            <div className="text-xs text-green-300 mb-2">Current Snake Colors:</div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-6 h-6 rounded border border-green-400/30" 
+                  style={{ backgroundColor: settings.snakeColor }}
+                />
+                <span className="text-xs text-green-400">Head</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-6 h-6 rounded border border-green-400/30" 
+                  style={{ backgroundColor: settings.snakeBodyColor }}
+                />
+                <span className="text-xs text-green-400">Body</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

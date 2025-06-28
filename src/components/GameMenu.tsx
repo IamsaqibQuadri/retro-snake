@@ -1,5 +1,6 @@
+
 import React, { useEffect, useState } from 'react';
-import { Trophy, Gamepad2, Palette, Play, Crown } from 'lucide-react';
+import { Trophy, Gamepad2, Play, Crown } from 'lucide-react';
 import { useGameSettings } from '../contexts/GameSettingsContext';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import { useLeaderboard } from '../hooks/useLeaderboard';
@@ -12,11 +13,10 @@ interface GameMenuProps {
 
 const GameMenu = ({ onStartGame }: GameMenuProps) => {
   const [highScore, setHighScore] = useState(0);
-  const [showColorSelector, setShowColorSelector] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [selectedSpeed, setSelectedSpeed] = useState<'slow' | 'normal' | 'fast' | null>(null);
   const [gameMode, setGameMode] = useState<'classic' | 'modern'>('classic');
-  const { settings, setSnakeColors } = useGameSettings();
+  const { settings } = useGameSettings();
   const { leaderboard, clearLeaderboard } = useLeaderboard();
 
   // Background music
@@ -29,15 +29,6 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
     }
   }, []);
 
-  const colorPresets = [
-    { name: 'Classic Green', head: '#22c55e', body: '#16a34a' },
-    { name: 'Blue Ocean', head: '#3b82f6', body: '#1d4ed8' },
-    { name: 'Purple Magic', head: '#a855f7', body: '#7c3aed' },
-    { name: 'Red Fire', head: '#ef4444', body: '#dc2626' },
-    { name: 'Orange Sunset', head: '#f97316', body: '#ea580c' },
-    { name: 'Pink Rose', head: '#ec4899', body: '#db2777' },
-  ];
-
   const handleStartGame = () => {
     if (selectedSpeed) {
       onStartGame(selectedSpeed, gameMode);
@@ -49,22 +40,22 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
       {/* Animated Background Snake */}
       <BackgroundSnake />
 
-      {/* Watermark - Bottom Left */}
-      <div className="absolute bottom-4 left-4 z-10">
+      {/* Watermark - Bottom Right with better positioning */}
+      <div className="absolute bottom-2 right-2 z-10 md:bottom-4 md:right-4">
         <img 
           src="/lovable-uploads/497fd7e1-4d9e-449f-8fd9-bc8c8c52ea9a.png" 
           alt="Made by Saqib" 
-          className="w-16 h-16 opacity-80"
+          className="w-12 h-12 md:w-16 md:h-16 opacity-80"
         />
       </div>
 
-      {/* Title Section with Snake Graphic */}
+      {/* Title Section with New Snake Logo */}
       <div className="mb-8 relative">
         <div className="relative">
           <img 
-            src="/lovable-uploads/7f6b57cf-df59-47e5-856f-6ecb6ab5f6b2.png" 
-            alt="FLAKY Logo" 
-            className="w-80 md:w-96 h-auto mx-auto"
+            src="/lovable-uploads/a97eb904-18bb-40d7-b927-eb29b333e690.png" 
+            alt="Snake Game Logo" 
+            className="w-64 md:w-80 h-auto mx-auto"
             style={{
               filter: 'drop-shadow(1px 1px 0 #000) drop-shadow(2px 2px 0 #000) drop-shadow(3px 3px 0 #000)',
               textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
@@ -191,50 +182,8 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
         </div>
       )}
 
-      {/* Snake Color Selector */}
-      <div className="mb-6 w-full max-w-md">
-        <button
-          onClick={() => setShowColorSelector(!showColorSelector)}
-          className="w-full flex items-center justify-center gap-2 py-2 px-3 border-2 border-purple-400 bg-purple-400/10 text-purple-400 hover:bg-purple-400/20 transition-all duration-200 rounded-lg text-sm"
-        >
-          <Palette size={16} />
-          <span className="font-bold">SNAKE COLOR</span>
-        </button>
-        
-        {showColorSelector && (
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            {colorPresets.map((preset) => (
-              <button
-                key={preset.name}
-                onClick={() => {
-                  setSnakeColors(preset.head, preset.body);
-                  setShowColorSelector(false);
-                }}
-                className={`p-2 border-2 rounded-lg transition-colors text-left ${
-                  settings.snakeColor === preset.head
-                    ? 'border-green-400 bg-green-400/10'
-                    : 'border-gray-600 hover:border-green-400/50'
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <div 
-                    className="w-3 h-3 rounded" 
-                    style={{ backgroundColor: preset.head }}
-                  />
-                  <div 
-                    className="w-3 h-3 rounded" 
-                    style={{ backgroundColor: preset.body }}
-                  />
-                </div>
-                <span className="text-xs text-green-300">{preset.name}</span>
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Instructions */}
-      <div className="text-green-300 text-xs space-y-1 max-w-md">
+      {/* Instructions - moved higher up to avoid watermark overlap */}
+      <div className="text-green-300 text-xs space-y-1 max-w-md mb-4">
         <p>🎮 Use SWIPE or arrow buttons to control</p>
         <p>🍎 Eat food to grow and score</p>
         <p>💀 Don't hit walls or yourself!</p>
