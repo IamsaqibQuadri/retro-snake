@@ -8,34 +8,50 @@ export interface LeaderboardEntry {
   date: string;
   gameMode: 'classic' | 'modern';
   speed: 'slow' | 'normal' | 'fast';
-  timestamp: number; // Add timestamp for better tracking
+  timestamp: number;
 }
 
 export const useLeaderboard = () => {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
 
-  // Load leaderboard with error handling and validation
+  // Load leaderboard with comprehensive testing
   const loadLeaderboard = useCallback(() => {
+    console.log('useLeaderboard: Loading leaderboard from localStorage...');
     try {
       const saved = localStorage.getItem(LEADERBOARD_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
+        console.log('useLeaderboard: Raw data from localStorage:', parsed);
+        
         // Validate the data structure
         if (Array.isArray(parsed)) {
-          const validEntries = parsed.filter(entry => 
-            entry && 
-            typeof entry.score === 'number' && 
-            typeof entry.date === 'string' &&
-            typeof entry.gameMode === 'string' &&
-            typeof entry.speed === 'string'
-          );
+          const validEntries = parsed.filter(entry => {
+            const isValid = entry && 
+              typeof entry.score === 'number' && 
+              typeof entry.date === 'string' &&
+              typeof entry.gameMode === 'string' &&
+              typeof entry.speed === 'string';
+            
+            if (!isValid) {
+              console.warn('useLeaderboard: Invalid entry found:', entry);
+            }
+            
+            return isValid;
+          });
+          
+          console.log('useLeaderboard: Valid entries loaded:', validEntries.length);
           setLeaderboard(validEntries);
-          console.log('Loaded leaderboard:', validEntries);
+        } else {
+          console.warn('useLeaderboard: Data is not an array, clearing...');
+          localStorage.removeItem(LEADERBOARD_KEY);
+          setLeaderboard([]);
         }
+      } else {
+        console.log('useLeaderboard: No saved data found');
+        setLeaderboard([]);
       }
     } catch (error) {
-      console.error('Error loading leaderboard:', error);
-      // Clear corrupted data
+      console.error('useLeaderboard: Error loading leaderboard:', error);
       localStorage.removeItem(LEADERBOARD_KEY);
       setLeaderboard([]);
     }
@@ -47,6 +63,7 @@ export const useLeaderboard = () => {
     // Listen for storage changes (when another tab updates the leaderboard)
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === LEADERBOARD_KEY) {
+        console.log('useLeaderboard: Storage change detected, reloading...');
         loadLeaderboard();
       }
     };
@@ -56,6 +73,8 @@ export const useLeaderboard = () => {
   }, [loadLeaderboard]);
 
   const addScore = useCallback((score: number, gameMode: 'classic' | 'modern', speed: 'slow' | 'normal' | 'fast') => {
+    console.log('useLeaderboard: Adding new score:', { score, gameMode, speed });
+    
     const newEntry: LeaderboardEntry = {
       score,
       date: new Date().toLocaleDateString(),
@@ -69,11 +88,13 @@ export const useLeaderboard = () => {
         .sort((a, b) => b.score - a.score)
         .slice(0, 5); // Keep only top 5
       
+      console.log('useLeaderboard: Updated leaderboard:', updated);
+      
       try {
         localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(updated));
-        console.log('Saved leaderboard:', updated);
+        console.log('useLeaderboard: Successfully saved to localStorage');
       } catch (error) {
-        console.error('Error saving leaderboard:', error);
+        console.error('useLeaderboard: Error saving to localStorage:', error);
       }
       
       return updated;
@@ -81,14 +102,20 @@ export const useLeaderboard = () => {
   }, []);
 
   const clearLeaderboard = useCallback(() => {
+    console.log('useLeaderboard: Clearing all leaderboard data');
     setLeaderboard([]);
     try {
       localStorage.removeItem(LEADERBOARD_KEY);
-      console.log('Cleared leaderboard');
+      console.log('useLeaderboard: Successfully cleared localStorage');
     } catch (error) {
-      console.error('Error clearing leaderboard:', error);
+      console.error('useLeaderboard: Error clearing localStorage:', error);
     }
   }, []);
+
+  // Test leaderboard functionality
+  useEffect(() => {
+    console.log('useLeaderboard: Current leaderboard state:', leaderboard);
+  }, [leaderboard]);
 
   return {
     leaderboard,

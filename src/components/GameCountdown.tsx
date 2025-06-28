@@ -10,19 +10,30 @@ interface GameCountdownProps {
 const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownProps) => {
   const [count, setCount] = useState(3);
 
+  console.log('GameCountdown: Starting countdown with:', { gameMode, speed });
+
   useEffect(() => {
+    console.log('GameCountdown: Starting countdown timer');
     const timer = setInterval(() => {
       setCount(prev => {
+        console.log('GameCountdown: Count:', prev);
         if (prev <= 1) {
+          console.log('GameCountdown: Countdown complete!');
           clearInterval(timer);
-          setTimeout(onCountdownComplete, 500);
+          setTimeout(() => {
+            console.log('GameCountdown: Calling onCountdownComplete');
+            onCountdownComplete();
+          }, 500);
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
 
-    return () => clearInterval(timer);
+    return () => {
+      console.log('GameCountdown: Cleaning up timer');
+      clearInterval(timer);
+    };
   }, [onCountdownComplete]);
 
   const getSpeedEmoji = (speed: string) => {
@@ -39,6 +50,7 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
   };
 
   if (count === 0) {
+    console.log('GameCountdown: Displaying GO! message');
     return (
       <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50">
         <div className="text-center">

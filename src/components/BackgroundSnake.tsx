@@ -17,6 +17,7 @@ const BackgroundSnake = () => {
   const [direction, setDirection] = useState<'up' | 'down' | 'left' | 'right'>('right');
 
   useEffect(() => {
+    console.log('BackgroundSnake: Starting animation');
     const interval = setInterval(() => {
       setSnake(prevSnake => {
         const newSnake = [...prevSnake];
@@ -50,7 +51,7 @@ const BackgroundSnake = () => {
 
         return newSnake;
       });
-    }, 150); // Slightly faster for more dynamic feel
+    }, 120); // Slightly faster for more dynamic feel
 
     return () => clearInterval(interval);
   }, [direction]);
@@ -60,28 +61,36 @@ const BackgroundSnake = () => {
     const directionInterval = setInterval(() => {
       const directions: ('up' | 'down' | 'left' | 'right')[] = ['up', 'down', 'left', 'right'];
       const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+      console.log('BackgroundSnake: Changing direction to:', randomDirection);
       setDirection(randomDirection);
-    }, 4000);
+    }, 3500);
 
     return () => clearInterval(directionInterval);
   }, []);
 
   return (
-    <div className="fixed inset-0 opacity-30 pointer-events-none overflow-hidden z-0">
+    <div className="fixed inset-0 opacity-50 pointer-events-none overflow-hidden z-0">
       <div className="relative w-full h-full">
         {snake.map((segment, index) => (
           <div
             key={index}
-            className={`absolute w-3 h-3 rounded-sm transition-all duration-200 ${
+            className={`absolute w-4 h-4 rounded-sm transition-all duration-200 ${
               index === 0 
-                ? 'bg-green-400 shadow-lg shadow-green-400/50' 
-                : 'bg-green-500 shadow-md shadow-green-500/30'
+                ? 'animate-pulse' 
+                : ''
             }`}
             style={{
               left: `${(segment.x * 100) / 50}%`,
               top: `${(segment.y * 100) / 40}%`,
               transform: 'translate(-50%, -50%)',
-              filter: 'drop-shadow(0 0 4px rgba(34, 197, 94, 0.6))',
+              backgroundColor: index === 0 ? '#22c55e' : '#16a34a', // Same green as in-game snake
+              background: index === 0 
+                ? 'linear-gradient(45deg, #22c55e 0%, #22c55e 40%, #000 45%, #22c55e 50%, #000 55%, #22c55e 60%, #22c55e 100%)'
+                : 'linear-gradient(45deg, #16a34a 0%, #16a34a 30%, #000 35%, #16a34a 40%, #000 45%, #16a34a 50%, #000 55%, #16a34a 60%, #000 65%, #16a34a 70%, #16a34a 100%)',
+              boxShadow: index === 0 
+                ? '0 0 8px #22c55e, 0 0 16px rgba(34, 197, 94, 0.6)' 
+                : '0 0 4px #16a34a, 0 0 8px rgba(22, 163, 74, 0.4)',
+              filter: 'drop-shadow(0 0 6px rgba(34, 197, 94, 0.7))',
             }}
           />
         ))}

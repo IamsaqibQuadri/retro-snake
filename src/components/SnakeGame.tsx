@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useSnakeGame } from '../hooks/useSnakeGame';
 import GameControls from './GameControls';
@@ -25,21 +26,56 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
   const GAME_WIDTH = 300;
   const GAME_HEIGHT = 300;
 
+  console.log('SnakeGame: Rendered with props:', { speed, gameMode, gameOver, score, highScore });
+  console.log('SnakeGame: Game state:', { 
+    snakeLength: gameState.snake.length, 
+    foodPosition: gameState.food,
+    currentDirection: direction 
+  });
+
   // Memoize callbacks to prevent unnecessary re-renders
-  const handleShowSettings = useCallback(() => setShowSettings(true), []);
-  const handleCloseSettings = useCallback(() => setShowSettings(false), []);
-  const handleNewGame = useCallback(() => resetGame(), [resetGame]);
+  const handleShowSettings = useCallback(() => {
+    console.log('SnakeGame: Opening settings panel');
+    setShowSettings(true);
+  }, []);
+  
+  const handleCloseSettings = useCallback(() => {
+    console.log('SnakeGame: Closing settings panel');
+    setShowSettings(false);
+  }, []);
+  
+  const handleNewGame = useCallback(() => {
+    console.log('SnakeGame: Starting new game');
+    resetGame();
+  }, [resetGame]);
+
+  const handleBackToMenu = useCallback(() => {
+    console.log('SnakeGame: Going back to menu');
+    onBackToMenu();
+  }, [onBackToMenu]);
 
   // Watch for score changes to trigger food eaten effect
   useEffect(() => {
     if (score > 0) {
+      console.log('SnakeGame: Score increased, triggering food eaten effect');
       setFoodEaten(true);
       const timer = setTimeout(() => setFoodEaten(false), 300);
       return () => clearTimeout(timer);
     }
   }, [score]);
 
+  // Test game over scenario
+  useEffect(() => {
+    if (gameOver) {
+      console.log('SnakeGame: Game over detected - Final score:', score, 'High score:', highScore);
+      if (score === highScore && score > 0) {
+        console.log('SnakeGame: NEW HIGH SCORE ACHIEVED!');
+      }
+    }
+  }, [gameOver, score, highScore]);
+
   const takeScreenshot = async () => {
+    console.log('SnakeGame: Taking screenshot...');
     if (gameRef.current) {
       try {
         const canvas = await html2canvas(gameRef.current, {
@@ -52,11 +88,13 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
         link.href = canvas.toDataURL();
         link.click();
         
+        console.log('SnakeGame: Screenshot saved successfully');
         toast({
           title: "Screenshot saved!",
           description: `Your score of ${score} has been captured!`,
         });
       } catch (error) {
+        console.error('SnakeGame: Screenshot failed:', error);
         toast({
           title: "Screenshot failed",
           description: "Could not save screenshot. Please try again.",
@@ -72,7 +110,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
         score={score}
         highScore={highScore}
         gameMode={gameMode}
-        onBackToMenu={onBackToMenu}
+        onBackToMenu={handleBackToMenu}
         onShowSettings={handleShowSettings}
       />
 
@@ -93,7 +131,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
           score={score}
           highScore={highScore}
           onNewGame={handleNewGame}
-          onBackToMenu={onBackToMenu}
+          onBackToMenu={handleBackToMenu}
           onTakeScreenshot={takeScreenshot}
         />
       </div>

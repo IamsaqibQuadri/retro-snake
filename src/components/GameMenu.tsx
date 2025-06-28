@@ -28,26 +28,40 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
     if (savedHighScore) {
       setHighScore(parseInt(savedHighScore));
     }
+    console.log('GameMenu: High score loaded:', savedHighScore);
   }, []);
 
   const handleProceedToSetup = () => {
+    console.log('GameMenu: Proceeding to setup screen');
     setCurrentStep('setup');
   };
 
   const handleBackToWelcome = () => {
+    console.log('GameMenu: Going back to welcome screen');
     setCurrentStep('welcome');
     setSelectedSpeed(null);
   };
 
   const handleStartGame = () => {
     if (selectedSpeed) {
+      console.log('GameMenu: Starting game with:', { speed: selectedSpeed, mode: gameMode });
       onStartGame(selectedSpeed, gameMode);
     }
   };
 
+  const handleSpeedSelection = (speed: 'slow' | 'normal' | 'fast') => {
+    console.log('GameMenu: Speed selected:', speed);
+    setSelectedSpeed(speed);
+  };
+
+  const handleModeSelection = (mode: 'classic' | 'modern') => {
+    console.log('GameMenu: Game mode selected:', mode);
+    setGameMode(mode);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 py-4 text-center relative">
-      {/* Animated Background Snake - now brighter and behind content */}
+      {/* Enhanced Background Snake */}
       <BackgroundSnake />
 
       {/* Watermark - Bottom Right */}
@@ -64,15 +78,15 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
         {currentStep === 'welcome' ? (
           // Welcome Screen
           <>
-            {/* Logo and Title */}
+            {/* Logo and Title with New Transparent Logo */}
             <div className="mb-8">
               <div className="relative">
                 <img 
-                  src="/lovable-uploads/a97eb904-18bb-40d7-b927-eb29b333e690.png" 
+                  src="/lovable-uploads/fac2201e-f8a2-4cac-8ebc-c735a61174d1.png" 
                   alt="Snake Game Logo" 
-                  className="w-64 md:w-80 h-auto mx-auto relative z-10"
+                  className="w-64 md:w-80 h-auto mx-auto relative z-10 drop-shadow-2xl"
                   style={{
-                    filter: 'drop-shadow(1px 1px 0 #000) drop-shadow(2px 2px 0 #000) drop-shadow(3px 3px 0 #000)',
+                    filter: 'drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 10px rgba(34, 197, 94, 0.3))',
                   }}
                 />
               </div>
@@ -94,7 +108,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
 
             {/* Instructions */}
             <div className="text-green-300 text-xs space-y-1 mb-4">
-              <p>🎮 Use SWIPE or arrow buttons to control</p>
+              <p>🎮 Use arrow keys or control buttons</p>
               <p>🍎 Eat food to grow and score</p>
               <p>💀 Don't hit walls or yourself!</p>
               <p>📸 Take screenshot to save your score</p>
@@ -127,7 +141,10 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
               
               {leaderboard.length > 0 && (
                 <button
-                  onClick={() => setShowLeaderboard(!showLeaderboard)}
+                  onClick={() => {
+                    console.log('GameMenu: Toggling leaderboard:', !showLeaderboard);
+                    setShowLeaderboard(!showLeaderboard);
+                  }}
                   className="px-3 py-2 border-2 border-purple-400 bg-purple-400/10 text-purple-400 hover:bg-purple-400/20 transition-all duration-200 rounded-lg"
                 >
                   <Crown size={16} />
@@ -151,7 +168,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
               <h2 className="text-lg font-bold text-green-400 mb-4">GAME MODE</h2>
               <div className="flex justify-center gap-2">
                 <button
-                  onClick={() => setGameMode('classic')}
+                  onClick={() => handleModeSelection('classic')}
                   className={`px-4 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${
                     gameMode === 'classic'
                       ? 'border-green-400 bg-green-400/20 text-green-400'
@@ -161,7 +178,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
                   🏛️ CLASSIC
                 </button>
                 <button
-                  onClick={() => setGameMode('modern')}
+                  onClick={() => handleModeSelection('modern')}
                   className={`px-4 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${
                     gameMode === 'modern'
                       ? 'border-blue-400 bg-blue-400/20 text-blue-400'
@@ -179,7 +196,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
               
               <div className="flex justify-center gap-4">
                 <button
-                  onClick={() => setSelectedSpeed('slow')}
+                  onClick={() => handleSpeedSelection('slow')}
                   className={`w-20 h-20 text-sm font-bold border-2 rounded-lg flex flex-col items-center justify-center transition-all duration-200 ${
                     selectedSpeed === 'slow'
                       ? 'border-green-400 bg-green-400/20 text-green-400'
@@ -191,7 +208,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
                 </button>
                 
                 <button
-                  onClick={() => setSelectedSpeed('normal')}
+                  onClick={() => handleSpeedSelection('normal')}
                   className={`w-20 h-20 text-sm font-bold border-2 rounded-lg flex flex-col items-center justify-center transition-all duration-200 ${
                     selectedSpeed === 'normal'
                       ? 'border-yellow-400 bg-yellow-400/20 text-yellow-400'
@@ -203,7 +220,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
                 </button>
                 
                 <button
-                  onClick={() => setSelectedSpeed('fast')}
+                  onClick={() => handleSpeedSelection('fast')}
                   className={`w-20 h-20 text-sm font-bold border-2 rounded-lg flex flex-col items-center justify-center transition-all duration-200 ${
                     selectedSpeed === 'fast'
                       ? 'border-red-400 bg-red-400/20 text-red-400'
