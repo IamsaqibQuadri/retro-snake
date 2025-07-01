@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 
 const LEADERBOARD_KEY = 'snake-leaderboard';
@@ -30,7 +29,8 @@ export const useLeaderboard = () => {
               typeof entry.score === 'number' && 
               typeof entry.date === 'string' &&
               typeof entry.gameMode === 'string' &&
-              typeof entry.speed === 'string';
+              typeof entry.speed === 'string' &&
+              typeof entry.timestamp === 'number';
             
             if (!isValid) {
               console.warn('useLeaderboard: Invalid entry found:', entry);
@@ -39,8 +39,13 @@ export const useLeaderboard = () => {
             return isValid;
           });
           
-          console.log('useLeaderboard: Valid entries loaded:', validEntries.length);
-          setLeaderboard(validEntries);
+          // Sort by score descending and keep only top 5
+          const sortedEntries = validEntries
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 5);
+          
+          console.log('useLeaderboard: Valid entries loaded:', sortedEntries.length);
+          setLeaderboard(sortedEntries);
         } else {
           console.warn('useLeaderboard: Data is not an array, clearing...');
           localStorage.removeItem(LEADERBOARD_KEY);
@@ -111,11 +116,6 @@ export const useLeaderboard = () => {
       console.error('useLeaderboard: Error clearing localStorage:', error);
     }
   }, []);
-
-  // Test leaderboard functionality
-  useEffect(() => {
-    console.log('useLeaderboard: Current leaderboard state:', leaderboard);
-  }, [leaderboard]);
 
   return {
     leaderboard,
