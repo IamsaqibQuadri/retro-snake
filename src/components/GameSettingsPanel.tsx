@@ -2,6 +2,7 @@
 import React from 'react';
 import { Volume2, VolumeX, Palette, X } from 'lucide-react';
 import { useGameSettings } from '../contexts/GameSettingsContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface GameSettingsPanelProps {
   isOpen: boolean;
@@ -10,6 +11,17 @@ interface GameSettingsPanelProps {
 
 const GameSettingsPanel = ({ isOpen, onClose }: GameSettingsPanelProps) => {
   const { settings, toggleSound, setSnakeColors } = useGameSettings();
+  const { theme } = useTheme();
+
+  // Theme-based colors
+  const themeColors = {
+    primary: theme === 'light' ? 'text-green-600' : 'text-green-400',
+    secondary: theme === 'light' ? 'text-gray-600' : 'text-green-300',
+    border: theme === 'light' ? 'border-green-600' : 'border-green-400',
+    background: theme === 'light' ? 'bg-white' : 'bg-black',
+    panelBg: theme === 'light' ? 'bg-green-600/10' : 'bg-green-400/10',
+    hover: theme === 'light' ? 'hover:bg-green-600/20' : 'hover:bg-green-400/20',
+  };
 
   const colorPresets = [
     { name: 'Classic Green', head: '#22c55e', body: '#16a34a' },
@@ -24,16 +36,16 @@ const GameSettingsPanel = ({ isOpen, onClose }: GameSettingsPanelProps) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-      <div className="bg-black border-2 border-green-400 rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div className={`${themeColors.background} border-2 ${themeColors.border} rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto`}>
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-green-400 flex items-center gap-2">
+          <h2 className={`text-xl font-bold ${themeColors.primary} flex items-center gap-2`}>
             <Palette size={20} />
             Game Settings
           </h2>
           <button
             onClick={onClose}
-            className="text-green-400 hover:text-green-300 transition-colors"
+            className={`${themeColors.primary} ${themeColors.hover} transition-colors`}
           >
             <X size={20} />
           </button>
@@ -41,7 +53,7 @@ const GameSettingsPanel = ({ isOpen, onClose }: GameSettingsPanelProps) => {
 
         {/* Sound Settings */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold text-green-400 mb-3 flex items-center gap-2">
+          <h3 className={`text-lg font-semibold ${themeColors.primary} mb-3 flex items-center gap-2`}>
             {settings.soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
             Sound
           </h3>
@@ -49,8 +61,8 @@ const GameSettingsPanel = ({ isOpen, onClose }: GameSettingsPanelProps) => {
             onClick={toggleSound}
             className={`flex items-center gap-3 w-full p-3 border-2 rounded-lg transition-colors ${
               settings.soundEnabled
-                ? 'border-green-400 bg-green-400/10 text-green-400'
-                : 'border-gray-600 bg-gray-600/10 text-gray-400'
+                ? `${themeColors.border} ${themeColors.panelBg} ${themeColors.primary}`
+                : `border-gray-600 bg-gray-600/10 text-gray-400`
             }`}
           >
             {settings.soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
@@ -60,7 +72,7 @@ const GameSettingsPanel = ({ isOpen, onClose }: GameSettingsPanelProps) => {
 
         {/* Snake Colors */}
         <div>
-          <h3 className="text-lg font-semibold text-green-400 mb-3 flex items-center gap-2">
+          <h3 className={`text-lg font-semibold ${themeColors.primary} mb-3 flex items-center gap-2`}>
             <Palette size={18} />
             Snake Colors
           </h3>
@@ -71,8 +83,8 @@ const GameSettingsPanel = ({ isOpen, onClose }: GameSettingsPanelProps) => {
                 onClick={() => setSnakeColors(preset.head, preset.body)}
                 className={`p-3 border-2 rounded-lg transition-colors text-left ${
                   settings.snakeColor === preset.head
-                    ? 'border-green-400 bg-green-400/10'
-                    : 'border-gray-600 hover:border-green-400/50'
+                    ? `${themeColors.border} ${themeColors.panelBg}`
+                    : `border-gray-600 hover:border-green-400/50`
                 }`}
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -85,28 +97,28 @@ const GameSettingsPanel = ({ isOpen, onClose }: GameSettingsPanelProps) => {
                     style={{ backgroundColor: preset.body }}
                   />
                 </div>
-                <span className="text-sm text-green-300">{preset.name}</span>
+                <span className={`text-sm ${themeColors.secondary}`}>{preset.name}</span>
               </button>
             ))}
           </div>
           
           {/* Current Selection Indicator */}
-          <div className="mt-4 p-3 border border-green-400/30 bg-green-400/5 rounded-lg">
-            <div className="text-xs text-green-300 mb-2">Current Snake Colors:</div>
+          <div className={`mt-4 p-3 border ${themeColors.border.replace('border-', 'border-').replace('-600', '-600/30').replace('-400', '-400/30')} ${themeColors.panelBg.replace('bg-', 'bg-').replace('/10', '/5')} rounded-lg`}>
+            <div className={`text-xs ${themeColors.secondary} mb-2`}>Current Snake Colors:</div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <div 
-                  className="w-6 h-6 rounded border border-green-400/30" 
+                  className={`w-6 h-6 rounded border ${themeColors.border.replace('border-', 'border-').replace('-600', '-600/30').replace('-400', '-400/30')}`}
                   style={{ backgroundColor: settings.snakeColor }}
                 />
-                <span className="text-xs text-green-400">Head</span>
+                <span className={`text-xs ${themeColors.primary}`}>Head</span>
               </div>
               <div className="flex items-center gap-2">
                 <div 
-                  className="w-6 h-6 rounded border border-green-400/30" 
+                  className={`w-6 h-6 rounded border ${themeColors.border.replace('border-', 'border-').replace('-600', '-600/30').replace('-400', '-400/30')}`}
                   style={{ backgroundColor: settings.snakeBodyColor }}
                 />
-                <span className="text-xs text-green-400">Body</span>
+                <span className={`text-xs ${themeColors.primary}`}>Body</span>
               </div>
             </div>
           </div>

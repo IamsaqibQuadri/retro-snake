@@ -1,6 +1,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useSnakeGame } from '../hooks/useSnakeGame';
+import { useTheme } from '../contexts/ThemeContext';
 import GameControls from './GameControls';
 import GameSettingsPanel from './GameSettingsPanel';
 import GameHeader from './GameHeader';
@@ -21,6 +22,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
   const gameRef = useRef<HTMLDivElement>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [foodEaten, setFoodEaten] = useState(false);
+  const { theme } = useTheme();
   
   // useSnakeGame hook must be called consistently
   const { gameState, score, highScore, direction, gameOver, moveSnake, resetGame } = useSnakeGame(speed, gameMode);
@@ -28,6 +30,11 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
   const GRID_SIZE = 20;
   const GAME_WIDTH = 300;
   const GAME_HEIGHT = 300;
+
+  // Theme-based background classes
+  const backgroundClass = theme === 'light' 
+    ? 'bg-white text-gray-900' 
+    : 'bg-black text-green-400';
 
   console.log('SnakeGame: Rendered with props:', { speed, gameMode, gameOver, score, highScore });
   console.log('SnakeGame: Game state:', { 
@@ -82,7 +89,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
     if (gameRef.current) {
       try {
         const canvas = await html2canvas(gameRef.current, {
-          backgroundColor: '#000000',
+          backgroundColor: theme === 'light' ? '#ffffff' : '#000000',
           scale: 2,
         });
         
@@ -105,10 +112,10 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
         });
       }
     }
-  }, [score]);
+  }, [score, theme]);
 
   return (
-    <div ref={gameRef} className="flex flex-col items-center justify-center h-full px-4 bg-black">
+    <div ref={gameRef} className={`flex flex-col items-center justify-center h-full px-4 transition-colors duration-300 ${backgroundClass}`}>
       <GameHeader
         score={score}
         highScore={highScore}

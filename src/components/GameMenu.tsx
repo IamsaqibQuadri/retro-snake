@@ -1,11 +1,13 @@
+
 import React, { useEffect, useState } from 'react';
-import { Trophy, Gamepad2, Play, Crown, ArrowLeft, Sun, Moon, Speaker } from 'lucide-react';
+import { Trophy, Gamepad2, Play, Crown, ArrowLeft, Sun, Moon, Speaker, Settings } from 'lucide-react';
 import { useGameSettings } from '../contexts/GameSettingsContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import { useLeaderboard } from '../hooks/useLeaderboard';
 import EnhancedBackgroundSnake from './EnhancedBackgroundSnake';
 import Leaderboard from './Leaderboard';
+import GameSettingsPanel from './GameSettingsPanel';
 
 interface GameMenuProps {
   onStartGame: (speed: 'slow' | 'normal' | 'fast', gameMode: 'classic' | 'modern') => void;
@@ -14,6 +16,7 @@ interface GameMenuProps {
 const GameMenu = ({ onStartGame }: GameMenuProps) => {
   const [highScore, setHighScore] = useState(0);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [currentStep, setCurrentStep] = useState<'welcome' | 'setup'>('welcome');
   const [selectedSpeed, setSelectedSpeed] = useState<'slow' | 'normal' | 'fast' | null>(null);
   const [gameMode, setGameMode] = useState<'classic' | 'modern'>('classic');
@@ -40,6 +43,11 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
     background: theme === 'light' ? 'bg-green-600/10' : 'bg-green-400/10',
     hover: theme === 'light' ? 'hover:bg-green-600/20' : 'hover:bg-green-400/20',
   };
+
+  // Theme-based background classes
+  const backgroundClass = theme === 'light' 
+    ? 'bg-white text-gray-900' 
+    : 'bg-black text-green-400';
 
   const handleProceedToSetup = () => {
     console.log('GameMenu: Proceeding to setup screen');
@@ -70,9 +78,20 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full px-4 py-4 text-center relative">
+    <div className={`flex flex-col items-center justify-center h-full px-4 py-4 text-center relative transition-colors duration-300 ${backgroundClass}`}>
       {/* Enhanced Background Snake */}
       <EnhancedBackgroundSnake />
+
+      {/* Top-left settings button */}
+      <div className="absolute top-4 left-4 z-20">
+        <button
+          onClick={() => setShowSettings(true)}
+          className={`p-2 rounded-lg border-2 ${themeColors.border} ${themeColors.background} ${themeColors.primary} ${themeColors.hover} transition-all duration-200`}
+          title="Game Settings"
+        >
+          <Settings size={20} />
+        </button>
+      </div>
 
       {/* Top-right controls */}
       <div className="absolute top-4 right-4 z-20 flex gap-2">
@@ -100,8 +119,8 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
       {/* Updated Watermark - Bottom Right */}
       <div className="absolute bottom-2 right-2 z-20 md:bottom-4 md:right-4">
         <div className={`${themeColors.background} border ${themeColors.border.replace('border-', 'border-').replace('-400', '-400/20').replace('-600', '-600/20')} rounded-lg p-2`}>
-          <p className={`${themeColors.primary} text-xs font-bold`}>🐍 SNAKE RETRO</p>
-          <p className={`${themeColors.secondary} text-xs opacity-70`}>Classic Edition</p>
+          <p className={`${themeColors.primary} text-xs font-bold`}>🐍 Classic Edition</p>
+          <p className={`${themeColors.secondary} text-xs opacity-70`}>Made by Saqib</p>
         </div>
       </div>
 
@@ -279,6 +298,12 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
           </>
         )}
       </div>
+
+      {/* Settings Panel */}
+      <GameSettingsPanel 
+        isOpen={showSettings} 
+        onClose={() => setShowSettings(false)} 
+      />
     </div>
   );
 };
