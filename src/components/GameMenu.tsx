@@ -1,10 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
-import { Trophy, Gamepad2, Play, Crown, ArrowLeft } from 'lucide-react';
+import { Trophy, Gamepad2, Play, Crown, ArrowLeft, Sun, Moon, Speaker } from 'lucide-react';
 import { useGameSettings } from '../contexts/GameSettingsContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import { useLeaderboard } from '../hooks/useLeaderboard';
-import BackgroundSnake from './BackgroundSnake';
+import EnhancedBackgroundSnake from './EnhancedBackgroundSnake';
 import Leaderboard from './Leaderboard';
 
 interface GameMenuProps {
@@ -17,7 +17,8 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
   const [currentStep, setCurrentStep] = useState<'welcome' | 'setup'>('welcome');
   const [selectedSpeed, setSelectedSpeed] = useState<'slow' | 'normal' | 'fast' | null>(null);
   const [gameMode, setGameMode] = useState<'classic' | 'modern'>('classic');
-  const { settings } = useGameSettings();
+  const { settings, toggleSound } = useGameSettings();
+  const { theme, toggleTheme } = useTheme();
   const { leaderboard, clearLeaderboard } = useLeaderboard();
 
   // Background music
@@ -30,6 +31,15 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
     }
     console.log('GameMenu: High score loaded:', savedHighScore);
   }, []);
+
+  // Theme-based colors
+  const themeColors = {
+    primary: theme === 'light' ? 'text-green-600' : 'text-green-400',
+    secondary: theme === 'light' ? 'text-gray-600' : 'text-green-300',
+    border: theme === 'light' ? 'border-green-600' : 'border-green-400',
+    background: theme === 'light' ? 'bg-green-600/10' : 'bg-green-400/10',
+    hover: theme === 'light' ? 'hover:bg-green-600/20' : 'hover:bg-green-400/20',
+  };
 
   const handleProceedToSetup = () => {
     console.log('GameMenu: Proceeding to setup screen');
@@ -62,13 +72,36 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 py-4 text-center relative">
       {/* Enhanced Background Snake */}
-      <BackgroundSnake />
+      <EnhancedBackgroundSnake />
+
+      {/* Top-right controls */}
+      <div className="absolute top-4 right-4 z-20 flex gap-2">
+        <button
+          onClick={toggleSound}
+          className={`p-2 rounded-lg border-2 transition-all duration-200 ${
+            settings.soundEnabled 
+              ? `${themeColors.border} ${themeColors.background} ${themeColors.primary}` 
+              : `border-gray-600 bg-gray-600/10 text-gray-400`
+          } ${themeColors.hover}`}
+          title={settings.soundEnabled ? 'Mute sounds' : 'Enable sounds'}
+        >
+          <Speaker size={20} />
+        </button>
+        
+        <button
+          onClick={toggleTheme}
+          className={`p-2 rounded-lg border-2 ${themeColors.border} ${themeColors.background} ${themeColors.primary} ${themeColors.hover} transition-all duration-200`}
+          title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+        >
+          {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+        </button>
+      </div>
 
       {/* Updated Watermark - Bottom Right */}
       <div className="absolute bottom-2 right-2 z-20 md:bottom-4 md:right-4">
-        <div className="bg-green-400/10 border border-green-400/20 rounded-lg p-2">
-          <p className="text-green-400 text-xs font-bold">🐍 SNAKE RETRO</p>
-          <p className="text-green-300 text-xs opacity-70">Classic Edition</p>
+        <div className={`${themeColors.background} border ${themeColors.border.replace('border-', 'border-').replace('-400', '-400/20').replace('-600', '-600/20')} rounded-lg p-2`}>
+          <p className={`${themeColors.primary} text-xs font-bold`}>🐍 SNAKE RETRO</p>
+          <p className={`${themeColors.secondary} text-xs opacity-70`}>Classic Edition</p>
         </div>
       </div>
 
@@ -90,15 +123,15 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
                 />
               </div>
               
-              <p className="text-green-300 text-sm tracking-wide mt-2 mb-1">🎮 Snake Retro Edition 🎮</p>
-              <p className="text-green-200 text-xs tracking-wide">Fast. Offline. Classic fun</p>
+              <p className={`${themeColors.secondary} text-sm tracking-wide mt-2 mb-1`}>🎮 Snake Retro Edition 🎮</p>
+              <p className={`${themeColors.secondary} text-xs tracking-wide`}>Fast. Offline. Classic fun</p>
             </div>
 
             {/* Start Game Button */}
             <div className="mb-8">
               <button
                 onClick={handleProceedToSetup}
-                className="w-full flex items-center justify-center gap-3 py-4 px-6 border-2 border-green-400 bg-green-400/10 text-green-400 hover:bg-green-400/20 transition-all duration-200 rounded-lg text-lg font-bold animate-pulse relative z-10"
+                className={`w-full flex items-center justify-center gap-3 py-4 px-6 border-2 ${themeColors.border} ${themeColors.background} ${themeColors.primary} ${themeColors.hover} transition-all duration-200 rounded-lg text-lg font-bold animate-pulse relative z-10`}
               >
                 <Play size={20} />
                 <span>START GAME</span>
@@ -106,7 +139,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
             </div>
 
             {/* Instructions */}
-            <div className="text-green-300 text-xs space-y-1 mb-4">
+            <div className={`${themeColors.secondary} text-xs space-y-1 mb-4`}>
               <p>🎮 Use arrow keys or control buttons</p>
               <p>🍎 Eat food to grow and score</p>
               <p>💀 Don't hit walls or yourself!</p>
@@ -120,7 +153,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
             <div className="mb-6 flex justify-start">
               <button
                 onClick={handleBackToWelcome}
-                className="flex items-center gap-2 px-3 py-2 border border-green-400/50 bg-green-400/5 text-green-400 hover:bg-green-400/10 transition-all duration-200 rounded-lg text-sm"
+                className={`flex items-center gap-2 px-3 py-2 border ${themeColors.border.replace('border-', 'border-').replace('-400', '-400/50').replace('-600', '-600/50')} ${themeColors.background.replace('bg-', 'bg-').replace('/10', '/5')} ${themeColors.primary} ${themeColors.hover.replace('hover:bg-', 'hover:bg-').replace('/20', '/10')} transition-all duration-200 rounded-lg text-sm`}
               >
                 <ArrowLeft size={16} />
                 Back
@@ -130,7 +163,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
             {/* High Score and Leaderboard */}
             <div className="mb-6 flex gap-2">
               {highScore > 0 && (
-                <div className="flex-1 p-3 border-2 border-green-400 bg-green-400/10 rounded-lg">
+                <div className={`flex-1 p-3 border-2 ${themeColors.border} ${themeColors.background} rounded-lg`}>
                   <div className="flex items-center justify-center gap-2 text-yellow-400">
                     <Trophy size={16} />
                     <span className="text-sm font-bold">HIGH: {highScore}</span>
@@ -163,14 +196,14 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
 
             {/* Game Mode Selection */}
             <div className="mb-6">
-              <h2 className="text-lg font-bold text-green-400 mb-4">GAME MODE</h2>
+              <h2 className={`text-lg font-bold ${themeColors.primary} mb-4`}>GAME MODE</h2>
               <div className="flex justify-center gap-2">
                 <button
                   onClick={() => handleModeSelection('classic')}
                   className={`px-4 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${
                     gameMode === 'classic'
-                      ? 'border-green-400 bg-green-400/20 text-green-400'
-                      : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-green-400/50'
+                      ? `${themeColors.border} ${themeColors.background.replace('/10', '/20')} ${themeColors.primary}`
+                      : `border-gray-600 bg-gray-600/10 text-gray-400 hover:border-green-400/50`
                   }`}
                 >
                   🏛️ CLASSIC
@@ -190,15 +223,15 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
 
             {/* Speed Selection */}
             <div className="mb-6">
-              <h2 className="text-lg font-bold text-green-400 mb-4">SELECT SPEED</h2>
+              <h2 className={`text-lg font-bold ${themeColors.primary} mb-4`}>SELECT SPEED</h2>
               
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => handleSpeedSelection('slow')}
                   className={`w-20 h-20 text-sm font-bold border-2 rounded-lg flex flex-col items-center justify-center transition-all duration-200 ${
                     selectedSpeed === 'slow'
-                      ? 'border-green-400 bg-green-400/20 text-green-400'
-                      : 'border-green-400 bg-green-400/10 text-green-400 hover:bg-green-400/20'
+                      ? `${themeColors.border} ${themeColors.background.replace('/10', '/20')} ${themeColors.primary}`
+                      : `${themeColors.border} ${themeColors.background} ${themeColors.primary} ${themeColors.hover}`
                   }`}
                 >
                   <span className="text-lg">🐌</span>
@@ -236,7 +269,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
               <div className="mb-6">
                 <button
                   onClick={handleStartGame}
-                  className="w-full flex items-center justify-center gap-3 py-4 px-6 border-2 border-green-400 bg-green-400/10 text-green-400 hover:bg-green-400/20 transition-all duration-200 rounded-lg text-lg font-bold animate-pulse"
+                  className={`w-full flex items-center justify-center gap-3 py-4 px-6 border-2 ${themeColors.border} ${themeColors.background} ${themeColors.primary} ${themeColors.hover} transition-all duration-200 rounded-lg text-lg font-bold animate-pulse`}
                 >
                   <Gamepad2 size={20} />
                   <span>PLAY NOW</span>
