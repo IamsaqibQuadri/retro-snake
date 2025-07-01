@@ -64,13 +64,12 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
       {/* Enhanced Background Snake */}
       <BackgroundSnake />
 
-      {/* Watermark - Bottom Right */}
+      {/* Updated Watermark - Bottom Right */}
       <div className="absolute bottom-2 right-2 z-20 md:bottom-4 md:right-4">
-        <img 
-          src="/lovable-uploads/497fd7e1-4d9e-449f-8fd9-bc8c8c52ea9a.png" 
-          alt="Made by Saqib" 
-          className="w-12 h-12 md:w-16 md:h-16 opacity-80"
-        />
+        <div className="bg-green-400/10 border border-green-400/20 rounded-lg p-2">
+          <p className="text-green-400 text-xs font-bold">🐍 SNAKE RETRO</p>
+          <p className="text-green-300 text-xs opacity-70">Classic Edition</p>
+        </div>
       </div>
 
       {/* Content Container with higher z-index */}
@@ -139,17 +138,16 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
                 </div>
               )}
               
-              {leaderboard.length > 0 && (
-                <button
-                  onClick={() => {
-                    console.log('GameMenu: Toggling leaderboard:', !showLeaderboard);
-                    setShowLeaderboard(!showLeaderboard);
-                  }}
-                  className="px-3 py-2 border-2 border-purple-400 bg-purple-400/10 text-purple-400 hover:bg-purple-400/20 transition-all duration-200 rounded-lg"
-                >
-                  <Crown size={16} />
-                </button>
-              )}
+              <button
+                onClick={() => {
+                  console.log('GameMenu: Toggling leaderboard:', !showLeaderboard);
+                  console.log('GameMenu: Current leaderboard entries:', leaderboard);
+                  setShowLeaderboard(!showLeaderboard);
+                }}
+                className="px-3 py-2 border-2 border-purple-400 bg-purple-400/10 text-purple-400 hover:bg-purple-400/20 transition-all duration-200 rounded-lg"
+              >
+                <Crown size={16} />
+              </button>
             </div>
 
             {/* Leaderboard */}

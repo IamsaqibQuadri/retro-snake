@@ -17,10 +17,13 @@ interface SnakeGameProps {
 }
 
 const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
+  // All hooks must be called in the same order every time
   const gameRef = useRef<HTMLDivElement>(null);
-  const { gameState, score, highScore, direction, gameOver, moveSnake, resetGame } = useSnakeGame(speed, gameMode);
   const [showSettings, setShowSettings] = useState(false);
   const [foodEaten, setFoodEaten] = useState(false);
+  
+  // useSnakeGame hook must be called consistently
+  const { gameState, score, highScore, direction, gameOver, moveSnake, resetGame } = useSnakeGame(speed, gameMode);
 
   const GRID_SIZE = 20;
   const GAME_WIDTH = 300;
@@ -74,7 +77,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
     }
   }, [gameOver, score, highScore]);
 
-  const takeScreenshot = async () => {
+  const takeScreenshot = useCallback(async () => {
     console.log('SnakeGame: Taking screenshot...');
     if (gameRef.current) {
       try {
@@ -102,7 +105,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
         });
       }
     }
-  };
+  }, [score]);
 
   return (
     <div ref={gameRef} className="flex flex-col items-center justify-center h-full px-4 bg-black">
