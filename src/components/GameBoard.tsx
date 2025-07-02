@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useGameSettings } from '../contexts/GameSettingsContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { Position, Direction } from '../types/gameTypes';
 
 interface GameBoardProps {
@@ -15,6 +16,7 @@ interface GameBoardProps {
 
 const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, gridSize }: GameBoardProps) => {
   const { settings } = useGameSettings();
+  const { theme } = useTheme();
 
   // Snake head with tongue effect and eating glow
   const renderSnakeHead = (segment: Position, index: number) => {
@@ -76,8 +78,13 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
     />
   );
 
+  // Theme-based background and border
+  const boardStyles = theme === 'light' 
+    ? 'bg-gray-50 border-green-600' 
+    : 'bg-black border-green-400';
+
   return (
-    <div className="relative border-2 border-green-400 bg-black rounded-lg overflow-hidden" 
+    <div className={`relative border-2 ${boardStyles} rounded-lg overflow-hidden`} 
          style={{ width: gameWidth, height: gameHeight }}>
       
       {/* Snake */}
