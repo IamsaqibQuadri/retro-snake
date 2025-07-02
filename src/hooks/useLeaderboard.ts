@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const LEADERBOARD_KEY = 'snake-leaderboard';
+const LEADERBOARD_KEY = 'snake-leaderboard-global';
 
 export interface LeaderboardEntry {
   score: number;
@@ -8,6 +8,7 @@ export interface LeaderboardEntry {
   gameMode: 'classic' | 'modern';
   speed: 'slow' | 'normal' | 'fast';
   timestamp: number;
+  playerId: string;
 }
 
 export const useLeaderboard = () => {
@@ -30,10 +31,16 @@ export const useLeaderboard = () => {
               typeof entry.date === 'string' &&
               typeof entry.gameMode === 'string' &&
               typeof entry.speed === 'string' &&
-              typeof entry.timestamp === 'number';
+              typeof entry.timestamp === 'number' &&
+              (typeof entry.playerId === 'string' || entry.playerId === undefined);
             
             if (!isValid) {
               console.warn('useLeaderboard: Invalid entry found:', entry);
+            }
+            
+            // Add playerId to legacy entries
+            if (isValid && !entry.playerId) {
+              entry.playerId = 'Legacy_Player';
             }
             
             return isValid;
@@ -80,12 +87,20 @@ export const useLeaderboard = () => {
   const addScore = useCallback((score: number, gameMode: 'classic' | 'modern', speed: 'slow' | 'normal' | 'fast') => {
     console.log('useLeaderboard: Adding new score:', { score, gameMode, speed });
     
+    // Generate or get persistent player ID
+    let playerId = localStorage.getItem('snake-player-id');
+    if (!playerId) {
+      playerId = `Player_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem('snake-player-id', playerId);
+    }
+    
     const newEntry: LeaderboardEntry = {
       score,
       date: new Date().toLocaleDateString(),
       gameMode,
       speed,
       timestamp: Date.now(),
+      playerId,
     };
 
     setLeaderboard(prev => {

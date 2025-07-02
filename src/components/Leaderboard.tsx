@@ -59,7 +59,12 @@ const Leaderboard = ({ entries, onClear }: LeaderboardProps) => {
             {getIcon(index)}
             <div className="flex flex-col">
               <span className="text-green-400 font-bold text-sm">{entry.score}</span>
-              <span className="text-green-300 text-xs">{entry.date}</span>
+              <div className="flex items-center gap-1">
+                <span className="text-green-300 text-xs">{entry.date}</span>
+                {entry.playerId && (
+                  <span className="text-green-300/70 text-xs">• {entry.playerId}</span>
+                )}
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-1 text-xs">

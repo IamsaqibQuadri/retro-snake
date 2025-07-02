@@ -106,7 +106,7 @@ const EnhancedBackgroundSnake = () => {
   }, [shouldChangeDirection]);
 
   return (
-    <div className="fixed inset-0 opacity-30 pointer-events-none overflow-hidden z-0">
+    <div className="fixed inset-0 opacity-50 pointer-events-none overflow-hidden z-0">
       <div className="relative w-full h-full">
         {/* Snake */}
         {snake.map((segment, index) => (
