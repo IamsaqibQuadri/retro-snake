@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface GameOverlayProps {
   gameOver: boolean;
@@ -11,10 +12,15 @@ interface GameOverlayProps {
 }
 
 const GameOverlay = ({ gameOver, score, highScore, onNewGame, onBackToMenu, onTakeScreenshot }: GameOverlayProps) => {
+  const { theme } = useTheme();
+  
   if (!gameOver) return null;
 
+  // Theme-based overlay background
+  const overlayBg = theme === 'light' ? 'bg-white/95' : 'bg-black/90';
+
   return (
-    <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center p-4">
+    <div className={`absolute inset-0 ${overlayBg} flex flex-col items-center justify-center text-center p-4`}>
       <h2 className="text-xl font-bold text-red-400 mb-2">GAME OVER</h2>
       <p className="text-green-400 text-lg mb-2">Score: {score}</p>
       {score === highScore && score > 0 && (
