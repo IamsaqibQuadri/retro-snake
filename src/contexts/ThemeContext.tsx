@@ -1,10 +1,11 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-export type Theme = 'dark' | 'light';
+export type Theme = 'dark' | 'light' | 'pastel' | 'matrix' | 'retro' | 'ghibli';
 
 interface ThemeContextType {
   theme: Theme;
+  setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
 }
 
@@ -18,6 +19,8 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     localStorage.setItem('snake-theme', theme);
+    // Apply theme class to document body
+    document.body.className = theme === 'light' ? '' : theme;
   }, [theme]);
 
   const toggleTheme = () => {
@@ -25,7 +28,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

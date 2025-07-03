@@ -1,15 +1,17 @@
-import React from 'react';
-import { Settings, Speaker, Sun, Moon } from 'lucide-react';
+import React, { useState } from 'react';
+import { Settings, Speaker } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
+import ThemeSelector from '../ThemeSelector';
 
 interface TopControlsProps {
   onShowSettings: () => void;
 }
 
 const TopControls = ({ onShowSettings }: TopControlsProps) => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const { settings, toggleSound } = useGameSettings();
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
 
   const themeColors = {
     primary: theme === 'light' ? 'text-green-600' : 'text-green-400',
@@ -46,13 +48,18 @@ const TopControls = ({ onShowSettings }: TopControlsProps) => {
         </button>
         
         <button
-          onClick={toggleTheme}
+          onClick={() => setShowThemeSelector(true)}
           className={`p-2 rounded-lg border-2 ${themeColors.border} ${themeColors.background} ${themeColors.primary} ${themeColors.hover} transition-all duration-200`}
-          title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+          title="Change theme"
         >
-          {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+          🎨
         </button>
       </div>
+      
+      <ThemeSelector 
+        isOpen={showThemeSelector} 
+        onClose={() => setShowThemeSelector(false)} 
+      />
     </>
   );
 };

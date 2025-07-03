@@ -140,6 +140,8 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
           gameOver={gameOver}
           score={score}
           highScore={highScore}
+          gameMode={gameMode}
+          speed={speed}
           onNewGame={handleNewGame}
           onBackToMenu={handleBackToMenu}
           onTakeScreenshot={takeScreenshot}
