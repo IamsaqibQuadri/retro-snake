@@ -17,19 +17,9 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
 
   console.log('GameCountdown: Starting countdown with:', { gameMode, speed });
 
-  // Theme-based background classes
-  const backgroundClass = theme === 'light' 
-    ? 'bg-white/95 text-gray-900' 
-    : 'bg-black/95 text-green-400';
-
-  // Theme-based colors
-  const themeColors = {
-    primary: theme === 'light' ? 'text-green-600' : 'text-green-400',
-    secondary: theme === 'light' ? 'text-gray-600' : 'text-green-300',
-    border: theme === 'light' ? 'border-green-600' : 'border-green-400',
-    background: theme === 'light' ? 'bg-green-600/10' : 'bg-green-400/10',
-    hover: theme === 'light' ? 'hover:bg-green-600/20' : 'hover:bg-green-400/20',
-  };
+  // Using design system tokens for consistent theming
+  const backgroundClass = 'bg-background/95 text-foreground';
+  const buttonClasses = "p-2 rounded-lg border border-border bg-card text-card-foreground hover:bg-muted transition-all duration-200";
 
   useEffect(() => {
     console.log('GameCountdown: Starting countdown timer');
@@ -76,7 +66,7 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
         <div className="absolute top-4 left-4 z-20">
           <button
             onClick={() => setShowSettings(true)}
-            className={`p-2 rounded-lg border-2 ${themeColors.border} ${themeColors.background} ${themeColors.primary} ${themeColors.hover} transition-all duration-200`}
+            className={buttonClasses}
             title="Game Settings"
           >
             <Settings size={20} />
@@ -84,10 +74,10 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
         </div>
 
         <div className="text-center">
-          <div className={`text-6xl md:text-8xl font-bold animate-pulse mb-4 ${themeColors.primary}`}>
+          <div className="text-6xl md:text-8xl font-bold animate-pulse mb-4 text-primary">
             GO!
           </div>
-          <div className={`text-lg ${themeColors.secondary}`}>
+          <div className="text-lg text-muted-foreground">
             {getModeEmoji(gameMode)} {gameMode.toUpperCase()} • {getSpeedEmoji(speed)} {speed.toUpperCase()}
           </div>
         </div>
@@ -107,7 +97,7 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
       <div className="absolute top-4 left-4 z-20">
         <button
           onClick={() => setShowSettings(true)}
-          className={`p-2 rounded-lg border-2 ${themeColors.border} ${themeColors.background} ${themeColors.primary} ${themeColors.hover} transition-all duration-200`}
+          className={buttonClasses}
           title="Game Settings"
         >
           <Settings size={20} />
@@ -115,11 +105,11 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
       </div>
 
       <div className="text-center">
-        <div className={`text-8xl md:text-9xl font-bold animate-pulse mb-6 ${themeColors.primary}`}>
+        <div className="text-8xl md:text-9xl font-bold animate-pulse mb-6 text-primary">
           {count}
         </div>
-        <div className={`text-xl mb-4 ${themeColors.secondary}`}>Get Ready!</div>
-        <div className={`text-lg ${themeColors.secondary}`}>
+        <div className="text-xl mb-4 text-muted-foreground">Get Ready!</div>
+        <div className="text-lg text-muted-foreground">
           {getModeEmoji(gameMode)} {gameMode.toUpperCase()} • {getSpeedEmoji(speed)} {speed.toUpperCase()}
         </div>
       </div>

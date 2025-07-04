@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-export type Theme = 'dark' | 'light' | 'pastel' | 'matrix' | 'retro' | 'ghibli';
+export type Theme = 'light' | 'dark' | 'pastel';
 
 interface ThemeContextType {
   theme: Theme;
@@ -27,7 +27,14 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+    setTheme(prev => {
+      switch (prev) {
+        case 'light': return 'dark';
+        case 'dark': return 'pastel';
+        case 'pastel': return 'light';
+        default: return 'light';
+      }
+    });
   };
 
   return (

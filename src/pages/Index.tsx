@@ -26,10 +26,8 @@ const GameContent = () => {
     setGameState('menu');
   };
 
-  // Theme-based background classes
-  const backgroundClass = theme === 'light' 
-    ? 'bg-white text-gray-900' 
-    : 'bg-black text-green-400';
+  // Using design system tokens for consistent theming
+  const backgroundClass = 'bg-background text-foreground';
 
   return (
     <div className={`min-h-screen font-mono overflow-hidden transition-colors duration-300 ${backgroundClass}`}>

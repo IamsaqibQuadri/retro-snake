@@ -37,10 +37,8 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
     console.log('GameMenu: High score loaded:', savedHighScore);
   }, []);
 
-  // Theme-based background classes
-  const backgroundClass = theme === 'light' 
-    ? 'bg-white text-gray-900' 
-    : 'bg-black text-green-400';
+  // Using design system tokens for consistent theming
+  const backgroundClass = 'bg-background text-foreground';
 
   const handleProceedToSetup = () => {
     console.log('GameMenu: Proceeding to setup screen');

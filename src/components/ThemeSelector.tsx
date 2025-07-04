@@ -8,12 +8,9 @@ interface ThemeSelectorProps {
 }
 
 const themes: { value: Theme; label: string; description: string }[] = [
-  { value: 'light', label: 'Light', description: 'Clean and bright' },
-  { value: 'dark', label: 'Dark', description: 'Classic dark mode' },
-  { value: 'pastel', label: 'Pastel', description: 'Soft mint & peach colors' },
-  { value: 'matrix', label: 'Matrix', description: 'Green digital vibes' },
-  { value: 'retro', label: 'GameBoy', description: 'Retro green nostalgia' },
-  { value: 'ghibli', label: 'Ghibli', description: 'Magical forest colors' },
+  { value: 'light', label: 'Day', description: 'Clean and bright' },
+  { value: 'dark', label: 'Night', description: 'Classic dark mode' },
+  { value: 'pastel', label: 'Pastel Dreams', description: 'Soft retro vibes' },
 ];
 
 const ThemeSelector = ({ isOpen, onClose }: ThemeSelectorProps) => {

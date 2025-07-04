@@ -28,9 +28,6 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
       case 'light': return 'bg-background/95';
       case 'dark': return 'bg-background/90';
       case 'pastel': return 'bg-background/95';
-      case 'matrix': return 'bg-background/90';
-      case 'retro': return 'bg-background/95';
-      case 'ghibli': return 'bg-background/95';
       default: return 'bg-background/90';
     }
   };

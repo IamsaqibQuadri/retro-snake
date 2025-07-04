@@ -78,10 +78,8 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
     />
   );
 
-  // Theme-based background and border
-  const boardStyles = theme === 'light' 
-    ? 'bg-gray-50 border-green-600' 
-    : 'bg-black border-green-400';
+  // Using design system tokens for consistent theming
+  const boardStyles = 'bg-card border-border';
 
   return (
     <div className={`relative border-2 ${boardStyles} rounded-lg overflow-hidden`} 

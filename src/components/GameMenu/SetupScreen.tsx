@@ -30,12 +30,8 @@ const SetupScreen = ({
 }: SetupScreenProps) => {
   const { theme } = useTheme();
 
-  const themeColors = {
-    primary: theme === 'light' ? 'text-green-600' : 'text-green-400',
-    border: theme === 'light' ? 'border-green-600' : 'border-green-400',
-    background: theme === 'light' ? 'bg-green-600/10' : 'bg-green-400/10',
-    hover: theme === 'light' ? 'hover:bg-green-600/20' : 'hover:bg-green-400/20',
-  };
+  // Using design system tokens for consistent theming
+  const buttonClasses = "border border-border bg-card text-card-foreground hover:bg-muted transition-all duration-200 rounded-lg";
 
   return (
     <>
@@ -43,7 +39,7 @@ const SetupScreen = ({
       <div className="mb-6 flex justify-start">
         <button
           onClick={onBackToWelcome}
-          className={`flex items-center gap-2 px-3 py-2 border ${themeColors.border.replace('border-', 'border-').replace('-400', '-400/50').replace('-600', '-600/50')} ${themeColors.background.replace('bg-', 'bg-').replace('/10', '/5')} ${themeColors.primary} ${themeColors.hover.replace('hover:bg-', 'hover:bg-').replace('/20', '/10')} transition-all duration-200 rounded-lg text-sm`}
+          className={`flex items-center gap-2 px-3 py-2 ${buttonClasses} text-sm`}
         >
           <ArrowLeft size={16} />
           Back
@@ -71,7 +67,7 @@ const SetupScreen = ({
         <div className="mb-6">
           <button
             onClick={onStartGame}
-            className={`w-full flex items-center justify-center gap-3 py-4 px-6 border-2 ${themeColors.border} ${themeColors.background} ${themeColors.primary} ${themeColors.hover} transition-all duration-200 rounded-lg text-lg font-bold animate-pulse`}
+            className="w-full flex items-center justify-center gap-3 py-4 px-6 border-2 border-primary bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 rounded-lg text-lg font-bold animate-pulse"
           >
             <Gamepad2 size={20} />
             <span>PLAY NOW</span>
