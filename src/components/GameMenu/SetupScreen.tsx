@@ -1,20 +1,17 @@
 import React from 'react';
 import { ArrowLeft, Gamepad2 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
-import { LeaderboardEntry } from '../../hooks/useLeaderboard';
 import GameModeSelector from './GameModeSelector';
 import SpeedSelector from './SpeedSelector';
-import LeaderboardSection from './LeaderboardSection';
+import GlobalLeaderboardSection from './GlobalLeaderboardSection';
 
 interface SetupScreenProps {
   highScore: number;
   showLeaderboard: boolean;
-  leaderboard: LeaderboardEntry[];
   gameMode: 'classic' | 'modern';
   selectedSpeed: 'slow' | 'normal' | 'fast' | null;
   onBackToWelcome: () => void;
   onToggleLeaderboard: () => void;
-  onClearLeaderboard: () => void;
   onModeSelect: (mode: 'classic' | 'modern') => void;
   onSpeedSelect: (speed: 'slow' | 'normal' | 'fast') => void;
   onStartGame: () => void;
@@ -23,12 +20,10 @@ interface SetupScreenProps {
 const SetupScreen = ({
   highScore,
   showLeaderboard,
-  leaderboard,
   gameMode,
   selectedSpeed,
   onBackToWelcome,
   onToggleLeaderboard,
-  onClearLeaderboard,
   onModeSelect,
   onSpeedSelect,
   onStartGame
@@ -55,12 +50,10 @@ const SetupScreen = ({
         </button>
       </div>
 
-      <LeaderboardSection
+      <GlobalLeaderboardSection
         highScore={highScore}
         showLeaderboard={showLeaderboard}
-        leaderboard={leaderboard}
         onToggleLeaderboard={onToggleLeaderboard}
-        onClearLeaderboard={onClearLeaderboard}
       />
 
       <GameModeSelector

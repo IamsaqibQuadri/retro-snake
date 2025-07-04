@@ -14,13 +14,16 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem('snake-theme');
-    return (saved as Theme) || 'dark';
+    return (saved as Theme) || 'light';
   });
 
   useEffect(() => {
     localStorage.setItem('snake-theme', theme);
     // Apply theme class to document body
-    document.body.className = theme === 'light' ? '' : theme;
+    document.body.className = '';
+    if (theme !== 'light') {
+      document.body.classList.add(theme);
+    }
   }, [theme]);
 
   const toggleTheme = () => {

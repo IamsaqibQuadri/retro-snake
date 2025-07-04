@@ -86,16 +86,13 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
           <SetupScreen
             highScore={highScore}
             showLeaderboard={showLeaderboard}
-            leaderboard={leaderboard}
             gameMode={gameMode}
             selectedSpeed={selectedSpeed}
             onBackToWelcome={handleBackToWelcome}
             onToggleLeaderboard={() => {
               console.log('GameMenu: Toggling leaderboard:', !showLeaderboard);
-              console.log('GameMenu: Current leaderboard entries:', leaderboard);
               setShowLeaderboard(!showLeaderboard);
             }}
-            onClearLeaderboard={clearLeaderboard}
             onModeSelect={handleModeSelection}
             onSpeedSelect={handleSpeedSelection}
             onStartGame={handleStartGame}
