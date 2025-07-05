@@ -28,6 +28,7 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
       case 'light': return 'bg-background/95';
       case 'dark': return 'bg-background/90';
       case 'pastel': return 'bg-background/95';
+      case 'gameboy': return 'bg-background/90';
       default: return 'bg-background/90';
     }
   };

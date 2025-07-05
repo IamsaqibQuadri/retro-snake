@@ -11,6 +11,7 @@ const themes: { value: Theme; label: string; description: string }[] = [
   { value: 'light', label: 'Day', description: 'Clean and bright' },
   { value: 'dark', label: 'Night', description: 'Classic dark mode' },
   { value: 'pastel', label: 'Pastel Dreams', description: 'Soft retro vibes' },
+  { value: 'gameboy', label: 'Gameboy LCD', description: 'Retro green screen' },
 ];
 
 const ThemeSelector = ({ isOpen, onClose }: ThemeSelectorProps) => {
