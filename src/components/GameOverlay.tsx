@@ -27,8 +27,8 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
     switch (theme) {
       case 'light': return 'bg-background/95';
       case 'dark': return 'bg-background/90';
-      case 'pastel': return 'bg-background/95';
-      case 'gameboy': return 'bg-background/90';
+      case 'pastel': return 'bg-background/90';
+      case 'gameboy': return 'bg-background/85'; // Less opacity for better visibility
       default: return 'bg-background/90';
     }
   };
@@ -52,7 +52,7 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
         <h2 className="text-xl font-bold text-destructive mb-2">GAME OVER</h2>
         <p className="text-primary text-lg mb-2">Score: {score}</p>
         {score === highScore && score > 0 && (
-          <p className="text-yellow-400 text-sm mb-3">🏆 NEW HIGH SCORE!</p>
+          <p className="text-accent text-sm mb-3">🏆 NEW HIGH SCORE!</p>
         )}
         <p className="text-muted-foreground text-xs mb-4">Try again or give up?</p>
         <div className="space-y-2">
@@ -70,7 +70,7 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
           </button>
           <button
             onClick={handleSaveScore}
-            className="block w-full px-4 py-2 border-2 border-yellow-400 bg-yellow-400/10 text-yellow-400 font-bold rounded hover:bg-yellow-400/20 transition-colors text-sm"
+            className="block w-full px-4 py-2 border-2 border-accent bg-accent/10 text-accent font-bold rounded hover:bg-accent/20 transition-colors text-sm"
           >
             🌐 SAVE TO GLOBAL LEADERBOARD
           </button>
