@@ -92,84 +92,84 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  /* Pastel Dreams Theme - Bright and vibrant colors with maximum readability */
+  /* Pastel Dreams Theme - Maximum contrast for readability */
   .pastel {
     /* Soft peachy cream background */
     --background: 35 45% 92%;
-    --foreground: 0 0% 5%; /* Very dark for maximum readability */
+    --foreground: 0 0% 0%; /* Pure black for maximum readability */
     
-    /* Card colors with good contrast */
-    --card: 35 50% 95%;
-    --card-foreground: 0 0% 5%; /* Very dark for maximum readability */
+    /* Card colors with maximum contrast */
+    --card: 0 0% 100%; /* Pure white cards */
+    --card-foreground: 0 0% 0%; /* Pure black text */
     
     /* Popover styling */
-    --popover: 35 50% 95%;
-    --popover-foreground: 0 0% 5%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
     
-    /* Primary: Vibrant mint green */
-    --primary: 158 70% 35%; /* Darker for better contrast */
+    /* Primary: Dark color for contrast */
+    --primary: 158 100% 25%; /* Very dark green */
     --primary-foreground: 0 0% 100%;
     
-    /* Secondary: Vibrant coral/peach */
-    --secondary: 15 80% 55%; /* Slightly darker */
+    /* Secondary: Dark coral */
+    --secondary: 15 100% 40%; /* Dark coral */
     --secondary-foreground: 0 0% 100%;
     
-    /* Muted colors with better contrast */
-    --muted: 35 30% 80%;
-    --muted-foreground: 0 0% 15%; /* Very dark for maximum readability */
+    /* Muted colors with maximum contrast */
+    --muted: 0 0% 95%; /* Light gray */
+    --muted-foreground: 0 0% 0%; /* Pure black */
     
     /* Accent colors */
-    --accent: 280 50% 60%; /* Darker purple for better contrast */
+    --accent: 280 100% 35%; /* Dark purple */
     --accent-foreground: 0 0% 100%;
     
     /* Destructive/error colors */
-    --destructive: 5 85% 50%; /* Darker for better contrast */
+    --destructive: 0 100% 40%; /* Dark red */
     --destructive-foreground: 0 0% 100%;
     
-    /* Borders and inputs with better visibility */
-    --border: 0 0% 25%; /* Dark borders for visibility */
-    --input: 0 0% 25%;
-    --ring: 158 70% 35%;
+    /* Borders and inputs - very dark for visibility */
+    --border: 0 0% 0%; /* Pure black borders */
+    --input: 0 0% 0%;
+    --ring: 158 100% 25%;
   }
 
-  /* Gameboy Retro Theme - Classic LCD green aesthetic with maximum contrast */
+  /* Gameboy Retro Theme - White text on green background for maximum contrast */
   .gameboy {
     /* Classic Gameboy LCD background */
     --background: 74 61% 56%; /* #9bbc0f - LCD green */
-    --foreground: 0 0% 3%; /* Pure dark for maximum contrast */
+    --foreground: 0 0% 100%; /* Pure white text for maximum contrast */
     
-    /* Card styling with LCD aesthetic */
-    --card: 74 45% 48%; /* Darker LCD green for cards */
-    --card-foreground: 0 0% 3%;
+    /* Card styling - darker green with white text */
+    --card: 74 45% 35%; /* Much darker green for cards */
+    --card-foreground: 0 0% 100%; /* White text */
     
     /* Popup styling */
-    --popover: 74 45% 48%;
-    --popover-foreground: 0 0% 3%;
+    --popover: 74 45% 35%;
+    --popover-foreground: 0 0% 100%;
     
-    /* Primary: Very dark for buttons */
-    --primary: 0 0% 8%; /* Almost black for maximum contrast */
-    --primary-foreground: 74 61% 56%;
+    /* Primary: Very dark green for buttons */
+    --primary: 74 100% 15%; /* Very dark green */
+    --primary-foreground: 0 0% 100%;
     
-    /* Secondary: Dark LCD green */
-    --secondary: 74 40% 35%; /* Darker green */
-    --secondary-foreground: 0 0% 3%;
+    /* Secondary: Medium dark green */
+    --secondary: 74 60% 25%; /* Dark green */
+    --secondary-foreground: 0 0% 100%;
     
-    /* Muted tones with strong contrast */
-    --muted: 74 30% 40%;
-    --muted-foreground: 0 0% 8%; /* Very dark */
+    /* Muted tones with white text */
+    --muted: 74 40% 30%;
+    --muted-foreground: 0 0% 100%; /* White text */
     
-    /* Accent using very dark color */
-    --accent: 0 0% 12%;
-    --accent-foreground: 74 61% 56%;
+    /* Accent using very dark green */
+    --accent: 74 100% 20%;
+    --accent-foreground: 0 0% 100%;
     
     /* Error in high contrast */
-    --destructive: 0 0% 5%; /* Very dark for errors */
-    --destructive-foreground: 74 61% 56%;
+    --destructive: 0 100% 25%; /* Very dark red */
+    --destructive-foreground: 0 0% 100%;
     
-    /* Borders and inputs - dark for visibility */
-    --border: 0 0% 15%; /* Dark borders */
-    --input: 0 0% 15%;
-    --ring: 0 0% 8%;
+    /* Borders and inputs - very dark for visibility */
+    --border: 0 0% 100%; /* White borders for visibility */
+    --input: 0 0% 100%;
+    --ring: 0 0% 100%;
   }
 }
 

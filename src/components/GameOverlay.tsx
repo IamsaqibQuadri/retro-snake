@@ -22,14 +22,14 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
   
   if (!gameOver) return null;
 
-  // Theme-aware overlay background
+  // Theme-aware overlay background with better visibility
   const getOverlayBg = () => {
     switch (theme) {
-      case 'light': return 'bg-background/95';
-      case 'dark': return 'bg-background/90';
-      case 'pastel': return 'bg-background/90';
-      case 'gameboy': return 'bg-background/85'; // Less opacity for better visibility
-      default: return 'bg-background/90';
+      case 'light': return 'bg-white/95 backdrop-blur-md';
+      case 'dark': return 'bg-black/90 backdrop-blur-md';
+      case 'pastel': return 'bg-white/95 backdrop-blur-md'; // White overlay for pastel
+      case 'gameboy': return 'bg-black/80 backdrop-blur-md'; // Dark overlay for gameboy
+      default: return 'bg-background/90 backdrop-blur-md';
     }
   };
 
