@@ -25,11 +25,12 @@ export const useBackgroundMusic = (shouldPlay: boolean = false) => {
     oscillator.connect(gainNode);
     gainNode.connect(context.destination);
 
-    // Energetic 8-bit style melody (Mario-inspired upbeat tune)
+    // Upbeat retro arcade melody (Tetris-inspired)
     const notes = [
-      523.25, 659.25, 783.99, 1046.50, // C5, E5, G5, C6 - ascending
-      783.99, 659.25, 523.25, 659.25,  // G5, E5, C5, E5 - playful bounce
-      783.99, 1046.50, 987.77, 880.00  // G5, C6, B5, A5 - energetic finish
+      659.25, 493.88, 523.25, 587.33, // E5, B4, C5, D5 - classic tetris opening
+      523.25, 493.88, 440.00, 440.00, // C5, B4, A4, A4 - smooth transition
+      523.25, 659.25, 587.33, 523.25, // C5, E5, D5, C5 - catchy melody
+      493.88, 523.25, 587.33, 659.25  // B4, C5, D5, E5 - uplifting finish
     ];
     let noteIndex = 0;
 
@@ -56,8 +57,8 @@ export const useBackgroundMusic = (shouldPlay: boolean = false) => {
     oscillatorRef.current = oscillator;
     gainNodeRef.current = gainNode;
 
-    // Faster tempo for more energy
-    const interval = setInterval(playNote, 400);
+    // Medium tempo for pleasant listening
+    const interval = setInterval(playNote, 500);
 
     // Play for 8 seconds
     setTimeout(() => {

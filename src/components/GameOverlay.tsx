@@ -47,7 +47,7 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
 
   return (
     <>
-      <div className={`absolute inset-0 ${getOverlayBg()} flex flex-col items-center justify-center text-center p-4`}>
+      <div className={`absolute inset-0 ${getOverlayBg()} backdrop-blur-sm flex flex-col items-center justify-center text-center p-4 z-50`}>
         <h2 className="text-xl font-bold text-destructive mb-2">GAME OVER</h2>
         <p className="text-primary text-lg mb-2">Score: {score}</p>
         {score === highScore && score > 0 && (

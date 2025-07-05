@@ -76,34 +76,42 @@ const EnhancedBackgroundSnake = () => {
 
         if (foodEaten) {
           // Grow snake and generate new food
-          newSnake.unshift(head);
-          setFood(generateFood(newSnake));
+          const grownSnake = [head, ...newSnake];
+          setFood(generateFood(grownSnake));
           setScore(prev => prev + 1);
+          return grownSnake;
         } else {
           // Move snake normally
           newSnake.unshift(head);
           newSnake.pop();
+          return newSnake;
         }
-
-        return newSnake;
       });
-    }, 150); // Optimized speed
+    }, 200); // Slightly slower for better visibility
 
     return () => clearInterval(interval);
   }, [direction, food, generateFood, GRID_WIDTH, GRID_HEIGHT]);
 
-  // Direction change logic - less frequent for better performance
+  // Direction change logic - more frequent and smarter
   useEffect(() => {
     const directionInterval = setInterval(() => {
-      if (shouldChangeDirection) {
+      // Change direction more frequently for dynamic movement
+      if (Math.random() < 0.3) { // 30% chance to change direction
         const directions: ('up' | 'down' | 'left' | 'right')[] = ['up', 'down', 'left', 'right'];
-        const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+        const currentDirection = direction;
+        const oppositeDirection = currentDirection === 'up' ? 'down' : 
+                                currentDirection === 'down' ? 'up' :
+                                currentDirection === 'left' ? 'right' : 'left';
+        
+        // Avoid immediate reverse direction for smoother movement
+        const availableDirections = directions.filter(dir => dir !== oppositeDirection);
+        const randomDirection = availableDirections[Math.floor(Math.random() * availableDirections.length)];
         setDirection(randomDirection);
       }
-    }, 4000); // Less frequent changes
+    }, 2000); // More frequent changes for dynamic movement
 
     return () => clearInterval(directionInterval);
-  }, [shouldChangeDirection]);
+  }, [direction]);
 
   return (
     <div className="fixed inset-0 opacity-50 pointer-events-none overflow-hidden z-0">

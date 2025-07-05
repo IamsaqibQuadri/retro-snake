@@ -31,10 +31,8 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
   const GAME_WIDTH = 300;
   const GAME_HEIGHT = 300;
 
-  // Theme-based background classes
-  const backgroundClass = theme === 'light' 
-    ? 'bg-white text-gray-900' 
-    : 'bg-black text-green-400';
+  // Use design system tokens for consistent theming
+  const backgroundClass = 'bg-background text-foreground';
 
   console.log('SnakeGame: Rendered with props:', { speed, gameMode, gameOver, score, highScore });
   console.log('SnakeGame: Game state:', { 

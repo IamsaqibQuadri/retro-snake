@@ -92,44 +92,44 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  /* Pastel Dreams Theme - Inspired by retro pixel games */
+  /* Pastel Dreams Theme - Bright and vibrant colors */
   .pastel {
-    /* Soft peachy cream background like in the design */
+    /* Soft peachy cream background */
     --background: 35 45% 92%;
-    --foreground: 158 40% 25%;
+    --foreground: 158 60% 15%; /* Much brighter/darker for better readability */
     
-    /* Card colors with subtle contrast */
+    /* Card colors with good contrast */
     --card: 35 50% 95%;
-    --card-foreground: 158 40% 25%;
+    --card-foreground: 158 60% 15%; /* Brighter for readability */
     
     /* Popover styling */
     --popover: 35 50% 95%;
-    --popover-foreground: 158 40% 25%;
+    --popover-foreground: 158 60% 15%;
     
-    /* Primary: Soft mint green like the logo */
-    --primary: 158 45% 55%;
+    /* Primary: Vibrant mint green */
+    --primary: 158 70% 45%; /* More vibrant */
     --primary-foreground: 0 0% 100%;
     
-    /* Secondary: Coral/peach like the start button */
-    --secondary: 15 65% 75%;
-    --secondary-foreground: 158 40% 25%;
+    /* Secondary: Vibrant coral/peach */
+    --secondary: 15 80% 65%; /* More vibrant */
+    --secondary-foreground: 158 60% 15%;
     
-    /* Muted colors for subtle elements */
-    --muted: 35 30% 85%;
-    --muted-foreground: 158 25% 45%;
+    /* Muted colors with better contrast */
+    --muted: 35 30% 80%;
+    --muted-foreground: 158 45% 30%; /* Brighter for readability */
     
     /* Accent colors */
-    --accent: 35 30% 85%;
-    --accent-foreground: 158 40% 25%;
+    --accent: 280 50% 70%; /* Purple accent for variety */
+    --accent-foreground: 0 0% 100%;
     
     /* Destructive/error colors */
-    --destructive: 5 75% 65%;
+    --destructive: 5 85% 60%; /* More vibrant */
     --destructive-foreground: 0 0% 100%;
     
-    /* Borders and inputs */
-    --border: 158 25% 75%;
-    --input: 158 25% 75%;
-    --ring: 158 45% 55%;
+    /* Borders and inputs with better visibility */
+    --border: 158 35% 65%;
+    --input: 158 35% 65%;
+    --ring: 158 70% 45%;
   }
 }
 
