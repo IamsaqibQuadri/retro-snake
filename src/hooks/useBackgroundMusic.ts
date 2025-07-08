@@ -25,12 +25,13 @@ export const useBackgroundMusic = (shouldPlay: boolean = false) => {
     oscillator.connect(gainNode);
     gainNode.connect(context.destination);
 
-    // Aladdin Arabian Nights inspired melody (desert theme)
+    // Aladdin Arabian Nights inspired melody (simplified desert theme)
     const notes = [
-      440.00, 523.25, 587.33, 659.25, // A4, C5, D5, E5 - exotic opening
-      587.33, 523.25, 493.88, 523.25, // D5, C5, B4, C5 - Arabian scale
-      659.25, 698.46, 783.99, 698.46, // E5, F5, G5, F5 - mystical climb
-      659.25, 587.33, 523.25, 440.00  // E5, D5, C5, A4 - desert wind finish
+      523.25, 587.33, 659.25, 698.46, // C5, D5, E5, F5 - Arabian opening
+      659.25, 587.33, 523.25, 493.88, // E5, D5, C5, B4 - desert scale descent
+      440.00, 523.25, 587.33, 659.25, // A4, C5, D5, E5 - mystical rise
+      698.46, 659.25, 587.33, 523.25, // F5, E5, D5, C5 - wind finale
+      440.00, 493.88, 523.25, 440.00  // A4, B4, C5, A4 - peaceful end
     ];
     let noteIndex = 0;
 
@@ -57,10 +58,10 @@ export const useBackgroundMusic = (shouldPlay: boolean = false) => {
     oscillatorRef.current = oscillator;
     gainNodeRef.current = gainNode;
 
-    // Medium tempo for pleasant listening
-    const interval = setInterval(playNote, 500);
+    // Medium tempo for pleasant Arabian rhythm
+    const interval = setInterval(playNote, 400);
 
-    // Play for 8 seconds
+    // Play for 10 seconds (longer Arabian melody)
     setTimeout(() => {
       clearInterval(interval);
       if (oscillatorRef.current) {
@@ -69,7 +70,7 @@ export const useBackgroundMusic = (shouldPlay: boolean = false) => {
         gainNodeRef.current = null;
         isPlayingRef.current = false;
       }
-    }, 8000);
+    }, 10000);
   };
 
   const stopTune = () => {

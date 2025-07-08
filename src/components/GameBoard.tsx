@@ -41,7 +41,28 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
 
     const getSnakeHeadStyle = () => {
       if (snakeSkin === 'classic') {
-        // Classic pixelated snake - solid block design
+        // Classic pixelated snake - solid block design with black squares
+        return {
+          left: segment.x * gridSize,
+          top: segment.y * gridSize,
+          width: gridSize,
+          height: gridSize,
+          backgroundColor: '#00ff00', // Classic green
+          position: 'relative' as const,
+          imageRendering: 'pixelated' as const,
+          border: '2px solid #000000',
+          boxShadow: foodEaten ? '0 0 8px #00ff00' : 'inset 2px 2px 0 rgba(255,255,255,0.3)',
+          background: `
+            radial-gradient(circle at 25% 25%, #000000 1px, transparent 1px),
+            radial-gradient(circle at 75% 25%, #000000 1px, transparent 1px),
+            radial-gradient(circle at 25% 75%, #000000 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, #000000 1px, transparent 1px),
+            #00ff00
+          `,
+          backgroundSize: '50% 50%',
+        };
+      } else if (snakeSkin === 'tetris') {
+        // Tetris block style
         return {
           left: segment.x * gridSize,
           top: segment.y * gridSize,
@@ -51,7 +72,7 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
           position: 'relative' as const,
           imageRendering: 'pixelated' as const,
           border: '1px solid #000',
-          boxShadow: foodEaten ? `0 0 8px ${settings.snakeColor}` : 'inset 1px 1px 0 rgba(255,255,255,0.3), inset -1px -1px 0 rgba(0,0,0,0.3)',
+          boxShadow: foodEaten ? `0 0 8px ${settings.snakeColor}` : 'inset 2px 2px 0 rgba(255,255,255,0.6), inset -2px -2px 0 rgba(0,0,0,0.6)',
         };
       } else {
         // Modern remix snake - gradient design
@@ -80,6 +101,15 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
             style={tongueStyle}
           />
         )}
+        {snakeSkin === 'classic' && (
+          <div
+            className="absolute bg-red-600"
+            style={{
+              ...tongueStyle,
+              imageRendering: 'pixelated',
+            }}
+          />
+        )}
       </div>
     );
   };
@@ -88,7 +118,25 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
   const renderSnakeBody = (segment: Position, index: number) => {
     const getSnakeBodyStyle = () => {
       if (snakeSkin === 'classic') {
-        // Classic pixelated snake body - solid blocks
+        // Classic pixelated snake body - solid blocks with black dots
+        return {
+          left: segment.x * gridSize,
+          top: segment.y * gridSize,
+          width: gridSize,
+          height: gridSize,
+          backgroundColor: '#00cc00', // Slightly darker green for body
+          imageRendering: 'pixelated' as const,
+          border: '2px solid #000000',
+          boxShadow: 'inset 2px 2px 0 rgba(255,255,255,0.2)',
+          background: `
+            radial-gradient(circle at 50% 50%, #000000 1px, transparent 1px),
+            #00cc00
+          `,
+          backgroundSize: '50% 50%',
+          animationDelay: `${index * 50}ms`,
+        };
+      } else if (snakeSkin === 'tetris') {
+        // Tetris block style
         return {
           left: segment.x * gridSize,
           top: segment.y * gridSize,
@@ -97,7 +145,7 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
           backgroundColor: settings.snakeBodyColor,
           imageRendering: 'pixelated' as const,
           border: '1px solid #000',
-          boxShadow: 'inset 1px 1px 0 rgba(255,255,255,0.2), inset -1px -1px 0 rgba(0,0,0,0.2)',
+          boxShadow: 'inset 2px 2px 0 rgba(255,255,255,0.4), inset -2px -2px 0 rgba(0,0,0,0.4)',
           animationDelay: `${index * 50}ms`,
         };
       } else {

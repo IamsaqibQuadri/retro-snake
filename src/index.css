@@ -96,18 +96,18 @@
   .pastel {
     /* Soft peachy cream background */
     --background: 35 45% 92%;
-    --foreground: 0 0% 0%; /* Pure black for maximum readability */
+    --foreground: 0 0% 10%; /* Dark text for readability */
     
     /* Card colors with maximum contrast */
     --card: 0 0% 100%; /* Pure white cards */
-    --card-foreground: 0 0% 0%; /* Pure black text */
+    --card-foreground: 0 0% 10%; /* Dark text */
     
     /* Popover styling */
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
+    --popover-foreground: 0 0% 10%;
     
     /* Primary: Dark coral for snake and scores */
-    --primary: 15 100% 40%; /* Dark coral - matches pastel theme */
+    --primary: 280 100% 25%; /* Dark purple for snake */
     --primary-foreground: 0 0% 100%;
     
     /* Secondary: Dark purple */
@@ -116,10 +116,10 @@
     
     /* Muted colors with maximum contrast */
     --muted: 0 0% 95%; /* Light gray */
-    --muted-foreground: 0 0% 0%; /* Pure black */
+    --muted-foreground: 0 0% 10%; /* Dark text */
     
     /* Accent colors - dark purple for buttons */
-    --accent: 280 100% 35%; /* Dark purple */
+    --accent: 280 100% 25%; /* Dark purple for visibility */
     --accent-foreground: 0 0% 100%;
     
     /* Destructive/error colors */
@@ -127,49 +127,49 @@
     --destructive-foreground: 0 0% 100%;
     
     /* Borders and inputs - very dark for visibility */
-    --border: 0 0% 15%; /* Dark gray borders for better visibility */
-    --input: 0 0% 15%;
-    --ring: 15 100% 40%;
+    --border: 0 0% 20%; /* Darker borders for better visibility */
+    --input: 0 0% 20%;
+    --ring: 280 100% 25%;
   }
 
   /* Gameboy Retro Theme - Dark text on green background for maximum contrast */
   .gameboy {
     /* Classic Gameboy LCD background */
     --background: 74 61% 56%; /* #9bbc0f - LCD green */
-    --foreground: 0 0% 0%; /* Pure black text for maximum contrast */
+    --foreground: 0 0% 5%; /* Very dark text for maximum contrast */
     
     /* Card styling - darker green with black text */
-    --card: 74 45% 35%; /* Much darker green for cards */
-    --card-foreground: 0 0% 0%; /* Black text for better readability */
+    --card: 74 45% 40%; /* Darker green for cards */
+    --card-foreground: 0 0% 5%; /* Very dark text for better readability */
     
     /* Popup styling */
-    --popover: 74 45% 35%;
-    --popover-foreground: 0 0% 0%;
+    --popover: 74 45% 40%;
+    --popover-foreground: 0 0% 5%;
     
     /* Primary: Very dark green for snake and buttons */
-    --primary: 74 100% 15%; /* Very dark green */
+    --primary: 74 100% 10%; /* Very dark green */
     --primary-foreground: 0 0% 100%;
     
     /* Secondary: Medium dark green */
-    --secondary: 74 60% 25%; /* Dark green */
+    --secondary: 74 60% 20%; /* Dark green */
     --secondary-foreground: 0 0% 100%;
     
     /* Muted tones with black text */
-    --muted: 74 40% 30%;
-    --muted-foreground: 0 0% 0%; /* Black text for readability */
+    --muted: 74 40% 35%;
+    --muted-foreground: 0 0% 5%; /* Very dark text for readability */
     
     /* Accent using very dark green */
-    --accent: 74 100% 20%;
+    --accent: 74 100% 15%;
     --accent-foreground: 0 0% 100%;
     
     /* Error in high contrast */
-    --destructive: 0 100% 25%; /* Very dark red */
+    --destructive: 0 100% 20%; /* Very dark red */
     --destructive-foreground: 0 0% 100%;
     
     /* Borders and inputs - black for visibility */
-    --border: 0 0% 0%; /* Black borders for visibility */
-    --input: 0 0% 0%;
-    --ring: 0 0% 0%;
+    --border: 0 0% 10%; /* Dark borders for visibility */
+    --input: 0 0% 10%;
+    --ring: 0 0% 5%;
   }
 }
 
