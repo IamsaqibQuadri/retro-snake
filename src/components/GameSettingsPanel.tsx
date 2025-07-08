@@ -1,8 +1,10 @@
 
-import React from 'react';
-import { Volume2, VolumeX, Palette, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { Volume2, VolumeX, Palette, X, Shirt } from 'lucide-react';
 import { useGameSettings } from '../contexts/GameSettingsContext';
 import { useTheme } from '../contexts/ThemeContext';
+import ThemeSelector from './ThemeSelector';
+import SnakeSkinSelector from './SnakeSkinSelector';
 
 interface GameSettingsPanelProps {
   isOpen: boolean;
@@ -12,6 +14,8 @@ interface GameSettingsPanelProps {
 const GameSettingsPanel = ({ isOpen, onClose }: GameSettingsPanelProps) => {
   const { settings, toggleSound, setSnakeColors } = useGameSettings();
   const { theme } = useTheme();
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
+  const [showSnakeSkinSelector, setShowSnakeSkinSelector] = useState(false);
 
   // Theme-based colors
   const themeColors = {
@@ -35,96 +39,95 @@ const GameSettingsPanel = ({ isOpen, onClose }: GameSettingsPanelProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-      <div className={`${themeColors.background} border-2 ${themeColors.border} rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto`}>
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className={`text-xl font-bold ${themeColors.primary} flex items-center gap-2`}>
-            <Palette size={20} />
-            Game Settings
-          </h2>
-          <button
-            onClick={onClose}
-            className={`${themeColors.primary} ${themeColors.hover} transition-colors`}
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        {/* Sound Settings */}
-        <div className="mb-6">
-          <h3 className={`text-lg font-semibold ${themeColors.primary} mb-3 flex items-center gap-2`}>
-            {settings.soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
-            Sound
-          </h3>
-          <button
-            onClick={toggleSound}
-            className={`flex items-center gap-3 w-full p-3 border-2 rounded-lg transition-colors ${
-              settings.soundEnabled
-                ? `${themeColors.border} ${themeColors.panelBg} ${themeColors.primary}`
-                : `border-gray-600 bg-gray-600/10 text-gray-400`
-            }`}
-          >
-            {settings.soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
-            <span>{settings.soundEnabled ? 'Sound On' : 'Sound Off'}</span>
-          </button>
-        </div>
-
-        {/* Snake Colors */}
-        <div>
-          <h3 className={`text-lg font-semibold ${themeColors.primary} mb-3 flex items-center gap-2`}>
-            <Palette size={18} />
-            Snake Colors
-          </h3>
-          <div className="grid grid-cols-2 gap-3">
-            {colorPresets.map((preset) => (
-              <button
-                key={preset.name}
-                onClick={() => setSnakeColors(preset.head, preset.body)}
-                className={`p-3 border-2 rounded-lg transition-colors text-left ${
-                  settings.snakeColor === preset.head
-                    ? `${themeColors.border} ${themeColors.panelBg}`
-                    : `border-gray-600 hover:border-green-400/50`
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <div 
-                    className="w-4 h-4 rounded" 
-                    style={{ backgroundColor: preset.head }}
-                  />
-                  <div 
-                    className="w-4 h-4 rounded" 
-                    style={{ backgroundColor: preset.body }}
-                  />
-                </div>
-                <span className={`text-sm ${themeColors.secondary}`}>{preset.name}</span>
-              </button>
-            ))}
+    <>
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="bg-card border border-border rounded-lg p-6 max-w-md w-full">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-foreground">⚙️ Game Settings</h2>
+            <button
+              onClick={onClose}
+              className="p-1 hover:bg-muted rounded"
+            >
+              <X size={16} className="text-muted-foreground" />
+            </button>
           </div>
           
-          {/* Current Selection Indicator */}
-          <div className={`mt-4 p-3 border ${themeColors.border.replace('border-', 'border-').replace('-600', '-600/30').replace('-400', '-400/30')} ${themeColors.panelBg.replace('bg-', 'bg-').replace('/10', '/5')} rounded-lg`}>
-            <div className={`text-xs ${themeColors.secondary} mb-2`}>Current Snake Colors:</div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <div 
-                  className={`w-6 h-6 rounded border ${themeColors.border.replace('border-', 'border-').replace('-600', '-600/30').replace('-400', '-400/30')}`}
-                  style={{ backgroundColor: settings.snakeColor }}
-                />
-                <span className={`text-xs ${themeColors.primary}`}>Head</span>
+          <div className="space-y-3">
+            <button
+              onClick={toggleSound}
+              className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-muted transition-colors w-full text-left"
+            >
+              {settings.soundEnabled ? <Volume2 size={20} className="text-primary" /> : <VolumeX size={20} className="text-muted-foreground" />}
+              <div>
+                <div className="font-semibold text-foreground">Sound</div>
+                <div className="text-xs text-muted-foreground">{settings.soundEnabled ? 'Sound enabled' : 'Sound disabled'}</div>
               </div>
-              <div className="flex items-center gap-2">
-                <div 
-                  className={`w-6 h-6 rounded border ${themeColors.border.replace('border-', 'border-').replace('-600', '-600/30').replace('-400', '-400/30')}`}
-                  style={{ backgroundColor: settings.snakeBodyColor }}
-                />
-                <span className={`text-xs ${themeColors.primary}`}>Body</span>
+            </button>
+
+            <button
+              onClick={() => setShowThemeSelector(true)}
+              className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-muted transition-colors w-full text-left"
+            >
+              <Palette size={20} className="text-primary" />
+              <div>
+                <div className="font-semibold text-foreground">Theme</div>
+                <div className="text-xs text-muted-foreground">Change app appearance</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setShowSnakeSkinSelector(true)}
+              className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-muted transition-colors w-full text-left"
+            >
+              <Shirt size={20} className="text-primary" />
+              <div>
+                <div className="font-semibold text-foreground">Snake Skin</div>
+                <div className="text-xs text-muted-foreground">Choose snake appearance</div>
+              </div>
+            </button>
+
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold text-foreground">Snake Colors</h4>
+              <div className="grid grid-cols-3 gap-2">
+                {colorPresets.map((preset) => (
+                  <button
+                    key={preset.name}
+                    onClick={() => setSnakeColors(preset.head, preset.body)}
+                    className={`p-2 rounded border transition-colors ${
+                      settings.snakeColor === preset.head
+                        ? 'border-primary bg-primary/10'
+                        : 'border-border hover:border-primary/50 hover:bg-muted/50'
+                    }`}
+                    title={preset.name}
+                  >
+                    <div className="flex items-center gap-1 justify-center">
+                      <div 
+                        className="w-3 h-3 rounded" 
+                        style={{ backgroundColor: preset.head }}
+                      />
+                      <div 
+                        className="w-3 h-3 rounded" 
+                        style={{ backgroundColor: preset.body }}
+                      />
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <ThemeSelector 
+        isOpen={showThemeSelector} 
+        onClose={() => setShowThemeSelector(false)} 
+      />
+      
+      <SnakeSkinSelector 
+        isOpen={showSnakeSkinSelector} 
+        onClose={() => setShowSnakeSkinSelector(false)} 
+      />
+    </>
   );
 };
 

@@ -28,7 +28,7 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
       case 'light': return 'bg-white/95 backdrop-blur-md';
       case 'dark': return 'bg-black/90 backdrop-blur-md';
       case 'pastel': return 'bg-white/95 backdrop-blur-md'; // White overlay for pastel
-      case 'gameboy': return 'bg-black/80 backdrop-blur-md'; // Dark overlay for gameboy
+      case 'gameboy': return 'bg-background/95 backdrop-blur-md'; // Use theme background for gameboy
       default: return 'bg-background/90 backdrop-blur-md';
     }
   };

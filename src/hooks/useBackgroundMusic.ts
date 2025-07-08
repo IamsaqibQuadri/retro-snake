@@ -25,12 +25,12 @@ export const useBackgroundMusic = (shouldPlay: boolean = false) => {
     oscillator.connect(gainNode);
     gainNode.connect(context.destination);
 
-    // Upbeat retro arcade melody (Tetris-inspired)
+    // Aladdin Arabian Nights inspired melody (desert theme)
     const notes = [
-      659.25, 493.88, 523.25, 587.33, // E5, B4, C5, D5 - classic tetris opening
-      523.25, 493.88, 440.00, 440.00, // C5, B4, A4, A4 - smooth transition
-      523.25, 659.25, 587.33, 523.25, // C5, E5, D5, C5 - catchy melody
-      493.88, 523.25, 587.33, 659.25  // B4, C5, D5, E5 - uplifting finish
+      440.00, 523.25, 587.33, 659.25, // A4, C5, D5, E5 - exotic opening
+      587.33, 523.25, 493.88, 523.25, // D5, C5, B4, C5 - Arabian scale
+      659.25, 698.46, 783.99, 698.46, // E5, F5, G5, F5 - mystical climb
+      659.25, 587.33, 523.25, 440.00  // E5, D5, C5, A4 - desert wind finish
     ];
     let noteIndex = 0;
 
