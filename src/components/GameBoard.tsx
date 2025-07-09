@@ -41,25 +41,24 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
 
     const getSnakeHeadStyle = () => {
       if (snakeSkin === 'classic') {
-        // Classic pixelated snake - solid block design with black squares
+        // Dice snake head - shows dice number 1
         return {
           left: segment.x * gridSize,
           top: segment.y * gridSize,
           width: gridSize,
           height: gridSize,
-          backgroundColor: '#00ff00', // Classic green
+          backgroundColor: settings.snakeColor,
           position: 'relative' as const,
           imageRendering: 'pixelated' as const,
           border: '2px solid #000000',
-          boxShadow: foodEaten ? '0 0 8px #00ff00' : 'inset 2px 2px 0 rgba(255,255,255,0.3)',
-          background: `
-            radial-gradient(circle at 25% 25%, #000000 1px, transparent 1px),
-            radial-gradient(circle at 75% 25%, #000000 1px, transparent 1px),
-            radial-gradient(circle at 25% 75%, #000000 1px, transparent 1px),
-            radial-gradient(circle at 75% 75%, #000000 1px, transparent 1px),
-            #00ff00
-          `,
-          backgroundSize: '50% 50%',
+          boxShadow: foodEaten ? `0 0 8px ${settings.snakeColor}` : 'inset 2px 2px 0 rgba(255,255,255,0.3)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: `${gridSize * 0.6}px`,
+          fontWeight: 'bold',
+          color: '#ffffff',
+          textShadow: '1px 1px 0 #000000',
         };
       } else if (snakeSkin === 'tetris') {
         // Tetris block style
@@ -95,6 +94,7 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
         className={`absolute transition-all duration-300 ${foodEaten ? 'animate-pulse scale-110' : ''}`}
         style={getSnakeHeadStyle()}
       >
+        {snakeSkin === 'classic' && '⚀'}
         {snakeSkin === 'remix' && (
           <div
             className="absolute bg-red-500 animate-pulse"
@@ -118,22 +118,24 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
   const renderSnakeBody = (segment: Position, index: number) => {
     const getSnakeBodyStyle = () => {
       if (snakeSkin === 'classic') {
-        // Classic pixelated snake body - solid blocks with black dots
+        // Dice snake body - each segment shows a different dice number
         return {
           left: segment.x * gridSize,
           top: segment.y * gridSize,
           width: gridSize,
           height: gridSize,
-          backgroundColor: '#00cc00', // Slightly darker green for body
+          backgroundColor: settings.snakeBodyColor,
           imageRendering: 'pixelated' as const,
           border: '2px solid #000000',
           boxShadow: 'inset 2px 2px 0 rgba(255,255,255,0.2)',
-          background: `
-            radial-gradient(circle at 50% 50%, #000000 1px, transparent 1px),
-            #00cc00
-          `,
-          backgroundSize: '50% 50%',
           animationDelay: `${index * 50}ms`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: `${gridSize * 0.6}px`,
+          fontWeight: 'bold',
+          color: '#ffffff',
+          textShadow: '1px 1px 0 #000000',
         };
       } else if (snakeSkin === 'tetris') {
         // Tetris block style
@@ -162,12 +164,17 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
       }
     };
 
+    const diceNumber = (index + 1) % 6 + 1; // Get dice number 1-6
+    const diceSymbols = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+    
     return (
       <div
         key={index}
         className={`absolute transition-all duration-200 ${foodEaten ? 'animate-bounce' : ''}`}
         style={getSnakeBodyStyle()}
-      />
+      >
+        {snakeSkin === 'classic' && diceSymbols[diceNumber - 1]}
+      </div>
     );
   };
 

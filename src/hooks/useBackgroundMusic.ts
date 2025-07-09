@@ -25,13 +25,13 @@ export const useBackgroundMusic = (shouldPlay: boolean = false) => {
     oscillator.connect(gainNode);
     gainNode.connect(context.destination);
 
-    // Aladdin Arabian Nights inspired melody (simplified desert theme)
+    // Arabian Nights style melody with authentic Middle Eastern scale
     const notes = [
-      523.25, 587.33, 659.25, 698.46, // C5, D5, E5, F5 - Arabian opening
-      659.25, 587.33, 523.25, 493.88, // E5, D5, C5, B4 - desert scale descent
-      440.00, 523.25, 587.33, 659.25, // A4, C5, D5, E5 - mystical rise
-      698.46, 659.25, 587.33, 523.25, // F5, E5, D5, C5 - wind finale
-      440.00, 493.88, 523.25, 440.00  // A4, B4, C5, A4 - peaceful end
+      440.00, 466.16, 523.25, 554.37, // A4, Bb4, C5, Db5 - mystical opening
+      587.33, 659.25, 622.25, 587.33, // D5, E5, Eb5, D5 - exotic descent
+      523.25, 466.16, 440.00, 415.30, // C5, Bb4, A4, Ab4 - desert wind
+      440.00, 523.25, 587.33, 523.25, // A4, C5, D5, C5 - climbing phrase
+      466.16, 440.00, 415.30, 440.00  // Bb4, A4, Ab4, A4 - mystical end
     ];
     let noteIndex = 0;
 

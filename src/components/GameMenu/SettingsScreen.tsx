@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Volume2, VolumeX, Palette, Zap } from 'lucide-react';
+import { ArrowLeft, Volume2, VolumeX, Palette, Zap, Paintbrush } from 'lucide-react';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useSnakeSkin } from '../../contexts/SnakeSkinContext';
 import ThemeSelector from '../ThemeSelector';
 import SnakeSkinSelector from '../SnakeSkinSelector';
+import SnakeColorSelector from '../SnakeColorSelector';
 
 interface SettingsScreenProps {
   onBack: () => void;
@@ -16,6 +17,7 @@ const SettingsScreen = ({ onBack }: SettingsScreenProps) => {
   const { snakeSkin } = useSnakeSkin();
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [showSnakeSkinSelector, setShowSnakeSkinSelector] = useState(false);
+  const [showSnakeColorSelector, setShowSnakeColorSelector] = useState(false);
 
   return (
     <>
@@ -86,6 +88,23 @@ const SettingsScreen = ({ onBack }: SettingsScreenProps) => {
               CHANGE
             </button>
           </div>
+
+          {/* Snake Color Selector */}
+          <div className="flex items-center justify-between p-4 bg-card border border-border rounded-lg">
+            <div className="flex items-center gap-3">
+              <Paintbrush size={20} className="text-primary" />
+              <div>
+                <span className="text-foreground font-medium">Snake Color</span>
+                <p className="text-xs text-muted-foreground">Customize your snake</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowSnakeColorSelector(true)}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-bold hover:bg-primary/90 transition-colors"
+            >
+              CHANGE
+            </button>
+          </div>
         </div>
       </div>
 
@@ -99,6 +118,12 @@ const SettingsScreen = ({ onBack }: SettingsScreenProps) => {
       <SnakeSkinSelector
         isOpen={showSnakeSkinSelector}
         onClose={() => setShowSnakeSkinSelector(false)}
+      />
+
+      {/* Snake Color Selector Modal */}
+      <SnakeColorSelector
+        isOpen={showSnakeColorSelector}
+        onClose={() => setShowSnakeColorSelector(false)}
       />
     </>
   );

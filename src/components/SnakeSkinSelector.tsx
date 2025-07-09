@@ -9,7 +9,7 @@ interface SnakeSkinSelectorProps {
 
 const snakeSkins: { value: SnakeSkin; label: string; description: string }[] = [
   { value: 'remix', label: 'Remix', description: 'Modern gradient design' },
-  { value: 'classic', label: 'Classic', description: 'Retro pixelated blocks' },
+  { value: 'classic', label: 'Dice', description: 'Pixelated with dice numbers' },
   { value: 'tetris', label: 'Tetris', description: 'Block-style Tetris theme' },
 ];
 

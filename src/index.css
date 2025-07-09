@@ -92,21 +92,21 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  /* Pastel Dreams Theme - Maximum contrast for readability */
+  /* Pastel Dreams Theme - Black text everywhere for maximum readability */
   .pastel {
     /* Soft peachy cream background */
     --background: 35 45% 92%;
-    --foreground: 0 0% 10%; /* Dark text for readability */
+    --foreground: 0 0% 0%; /* Pure black text */
     
-    /* Card colors with maximum contrast */
+    /* Card colors with black text */
     --card: 0 0% 100%; /* Pure white cards */
-    --card-foreground: 0 0% 10%; /* Dark text */
+    --card-foreground: 0 0% 0%; /* Pure black text */
     
     /* Popover styling */
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
+    --popover-foreground: 0 0% 0%; /* Pure black text */
     
-    /* Primary: Dark coral for snake and scores */
+    /* Primary: Dark purple for snake and scores */
     --primary: 280 100% 25%; /* Dark purple for snake */
     --primary-foreground: 0 0% 100%;
     
@@ -114,9 +114,9 @@
     --secondary: 280 100% 35%; /* Dark purple */
     --secondary-foreground: 0 0% 100%;
     
-    /* Muted colors with maximum contrast */
-    --muted: 0 0% 95%; /* Light gray */
-    --muted-foreground: 0 0% 10%; /* Dark text */
+    /* Muted colors with black text */
+    --muted: 0 0% 90%; /* Light gray */
+    --muted-foreground: 0 0% 0%; /* Pure black text */
     
     /* Accent colors - dark purple for buttons */
     --accent: 280 100% 25%; /* Dark purple for visibility */
@@ -126,25 +126,25 @@
     --destructive: 0 100% 40%; /* Dark red */
     --destructive-foreground: 0 0% 100%;
     
-    /* Borders and inputs - very dark for visibility */
-    --border: 0 0% 20%; /* Darker borders for better visibility */
-    --input: 0 0% 20%;
+    /* Borders and inputs - dark for visibility */
+    --border: 0 0% 0%; /* Pure black borders */
+    --input: 0 0% 95%;
     --ring: 280 100% 25%;
   }
 
-  /* Gameboy Retro Theme - Dark text on green background for maximum contrast */
+  /* Gameboy Retro Theme - Black text everywhere for maximum readability */
   .gameboy {
     /* Classic Gameboy LCD background */
     --background: 74 61% 56%; /* #9bbc0f - LCD green */
-    --foreground: 0 0% 5%; /* Very dark text for maximum contrast */
+    --foreground: 0 0% 0%; /* Pure black text for maximum contrast */
     
-    /* Card styling - darker green with black text */
-    --card: 74 45% 40%; /* Darker green for cards */
-    --card-foreground: 0 0% 5%; /* Very dark text for better readability */
+    /* Card styling - lighter green with black text */
+    --card: 74 45% 65%; /* Lighter green for cards */
+    --card-foreground: 0 0% 0%; /* Pure black text */
     
     /* Popup styling */
-    --popover: 74 45% 40%;
-    --popover-foreground: 0 0% 5%;
+    --popover: 74 45% 65%;
+    --popover-foreground: 0 0% 0%; /* Pure black text */
     
     /* Primary: Very dark green for snake and buttons */
     --primary: 74 100% 10%; /* Very dark green */
@@ -155,8 +155,8 @@
     --secondary-foreground: 0 0% 100%;
     
     /* Muted tones with black text */
-    --muted: 74 40% 35%;
-    --muted-foreground: 0 0% 5%; /* Very dark text for readability */
+    --muted: 74 40% 50%;
+    --muted-foreground: 0 0% 0%; /* Pure black text for readability */
     
     /* Accent using very dark green */
     --accent: 74 100% 15%;
@@ -167,9 +167,9 @@
     --destructive-foreground: 0 0% 100%;
     
     /* Borders and inputs - black for visibility */
-    --border: 0 0% 10%; /* Dark borders for visibility */
-    --input: 0 0% 10%;
-    --ring: 0 0% 5%;
+    --border: 0 0% 0%; /* Pure black borders for visibility */
+    --input: 74 45% 60%;
+    --ring: 0 0% 0%;
   }
 }
 
