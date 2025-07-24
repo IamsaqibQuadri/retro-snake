@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Settings, Speaker, Palette } from 'lucide-react';
+import { Settings, Speaker } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
-import ThemeSelector from '../ThemeSelector';
-import SnakeSkinSelector from '../SnakeSkinSelector';
-import SnakeColorSelector from '../SnakeColorSelector';
+import UnifiedSettingsPanel from '../UnifiedSettingsPanel';
 
 interface TopControlsProps {
   onShowSettings: () => void;
@@ -13,9 +11,7 @@ interface TopControlsProps {
 const TopControls = ({ onShowSettings }: TopControlsProps) => {
   const { theme } = useTheme();
   const { settings, toggleSound } = useGameSettings();
-  const [showThemeSelector, setShowThemeSelector] = useState(false);
-  const [showSnakeSkinSelector, setShowSnakeSkinSelector] = useState(false);
-  const [showSnakeColorSelector, setShowSnakeColorSelector] = useState(false);
+  const [showUnifiedSettings, setShowUnifiedSettings] = useState(false);
 
   // Using design system tokens for consistent theming
   const buttonClasses = "p-2 rounded-lg border border-border bg-card text-card-foreground hover:bg-muted transition-all duration-200";
@@ -33,7 +29,7 @@ const TopControls = ({ onShowSettings }: TopControlsProps) => {
         </button>
       </div>
 
-      {/* Top-right controls */}
+      {/* Top-right controls - Sound and Unified Theme/Skin Settings */}
       <div className="absolute top-4 right-4 z-20 flex gap-2">
         <button
           onClick={toggleSound}
@@ -48,43 +44,17 @@ const TopControls = ({ onShowSettings }: TopControlsProps) => {
         </button>
         
         <button
-          onClick={() => setShowThemeSelector(true)}
+          onClick={() => setShowUnifiedSettings(true)}
           className={buttonClasses}
-          title="Change theme"
-        >
-          🎨
-        </button>
-        
-        <button
-          onClick={() => setShowSnakeSkinSelector(true)}
-          className={buttonClasses}
-          title="Change snake skin"
-        >
-          🐍
-        </button>
-        
-        <button
-          onClick={() => setShowSnakeColorSelector(true)}
-          className={buttonClasses}
-          title="Change snake color"
+          title="Themes, Snake Skins & Colors"
         >
           🎨
         </button>
       </div>
       
-      <ThemeSelector 
-        isOpen={showThemeSelector} 
-        onClose={() => setShowThemeSelector(false)} 
-      />
-      
-      <SnakeSkinSelector 
-        isOpen={showSnakeSkinSelector} 
-        onClose={() => setShowSnakeSkinSelector(false)} 
-      />
-      
-      <SnakeColorSelector 
-        isOpen={showSnakeColorSelector} 
-        onClose={() => setShowSnakeColorSelector(false)} 
+      <UnifiedSettingsPanel 
+        isOpen={showUnifiedSettings} 
+        onClose={() => setShowUnifiedSettings(false)} 
       />
     </>
   );

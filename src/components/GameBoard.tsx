@@ -50,15 +50,15 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
           backgroundColor: settings.snakeColor,
           position: 'relative' as const,
           imageRendering: 'pixelated' as const,
-          border: '2px solid #000000',
+          border: '3px solid #000000',
           boxShadow: foodEaten ? `0 0 8px ${settings.snakeColor}` : 'inset 2px 2px 0 rgba(255,255,255,0.3)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: `${gridSize * 0.6}px`,
+          fontSize: `${Math.max(gridSize * 0.9, 16)}px`, // Much larger font size
           fontWeight: 'bold',
-          color: '#ffffff',
-          textShadow: '1px 1px 0 #000000',
+          color: '#000000', // Black dice symbols for visibility
+          textShadow: '2px 2px 0 #ffffff, -1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff', // White outline for contrast
         };
       } else if (snakeSkin === 'tetris') {
         // Tetris block style
@@ -126,16 +126,16 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
           height: gridSize,
           backgroundColor: settings.snakeBodyColor,
           imageRendering: 'pixelated' as const,
-          border: '2px solid #000000',
+          border: '3px solid #000000',
           boxShadow: 'inset 2px 2px 0 rgba(255,255,255,0.2)',
           animationDelay: `${index * 50}ms`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: `${gridSize * 0.6}px`,
+          fontSize: `${Math.max(gridSize * 0.9, 16)}px`, // Much larger font size for better visibility
           fontWeight: 'bold',
-          color: '#ffffff',
-          textShadow: '1px 1px 0 #000000',
+          color: '#000000', // Black dice symbols for maximum visibility
+          textShadow: '2px 2px 0 #ffffff, -1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff', // White outline for contrast
         };
       } else if (snakeSkin === 'tetris') {
         // Tetris block style
