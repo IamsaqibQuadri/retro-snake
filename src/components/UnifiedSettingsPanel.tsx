@@ -10,7 +10,7 @@ interface UnifiedSettingsPanelProps {
 }
 
 const themes: { value: Theme; label: string; description: string; preview: string }[] = [
-  { value: 'light', label: 'Light', description: 'Clean and bright', preview: '☀️' },
+  { value: 'light', label: 'Classic', description: 'Clean and bright', preview: '☀️' },
   { value: 'dark', label: 'Dark', description: 'Easy on the eyes', preview: '🌙' },
   { value: 'pastel', label: 'Pastel Dreams', description: 'Soft and dreamy colors', preview: '🌸' },
   { value: 'gameboy', label: 'Game Boy Retro', description: 'Classic LCD green', preview: '🎮' },
