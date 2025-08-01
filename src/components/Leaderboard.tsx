@@ -18,7 +18,7 @@ const Leaderboard = ({ entries, onClear }: LeaderboardProps) => {
       case 2:
         return <Award className="w-4 h-4 text-orange-400" />;
       default:
-        return <span className="w-4 h-4 flex items-center justify-center text-green-400 font-bold">#{index + 1}</span>;
+        return <span className="w-4 h-4 flex items-center justify-center text-primary font-bold">#{index + 1}</span>;
     }
   };
 
@@ -41,7 +41,7 @@ const Leaderboard = ({ entries, onClear }: LeaderboardProps) => {
 
   if (entries.length === 0) {
     return (
-      <div className="text-center text-green-300 py-4">
+      <div className="text-center text-muted-foreground py-4">
         <p className="text-sm">No scores yet!</p>
         <p className="text-xs opacity-70">Play a game to see your scores here</p>
       </div>
@@ -58,11 +58,11 @@ const Leaderboard = ({ entries, onClear }: LeaderboardProps) => {
           <div className="flex items-center gap-2">
             {getIcon(index)}
             <div className="flex flex-col">
-              <span className="text-green-400 font-bold text-sm">{entry.score}</span>
+              <span className="text-primary font-bold text-sm">{entry.score}</span>
               <div className="flex items-center gap-1">
-                <span className="text-green-300 text-xs">{entry.date}</span>
+                <span className="text-muted-foreground text-xs">{entry.date}</span>
                 {entry.playerId && (
-                  <span className="text-green-300/70 text-xs">• {entry.playerId}</span>
+                  <span className="text-muted-foreground/70 text-xs">• {entry.playerId}</span>
                 )}
               </div>
             </div>

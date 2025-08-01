@@ -9,7 +9,7 @@ interface GameInfoProps {
 const GameInfo = ({ speed, gameMode }: GameInfoProps) => {
   return (
     <div className="mt-3 text-center space-y-1">
-      <span className="text-green-300 text-xs block">
+      <span className="text-muted-foreground text-xs block">
         {speed === 'slow' ? '🐌 SLOW' : speed === 'normal' ? '🏃 NORMAL' : '🚀 FAST'} MODE
       </span>
       <span className="text-gray-400 text-xs">

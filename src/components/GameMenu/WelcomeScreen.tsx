@@ -10,11 +10,11 @@ const WelcomeScreen = ({ onProceedToSetup }: WelcomeScreenProps) => {
   const { theme } = useTheme();
 
   const themeColors = {
-    primary: theme === 'light' ? 'text-green-600' : 'text-green-400',
-    secondary: theme === 'light' ? 'text-gray-600' : 'text-green-300',
-    border: theme === 'light' ? 'border-green-600' : 'border-green-400',
-    background: theme === 'light' ? 'bg-green-600/10' : 'bg-green-400/10',
-    hover: theme === 'light' ? 'hover:bg-green-600/20' : 'hover:bg-green-400/20',
+    primary: 'text-primary',
+    secondary: 'text-muted-foreground',
+    border: 'border-primary',
+    background: 'bg-primary/10',
+    hover: 'hover:bg-primary/20',
   };
 
   return (

@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useGameSettings } from '../contexts/GameSettingsContext';
 
 interface SnakeSegment {
   x: number;
@@ -12,6 +13,7 @@ interface Food {
 }
 
 const EnhancedBackgroundSnake = () => {
+  const { settings } = useGameSettings();
   const [snake, setSnake] = useState<SnakeSegment[]>([
     { x: 10, y: 10 },
     { x: 9, y: 10 },
@@ -127,13 +129,13 @@ const EnhancedBackgroundSnake = () => {
               left: `${(segment.x * 100) / GRID_WIDTH}%`,
               top: `${(segment.y * 100) / GRID_HEIGHT}%`,
               transform: 'translate(-50%, -50%)',
-              backgroundColor: index === 0 ? '#22c55e' : '#16a34a',
+              backgroundColor: index === 0 ? settings.snakeColor : settings.snakeBodyColor,
               background: index === 0 
-                ? 'linear-gradient(45deg, #22c55e 0%, #22c55e 40%, #000 45%, #22c55e 50%, #000 55%, #22c55e 60%, #22c55e 100%)'
-                : 'linear-gradient(45deg, #16a34a 0%, #16a34a 30%, #000 35%, #16a34a 40%, #000 45%, #16a34a 50%, #000 55%, #16a34a 60%, #000 65%, #16a34a 70%, #16a34a 100%)',
+                ? `linear-gradient(45deg, ${settings.snakeColor} 0%, ${settings.snakeColor} 40%, #000 45%, ${settings.snakeColor} 50%, #000 55%, ${settings.snakeColor} 60%, ${settings.snakeColor} 100%)`
+                : `linear-gradient(45deg, ${settings.snakeBodyColor} 0%, ${settings.snakeBodyColor} 30%, #000 35%, ${settings.snakeBodyColor} 40%, #000 45%, ${settings.snakeBodyColor} 50%, #000 55%, ${settings.snakeBodyColor} 60%, #000 65%, ${settings.snakeBodyColor} 70%, ${settings.snakeBodyColor} 100%)`,
               boxShadow: index === 0 
-                ? '0 0 6px #22c55e' 
-                : '0 0 3px #16a34a',
+                ? `0 0 6px ${settings.snakeColor}` 
+                : `0 0 3px ${settings.snakeBodyColor}`,
             }}
           />
         ))}
@@ -150,7 +152,7 @@ const EnhancedBackgroundSnake = () => {
         />
 
         {/* Score display */}
-        <div className="absolute top-4 left-4 text-green-400 text-xs opacity-50">
+        <div className="absolute top-4 left-4 text-muted-foreground text-xs opacity-50">
           Snake Score: {score}
         </div>
       </div>

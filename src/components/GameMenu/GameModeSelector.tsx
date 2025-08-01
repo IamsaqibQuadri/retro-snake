@@ -10,9 +10,9 @@ const GameModeSelector = ({ gameMode, onModeSelect }: GameModeSelectorProps) => 
   const { theme } = useTheme();
 
   const themeColors = {
-    primary: theme === 'light' ? 'text-green-600' : 'text-green-400',
-    border: theme === 'light' ? 'border-green-600' : 'border-green-400',
-    background: theme === 'light' ? 'bg-green-600/10' : 'bg-green-400/10',
+    primary: 'text-primary',
+    border: 'border-primary',
+    background: 'bg-primary/10',
   };
 
   return (
@@ -24,7 +24,7 @@ const GameModeSelector = ({ gameMode, onModeSelect }: GameModeSelectorProps) => 
           className={`px-4 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${
             gameMode === 'classic'
               ? `${themeColors.border} ${themeColors.background.replace('/10', '/20')} ${themeColors.primary}`
-              : `border-gray-600 bg-gray-600/10 text-gray-400 hover:border-green-400/50`
+              : `border-muted-foreground bg-muted text-muted-foreground hover:border-primary/50`
           }`}
         >
           🏛️ CLASSIC
@@ -33,8 +33,8 @@ const GameModeSelector = ({ gameMode, onModeSelect }: GameModeSelectorProps) => 
           onClick={() => onModeSelect('modern')}
           className={`px-4 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${
             gameMode === 'modern'
-              ? 'border-blue-400 bg-blue-400/20 text-blue-400'
-              : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-blue-400/50'
+              ? 'border-secondary bg-secondary/20 text-secondary'
+              : 'border-muted-foreground bg-muted text-muted-foreground hover:border-secondary/50'
           }`}
         >
           🌐 MODERN

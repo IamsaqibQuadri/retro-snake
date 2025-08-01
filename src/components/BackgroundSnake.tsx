@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
+import { useGameSettings } from '../contexts/GameSettingsContext';
 
 interface SnakeSegment {
   x: number;
@@ -7,6 +8,7 @@ interface SnakeSegment {
 }
 
 const BackgroundSnake = () => {
+  const { settings } = useGameSettings();
   const [snake, setSnake] = useState<SnakeSegment[]>([
     { x: 10, y: 10 },
     { x: 9, y: 10 },
@@ -83,14 +85,14 @@ const BackgroundSnake = () => {
               left: `${(segment.x * 100) / 50}%`,
               top: `${(segment.y * 100) / 40}%`,
               transform: 'translate(-50%, -50%)',
-              backgroundColor: index === 0 ? '#22c55e' : '#16a34a', // Same green as in-game snake
+              backgroundColor: index === 0 ? settings.snakeColor : settings.snakeBodyColor,
               background: index === 0 
-                ? 'linear-gradient(45deg, #22c55e 0%, #22c55e 40%, #000 45%, #22c55e 50%, #000 55%, #22c55e 60%, #22c55e 100%)'
-                : 'linear-gradient(45deg, #16a34a 0%, #16a34a 30%, #000 35%, #16a34a 40%, #000 45%, #16a34a 50%, #000 55%, #16a34a 60%, #000 65%, #16a34a 70%, #16a34a 100%)',
+                ? `linear-gradient(45deg, ${settings.snakeColor} 0%, ${settings.snakeColor} 40%, #000 45%, ${settings.snakeColor} 50%, #000 55%, ${settings.snakeColor} 60%, ${settings.snakeColor} 100%)`
+                : `linear-gradient(45deg, ${settings.snakeBodyColor} 0%, ${settings.snakeBodyColor} 30%, #000 35%, ${settings.snakeBodyColor} 40%, #000 45%, ${settings.snakeBodyColor} 50%, #000 55%, ${settings.snakeBodyColor} 60%, #000 65%, ${settings.snakeBodyColor} 70%, ${settings.snakeBodyColor} 100%)`,
               boxShadow: index === 0 
-                ? '0 0 8px #22c55e, 0 0 16px rgba(34, 197, 94, 0.6)' 
-                : '0 0 4px #16a34a, 0 0 8px rgba(22, 163, 74, 0.4)',
-              filter: 'drop-shadow(0 0 6px rgba(34, 197, 94, 0.7))',
+                ? `0 0 8px ${settings.snakeColor}` 
+                : `0 0 4px ${settings.snakeBodyColor}`,
+              
             }}
           />
         ))}

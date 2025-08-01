@@ -109,8 +109,8 @@ const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
     }
   };
 
-  const buttonClass = `w-16 h-16 border-2 border-green-400 bg-green-400/10 text-green-400 rounded-lg flex items-center justify-center active:bg-green-400/20 transition-colors ${
-    disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-400/15'
+  const buttonClass = `w-16 h-16 border-2 border-primary bg-primary/10 text-primary rounded-lg flex items-center justify-center active:bg-primary/20 transition-colors ${
+    disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/15'
   }`;
 
   return (
@@ -134,7 +134,7 @@ const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
         >
           <ArrowLeft size={24} />
         </button>
-        <div className="flex items-center justify-center text-green-300 text-xs">
+        <div className="flex items-center justify-center text-muted-foreground text-xs">
           MOVE
         </div>
         <button
@@ -156,7 +156,7 @@ const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
         <div></div>
       </div>
 
-      <div className="text-center mt-4 text-green-300 text-xs">
+      <div className="text-center mt-4 text-muted-foreground text-xs">
         Use WASD keys, arrow keys, or swipe anywhere on screen
       </div>
     </div>
