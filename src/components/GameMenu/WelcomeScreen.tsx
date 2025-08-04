@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Play } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -8,6 +8,14 @@ interface WelcomeScreenProps {
 
 const WelcomeScreen = ({ onProceedToSetup }: WelcomeScreenProps) => {
   const { theme } = useTheme();
+  const [isRotating, setIsRotating] = useState(false);
+
+  const handleLogoClick = () => {
+    if (!isRotating) {
+      setIsRotating(true);
+      setTimeout(() => setIsRotating(false), 800);
+    }
+  };
 
   const themeColors = {
     primary: 'text-primary',
@@ -25,10 +33,20 @@ const WelcomeScreen = ({ onProceedToSetup }: WelcomeScreenProps) => {
           <img 
             src="/lovable-uploads/fac2201e-f8a2-4cac-8ebc-c735a61174d1.png" 
             alt="Snake Game Logo" 
-            className="w-64 md:w-80 h-auto mx-auto relative z-10 drop-shadow-2xl"
+            className={`w-64 md:w-80 h-auto mx-auto relative z-10 drop-shadow-2xl cursor-pointer transition-transform duration-200 hover:scale-105 ${isRotating ? 'animate-spin-360' : ''}`}
             style={{
               filter: 'drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 10px rgba(34, 197, 94, 0.3))',
             }}
+            onClick={handleLogoClick}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleLogoClick();
+              }
+            }}
+            aria-label="Click to rotate logo"
           />
         </div>
         
