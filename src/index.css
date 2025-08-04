@@ -223,6 +223,30 @@
   }
 }
 
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff, inset 0 0 10px #ffffff;
+  }
+  50% {
+    box-shadow: 0 0 25px #00ffff, 0 0 50px #00ffff, inset 0 0 15px #ffffff, 0 0 70px #ff00ff;
+  }
+}
+
+@keyframes neon-flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  2%, 4%, 6%, 8%, 10% {
+    opacity: 0.9;
+  }
+  12%, 14% {
+    opacity: 0.8;
+  }
+  16% {
+    opacity: 1;
+  }
+}
+
 /* Prevent text selection and touch callouts */
 .select-none {
   -webkit-user-select: none;
