@@ -1,5 +1,4 @@
-
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface GameControlsProps {
@@ -10,9 +9,14 @@ interface GameControlsProps {
 const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
+  const handleButtonClick = useCallback((direction: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT') => {
+    if (!disabled) {
+      onDirectionChange(direction);
+    }
+  }, [onDirectionChange, disabled]);
+
   // Keyboard controls
   useEffect(() => {
-    console.log('GameControls: Setting up keyboard controls, disabled:', disabled);
     const handleKeyPress = (e: KeyboardEvent) => {
       if (disabled) return;
       
@@ -46,7 +50,6 @@ const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
       }
       
       if (direction) {
-        console.log('GameControls: Keyboard input detected:', direction);
         onDirectionChange(direction);
       }
     };
@@ -74,19 +77,16 @@ const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
       let direction: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT' | null = null;
 
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        // Horizontal swipe
         if (Math.abs(deltaX) > minSwipeDistance) {
           direction = deltaX > 0 ? 'RIGHT' : 'LEFT';
         }
       } else {
-        // Vertical swipe
         if (Math.abs(deltaY) > minSwipeDistance) {
           direction = deltaY > 0 ? 'DOWN' : 'UP';
         }
       }
       
       if (direction) {
-        console.log('GameControls: Touch swipe detected:', direction);
         onDirectionChange(direction);
       }
       
@@ -101,13 +101,6 @@ const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
       document.removeEventListener('touchend', handleTouchEnd);
     };
   }, [onDirectionChange, disabled]);
-
-  const handleButtonClick = (direction: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT') => {
-    if (!disabled) {
-      console.log('GameControls: Button clicked:', direction);
-      onDirectionChange(direction);
-    }
-  };
 
   const buttonClass = `w-16 h-16 border-2 border-primary bg-primary/10 text-primary rounded-lg flex items-center justify-center active:bg-primary/20 transition-colors ${
     disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/15'
@@ -163,4 +156,4 @@ const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
   );
 };
 
-export default GameControls;
+export default React.memo(GameControls);

@@ -17,7 +17,6 @@ export const useGameScore = () => {
   const increaseScore = () => {
     setScore(prevScore => {
       const newScore = prevScore + SCORE_PER_FOOD;
-      console.log('New score:', newScore);
       
       // Update high score
       setHighScore(prevHighScore => {

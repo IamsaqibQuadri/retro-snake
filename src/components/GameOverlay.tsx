@@ -1,8 +1,9 @@
-
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
-import PlayerNameDialog from './PlayerNameDialog';
 import { useGlobalLeaderboard } from '../hooks/useGlobalLeaderboard';
+
+// Lazy load PlayerNameDialog for better performance
+const PlayerNameDialog = React.lazy(() => import('./PlayerNameDialog'));
 
 interface GameOverlayProps {
   gameOver: boolean;
@@ -20,31 +21,30 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
   const { addScore } = useGlobalLeaderboard();
   const [showNameDialog, setShowNameDialog] = useState(false);
   
-  if (!gameOver) return null;
-
-  // Theme-aware overlay background with better visibility
-  const getOverlayBg = () => {
+  const getOverlayBg = useCallback(() => {
     switch (theme) {
       case 'light': return 'bg-white/95 backdrop-blur-md';
       case 'dark': return 'bg-black/90 backdrop-blur-md';
-      case 'pastel': return 'bg-white/95 backdrop-blur-md'; // White overlay for pastel
-      case 'gameboy': return 'bg-card/95 backdrop-blur-md'; // Use card background for gameboy
+      case 'pastel': return 'bg-white/95 backdrop-blur-md';
+      case 'gameboy': return 'bg-card/95 backdrop-blur-md';
       default: return 'bg-background/90 backdrop-blur-md';
     }
-  };
+  }, [theme]);
 
-  const handleSaveScore = () => {
+  const handleSaveScore = useCallback(() => {
     setShowNameDialog(true);
-  };
+  }, []);
 
-  const handleNameSave = async (playerName: string) => {
+  const handleNameSave = useCallback(async (playerName: string) => {
     await addScore(playerName, score, gameMode, speed);
     setShowNameDialog(false);
-  };
+  }, [addScore, score, gameMode, speed]);
 
-  const handleNameCancel = () => {
+  const handleNameCancel = useCallback(() => {
     setShowNameDialog(false);
-  };
+  }, []);
+  
+  if (!gameOver) return null;
 
   return (
     <>
@@ -83,14 +83,18 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
         </div>
       </div>
       
-      <PlayerNameDialog
-        isOpen={showNameDialog}
-        score={score}
-        onSave={handleNameSave}
-        onCancel={handleNameCancel}
-      />
+      {showNameDialog && (
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <PlayerNameDialog
+            isOpen={showNameDialog}
+            score={score}
+            onSave={handleNameSave}
+            onCancel={handleNameCancel}
+          />
+        </React.Suspense>
+      )}
     </>
   );
 };
 
-export default GameOverlay;
+export default React.memo(GameOverlay);

@@ -46,7 +46,6 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: 'classic' | 'modern' = 
       // Handle wall collision based on game mode
       if (gameMode === 'classic') {
         if (checkWallCollision(newHead)) {
-          console.log('useSnakeGame: Wall collision detected, ending game');
           playGameOverSound();
           endGame();
           return;
@@ -63,7 +62,6 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: 'classic' | 'modern' = 
         const newSnake = [newHead, ...currentSnake];
         
         if (checkSelfCollision(newHead, currentSnake)) {
-          console.log('useSnakeGame: Self collision detected, ending game');
           playGameOverSound();
           endGame();
           return;
@@ -80,7 +78,6 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: 'classic' | 'modern' = 
       } else {
         const snakeBodyWithoutTail = currentSnake.slice(0, -1);
         if (checkSelfCollision(newHead, snakeBodyWithoutTail)) {
-          console.log('useSnakeGame: Self collision detected, ending game');
           playGameOverSound();
           endGame();
           return;
@@ -103,7 +100,6 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: 'classic' | 'modern' = 
   // Add score to leaderboard when game ends
   useEffect(() => {
     if (gameOver && score > 0 && !scoreAddedRef.current) {
-      console.log('useSnakeGame: Game over, adding score to leaderboard:', score);
       addScore(score, gameMode, speed);
       scoreAddedRef.current = true;
     }
@@ -111,10 +107,9 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: 'classic' | 'modern' = 
 
   // Enhanced reset game
   const resetGame = useCallback(() => {
-    console.log('useSnakeGame: Resetting game');
     resetGameState();
     resetScore();
-    scoreAddedRef.current = false; // Reset the flag for next game
+    scoreAddedRef.current = false;
   }, [resetGameState, resetScore]);
 
   return {

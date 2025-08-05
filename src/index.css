@@ -225,25 +225,31 @@
 
 @keyframes neon-pulse {
   0%, 100% {
-    box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff, inset 0 0 10px #ffffff;
+    box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, inset 0 0 15px #ffffff;
+    border-color: #ffffff;
   }
   50% {
-    box-shadow: 0 0 25px #00ffff, 0 0 50px #00ffff, inset 0 0 15px #ffffff, 0 0 70px #ff00ff;
+    box-shadow: 0 0 30px #00ffff, 0 0 60px #00ffff, inset 0 0 20px #ffffff, 0 0 80px #ff00ff;
+    border-color: #00ffff;
   }
 }
 
 @keyframes neon-flicker {
   0%, 100% {
     opacity: 1;
+    filter: brightness(1);
   }
-  2%, 4%, 6%, 8%, 10% {
+  5%, 10%, 15% {
+    opacity: 0.95;
+    filter: brightness(1.1);
+  }
+  20%, 25% {
     opacity: 0.9;
+    filter: brightness(0.9);
   }
-  12%, 14% {
-    opacity: 0.8;
-  }
-  16% {
+  30% {
     opacity: 1;
+    filter: brightness(1);
   }
 }
 

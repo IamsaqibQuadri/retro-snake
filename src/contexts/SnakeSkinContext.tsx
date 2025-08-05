@@ -17,7 +17,6 @@ export const SnakeSkinProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     localStorage.setItem('snake-skin', snakeSkin);
-    console.log('SnakeSkinContext: Snake skin changed to:', snakeSkin);
   }, [snakeSkin]);
 
   return (

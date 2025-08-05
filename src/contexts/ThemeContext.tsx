@@ -19,12 +19,9 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     localStorage.setItem('snake-theme', theme);
-    console.log('ThemeContext: Theme changed to:', theme);
-    // Apply theme class to document body
     document.body.className = '';
     if (theme !== 'light') {
       document.body.classList.add(theme);
-      console.log('ThemeContext: Applied theme class:', theme, 'to body');
     }
   }, [theme]);
 

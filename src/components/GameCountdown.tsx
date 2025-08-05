@@ -15,22 +15,18 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
   const [showSettings, setShowSettings] = useState(false);
   const { theme } = useTheme();
 
-  console.log('GameCountdown: Starting countdown with:', { gameMode, speed });
+  
 
   // Using design system tokens for consistent theming
   const backgroundClass = 'bg-background/95 text-foreground';
   const buttonClasses = "p-2 rounded-lg border border-border bg-card text-card-foreground hover:bg-muted transition-all duration-200";
 
   useEffect(() => {
-    console.log('GameCountdown: Starting countdown timer');
     const timer = setInterval(() => {
       setCount(prev => {
-        console.log('GameCountdown: Count:', prev);
         if (prev <= 1) {
-          console.log('GameCountdown: Countdown complete!');
           clearInterval(timer);
           setTimeout(() => {
-            console.log('GameCountdown: Calling onCountdownComplete');
             onCountdownComplete();
           }, 500);
           return 0;
@@ -40,7 +36,6 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
     }, 1000);
 
     return () => {
-      console.log('GameCountdown: Cleaning up timer');
       clearInterval(timer);
     };
   }, [onCountdownComplete]);
@@ -59,7 +54,6 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
   };
 
   if (count === 0) {
-    console.log('GameCountdown: Displaying GO! message');
     return (
       <div className={`fixed inset-0 flex items-center justify-center z-50 transition-colors duration-300 ${backgroundClass}`}>
         {/* Top-left settings button */}

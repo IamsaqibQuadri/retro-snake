@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Home, Settings } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -14,15 +13,22 @@ interface GameHeaderProps {
 const GameHeader = ({ score, highScore, gameMode, onBackToMenu, onShowSettings }: GameHeaderProps) => {
   const { theme } = useTheme();
   
-  // Using design system tokens for consistent theming
   const buttonClasses = "border border-border bg-card text-card-foreground hover:bg-muted transition-all duration-200 rounded text-sm";
+
+  const handleBackToMenu = useCallback(() => {
+    onBackToMenu();
+  }, [onBackToMenu]);
+
+  const handleShowSettings = useCallback(() => {
+    onShowSettings();
+  }, [onShowSettings]);
 
   return (
     <>
       {/* Header */}
       <div className="flex items-center justify-between w-full max-w-md mb-4">
         <button
-          onClick={onShowSettings}
+          onClick={handleShowSettings}
           className={`flex items-center gap-1 px-2 py-2 ${buttonClasses}`}
         >
           <Settings size={16} />
@@ -35,7 +41,7 @@ const GameHeader = ({ score, highScore, gameMode, onBackToMenu, onShowSettings }
         
         <div className="flex gap-1">
           <button
-            onClick={onBackToMenu}
+            onClick={handleBackToMenu}
             className="flex items-center gap-1 px-2 py-2 border border-secondary bg-secondary/10 text-secondary-foreground hover:bg-secondary/20 transition-colors rounded text-sm"
           >
             <Home size={16} />
@@ -58,4 +64,4 @@ const GameHeader = ({ score, highScore, gameMode, onBackToMenu, onShowSettings }
   );
 };
 
-export default GameHeader;
+export default React.memo(GameHeader);
