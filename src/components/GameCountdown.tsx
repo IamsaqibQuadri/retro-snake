@@ -6,7 +6,7 @@ import GameSettingsPanel from './GameSettingsPanel';
 
 interface GameCountdownProps {
   onCountdownComplete: () => void;
-  gameMode: 'classic' | 'modern';
+  gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival';
   speed: 'slow' | 'normal' | 'fast';
 }
 
@@ -50,7 +50,14 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
   };
 
   const getModeEmoji = (mode: string) => {
-    return mode === 'classic' ? '🏛️' : '🌐';
+    switch (mode) {
+      case 'classic': return '🏛️';
+      case 'modern': return '🌐';
+      case 'obstacles': return '🧱';
+      case 'timeattack': return '⏱️';
+      case 'survival': return '🔥';
+      default: return '🎮';
+    }
   };
 
   if (count === 0) {

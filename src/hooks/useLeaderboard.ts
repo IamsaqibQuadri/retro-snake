@@ -5,7 +5,7 @@ const LEADERBOARD_KEY = 'snake-leaderboard-global';
 export interface LeaderboardEntry {
   score: number;
   date: string;
-  gameMode: 'classic' | 'modern';
+  gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival';
   speed: 'slow' | 'normal' | 'fast';
   timestamp: number;
   playerId: string;
@@ -74,7 +74,7 @@ export const useLeaderboard = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [loadLeaderboard]);
 
-  const addScore = useCallback((score: number, gameMode: 'classic' | 'modern', speed: 'slow' | 'normal' | 'fast') => {
+  const addScore = useCallback((score: number, gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival', speed: 'slow' | 'normal' | 'fast') => {
     
     // Generate or get persistent player ID
     let playerId = localStorage.getItem('snake-player-id');

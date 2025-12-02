@@ -5,12 +5,14 @@ import { useTheme } from '../contexts/ThemeContext';
 interface GameHeaderProps {
   score: number;
   highScore: number;
-  gameMode: 'classic' | 'modern';
+  gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival';
   onBackToMenu: () => void;
   onShowSettings: () => void;
+  timeRemaining?: number;
+  speedLevel?: string;
 }
 
-const GameHeader = ({ score, highScore, gameMode, onBackToMenu, onShowSettings }: GameHeaderProps) => {
+const GameHeader = ({ score, highScore, gameMode, onBackToMenu, onShowSettings, timeRemaining, speedLevel }: GameHeaderProps) => {
   const { theme } = useTheme();
   
   const buttonClasses = "border border-border bg-card text-card-foreground hover:bg-muted transition-all duration-200 rounded text-sm";
@@ -22,6 +24,19 @@ const GameHeader = ({ score, highScore, gameMode, onBackToMenu, onShowSettings }
   const handleShowSettings = useCallback(() => {
     onShowSettings();
   }, [onShowSettings]);
+
+  const getModeBadge = () => {
+    switch (gameMode) {
+      case 'classic': return { emoji: '🏛️', label: 'CLASSIC', color: 'border-primary text-primary bg-primary/10' };
+      case 'modern': return { emoji: '🌐', label: 'MODERN', color: 'border-secondary text-secondary-foreground bg-secondary/10' };
+      case 'obstacles': return { emoji: '🧱', label: 'OBSTACLES', color: 'border-accent text-accent bg-accent/10' };
+      case 'timeattack': return { emoji: '⏱️', label: 'TIME ATTACK', color: 'border-destructive text-destructive bg-destructive/10' };
+      case 'survival': return { emoji: '🔥', label: 'SURVIVAL', color: 'border-accent text-accent bg-accent/10' };
+      default: return { emoji: '🎮', label: 'GAME', color: 'border-primary text-primary bg-primary/10' };
+    }
+  };
+
+  const modeBadge = getModeBadge();
 
   return (
     <>
@@ -37,6 +52,16 @@ const GameHeader = ({ score, highScore, gameMode, onBackToMenu, onShowSettings }
         <div className="text-center">
           <div className="font-bold text-lg text-primary">SCORE: {score}</div>
           <div className="text-xs text-muted-foreground">HIGH: {highScore}</div>
+          {timeRemaining !== undefined && (
+            <div className="text-sm font-bold text-destructive mt-1">
+              ⏱️ {timeRemaining}s
+            </div>
+          )}
+          {speedLevel && (
+            <div className="text-xs text-accent mt-1">
+              🔥 {speedLevel}
+            </div>
+          )}
         </div>
         
         <div className="flex gap-1">
@@ -52,12 +77,8 @@ const GameHeader = ({ score, highScore, gameMode, onBackToMenu, onShowSettings }
 
       {/* Game Mode Indicator */}
       <div className="mb-2">
-        <span className={`text-xs font-bold px-2 py-1 rounded border ${
-          gameMode === 'classic' 
-            ? 'border-primary text-primary bg-primary/10' 
-            : 'border-secondary text-secondary-foreground bg-secondary/10'
-        }`}>
-          {gameMode === 'classic' ? '🏛️ CLASSIC MODE' : '🚀 MODERN MODE'}
+        <span className={`text-xs font-bold px-2 py-1 rounded border ${modeBadge.color}`}>
+          {modeBadge.emoji} {modeBadge.label}
         </span>
       </div>
     </>

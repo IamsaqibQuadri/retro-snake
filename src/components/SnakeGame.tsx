@@ -12,7 +12,7 @@ import { toast } from '@/hooks/use-toast';
 
 interface SnakeGameProps {
   speed: 'slow' | 'normal' | 'fast';
-  gameMode: 'classic' | 'modern';
+  gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival';
   onBackToMenu: () => void;
 }
 
@@ -22,7 +22,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
   const [foodEaten, setFoodEaten] = useState(false);
   const { theme } = useTheme();
   
-  const { gameState, score, highScore, direction, gameOver, moveSnake, resetGame } = useSnakeGame(speed, gameMode);
+  const { gameState, score, highScore, direction, gameOver, moveSnake, resetGame, timeRemaining, speedLevel } = useSnakeGame(speed, gameMode);
 
   const GRID_SIZE = 20;
   const GAME_WIDTH = 300;
@@ -90,6 +90,8 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
         gameMode={gameMode}
         onBackToMenu={handleBackToMenu}
         onShowSettings={handleShowSettings}
+        timeRemaining={timeRemaining}
+        speedLevel={speedLevel}
       />
 
       <div className="relative">
@@ -101,6 +103,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
           gameWidth={GAME_WIDTH}
           gameHeight={GAME_HEIGHT}
           gridSize={GRID_SIZE}
+          obstacles={gameState.obstacles || []}
         />
         
         <GameOverlay
