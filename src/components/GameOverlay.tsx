@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useGlobalLeaderboard } from '../hooks/useGlobalLeaderboard';
+import ShareScoreCard from './ShareScoreCard';
 
 // Lazy load PlayerNameDialog for better performance
 const PlayerNameDialog = React.lazy(() => import('./PlayerNameDialog'));
@@ -9,7 +10,7 @@ interface GameOverlayProps {
   gameOver: boolean;
   score: number;
   highScore: number;
-  gameMode: 'classic' | 'modern';
+  gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival';
   speed: 'slow' | 'normal' | 'fast';
   onNewGame: () => void;
   onBackToMenu: () => void;
@@ -20,6 +21,8 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
   const { theme } = useTheme();
   const { addScore } = useGlobalLeaderboard();
   const [showNameDialog, setShowNameDialog] = useState(false);
+  const [showShareCard, setShowShareCard] = useState(false);
+  const [savedPlayerName, setSavedPlayerName] = useState('');
   
   const getOverlayBg = useCallback(() => {
     switch (theme) {
@@ -37,7 +40,9 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
 
   const handleNameSave = useCallback(async (playerName: string) => {
     await addScore(playerName, score, gameMode, speed);
+    setSavedPlayerName(playerName);
     setShowNameDialog(false);
+    setShowShareCard(true);
   }, [addScore, score, gameMode, speed]);
 
   const handleNameCancel = useCallback(() => {
@@ -78,7 +83,7 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
             onClick={onTakeScreenshot}
             className="block w-full px-4 py-2 border border-accent text-accent-foreground font-bold rounded hover:bg-accent/10 transition-colors text-sm"
           >
-            📸 TAKE SCREENSHOT
+            📸 SHARE SCORE CARD
           </button>
         </div>
       </div>
@@ -92,6 +97,17 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
             onCancel={handleNameCancel}
           />
         </React.Suspense>
+      )}
+
+      {showShareCard && (
+        <ShareScoreCard
+          isOpen={showShareCard}
+          playerName={savedPlayerName}
+          score={score}
+          gameMode={gameMode}
+          speed={speed}
+          onClose={() => setShowShareCard(false)}
+        />
       )}
     </>
   );

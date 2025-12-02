@@ -5,6 +5,8 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import { useLeaderboard } from '../hooks/useLeaderboard';
 import EnhancedBackgroundSnake from './EnhancedBackgroundSnake';
+import OceanBackground from './backgrounds/OceanBackground';
+import MatrixBackground from './backgrounds/MatrixBackground';
 import GameSettingsPanel from './GameSettingsPanel';
 import WelcomeScreen from './GameMenu/WelcomeScreen';
 import SetupScreen from './GameMenu/SetupScreen';
@@ -12,7 +14,7 @@ import TopControls from './GameMenu/TopControls';
 import Watermark from './GameMenu/Watermark';
 
 interface GameMenuProps {
-  onStartGame: (speed: 'slow' | 'normal' | 'fast', gameMode: 'classic' | 'modern') => void;
+  onStartGame: (speed: 'slow' | 'normal' | 'fast', gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival') => void;
 }
 
 const GameMenu = ({ onStartGame }: GameMenuProps) => {
@@ -21,7 +23,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
   const [showSettings, setShowSettings] = useState(false);
   const [currentStep, setCurrentStep] = useState<'welcome' | 'setup'>('welcome');
   const [selectedSpeed, setSelectedSpeed] = useState<'slow' | 'normal' | 'fast' | null>(null);
-  const [gameMode, setGameMode] = useState<'classic' | 'modern'>('classic');
+  const [gameMode, setGameMode] = useState<'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival'>('classic');
   const { settings, toggleSound } = useGameSettings();
   const { theme, toggleTheme } = useTheme();
   const { leaderboard, clearLeaderboard } = useLeaderboard();
@@ -59,14 +61,16 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
     setSelectedSpeed(speed);
   };
 
-  const handleModeSelection = (mode: 'classic' | 'modern') => {
+  const handleModeSelection = (mode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival') => {
     setGameMode(mode);
   };
 
   return (
     <div className={`flex flex-col items-center justify-center h-full px-4 py-4 text-center relative transition-colors duration-300 ${backgroundClass}`}>
-      {/* Enhanced Background Snake */}
-      <EnhancedBackgroundSnake />
+      {/* Theme-specific backgrounds */}
+      {theme === 'ocean' && <OceanBackground />}
+      {theme === 'matrix' && <MatrixBackground />}
+      {theme !== 'ocean' && theme !== 'matrix' && <EnhancedBackgroundSnake />}
 
       <TopControls onShowSettings={() => setShowSettings(true)} />
       <Watermark />

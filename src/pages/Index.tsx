@@ -9,10 +9,10 @@ import { ThemeProvider, useTheme } from '../contexts/ThemeContext';
 const GameContent = () => {
   const [gameState, setGameState] = useState<'menu' | 'countdown' | 'playing'>('menu');
   const [gameSpeed, setGameSpeed] = useState<'slow' | 'normal' | 'fast'>('normal');
-  const [gameMode, setGameMode] = useState<'classic' | 'modern'>('classic');
+  const [gameMode, setGameMode] = useState<'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival'>('classic');
   const { theme } = useTheme();
 
-  const handleStartGame = (speed: 'slow' | 'normal' | 'fast', mode: 'classic' | 'modern') => {
+  const handleStartGame = (speed: 'slow' | 'normal' | 'fast', mode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival') => {
     setGameSpeed(speed);
     setGameMode(mode);
     setGameState('countdown');

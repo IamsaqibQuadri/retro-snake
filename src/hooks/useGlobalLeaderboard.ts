@@ -5,7 +5,7 @@ export interface GlobalLeaderboardEntry {
   id: string;
   player_name: string;
   score: number;
-  game_mode: 'classic' | 'modern';
+  game_mode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival';
   speed: 'slow' | 'normal' | 'fast';
   created_at: string;
 }
@@ -42,7 +42,7 @@ export const useGlobalLeaderboard = () => {
   const addScore = useCallback(async (
     playerName: string,
     score: number, 
-    gameMode: 'classic' | 'modern', 
+    gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival', 
     speed: 'slow' | 'normal' | 'fast'
   ) => {
     try {

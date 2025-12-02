@@ -13,9 +13,10 @@ interface GameBoardProps {
   gameWidth: number;
   gameHeight: number;
   gridSize: number;
+  obstacles: Position[];
 }
 
-const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, gridSize }: GameBoardProps) => {
+const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, gridSize, obstacles }: GameBoardProps) => {
   const { settings } = useGameSettings();
   const { theme } = useTheme();
   const { snakeSkin } = useSnakeSkin();
@@ -240,6 +241,21 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
           boxShadow: '0 0 8px #f87171',
         }}
       />
+
+      {/* Obstacles */}
+      {obstacles.map((obstacle, index) => (
+        <div
+          key={`obstacle-${index}`}
+          className="absolute bg-muted-foreground border-2 border-border"
+          style={{
+            left: obstacle.x * gridSize,
+            top: obstacle.y * gridSize,
+            width: gridSize,
+            height: gridSize,
+            boxShadow: '0 0 4px rgba(0, 0, 0, 0.5)',
+          }}
+        />
+      ))}
     </div>
   );
 };

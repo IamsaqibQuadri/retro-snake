@@ -171,6 +171,86 @@
     --input: 74 45% 60%;
     --ring: 0 0% 0%;
   }
+
+  /* Ocean Blue Theme - Deep ocean colors with excellent contrast */
+  .ocean {
+    /* Deep ocean blue background */
+    --background: 200 70% 85%;
+    --foreground: 200 100% 10%; /* Very dark blue text */
+    
+    /* Card styling - white cards on ocean bg */
+    --card: 0 0% 100%;
+    --card-foreground: 200 100% 10%;
+    
+    /* Popover styling */
+    --popover: 0 0% 100%;
+    --popover-foreground: 200 100% 10%;
+    
+    /* Primary: Deep ocean blue */
+    --primary: 200 100% 30%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Secondary: Seafoam/teal accent */
+    --secondary: 180 60% 40%;
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Muted tones */
+    --muted: 200 30% 90%;
+    --muted-foreground: 200 50% 30%;
+    
+    /* Accent: Coral/orange for contrast */
+    --accent: 25 90% 55%;
+    --accent-foreground: 0 0% 100%;
+    
+    /* Destructive */
+    --destructive: 0 80% 50%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Borders and inputs */
+    --border: 200 40% 70%;
+    --input: 200 30% 95%;
+    --ring: 200 100% 30%;
+  }
+
+  /* Terminal/Matrix Theme - Classic green terminal on black */
+  .matrix {
+    /* Pure black terminal background */
+    --background: 0 0% 0%;
+    --foreground: 120 100% 50%; /* Bright matrix green */
+    
+    /* Card styling */
+    --card: 0 0% 5%;
+    --card-foreground: 120 100% 50%;
+    
+    /* Popover styling */
+    --popover: 0 0% 5%;
+    --popover-foreground: 120 100% 50%;
+    
+    /* Primary: Matrix green */
+    --primary: 120 100% 40%;
+    --primary-foreground: 0 0% 0%;
+    
+    /* Secondary: Darker green */
+    --secondary: 120 100% 20%;
+    --secondary-foreground: 120 100% 70%;
+    
+    /* Muted tones */
+    --muted: 0 0% 10%;
+    --muted-foreground: 120 50% 40%;
+    
+    /* Accent: Bright electric green */
+    --accent: 120 100% 50%;
+    --accent-foreground: 0 0% 0%;
+    
+    /* Destructive: Red error color */
+    --destructive: 0 100% 40%;
+    --destructive-foreground: 120 100% 50%;
+    
+    /* Borders and inputs */
+    --border: 120 100% 20%;
+    --input: 0 0% 8%;
+    --ring: 120 100% 50%;
+  }
 }
 
 @layer base {
