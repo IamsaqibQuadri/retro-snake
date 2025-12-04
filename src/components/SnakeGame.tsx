@@ -7,6 +7,8 @@ import GameHeader from './GameHeader';
 import GameBoard from './GameBoard';
 import GameOverlay from './GameOverlay';
 import GameInfo from './GameInfo';
+import OceanBackground from './backgrounds/OceanBackground';
+import MatrixBackground from './backgrounds/MatrixBackground';
 import html2canvas from 'html2canvas';
 import { toast } from '@/hooks/use-toast';
 
@@ -83,7 +85,11 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
   }, [score, theme]);
 
   return (
-    <div ref={gameRef} className={`flex flex-col items-center justify-center h-full px-4 transition-colors duration-300 ${backgroundClass}`}>
+    <div ref={gameRef} className={`relative flex flex-col items-center justify-center h-full px-4 transition-colors duration-300 ${backgroundClass}`}>
+      {/* Themed backgrounds */}
+      {theme === 'ocean' && <OceanBackground />}
+      {theme === 'matrix' && <MatrixBackground />}
+      
       <GameHeader
         score={score}
         highScore={highScore}
