@@ -61,7 +61,7 @@ const MatrixBackground = () => {
   }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none bg-black">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none bg-black z-0">
       {/* Matrix rain canvas */}
       <canvas
         ref={canvasRef}
