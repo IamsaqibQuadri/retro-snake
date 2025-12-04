@@ -86,11 +86,13 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
 
   return (
     <div ref={gameRef} className={`relative flex flex-col items-center justify-center h-full px-4 transition-colors duration-300 ${backgroundClass}`}>
-      {/* Themed backgrounds */}
+      {/* Themed backgrounds - z-0 to stay behind content */}
       {theme === 'ocean' && <OceanBackground />}
       {theme === 'matrix' && <MatrixBackground />}
       
-      <GameHeader
+      {/* Game content wrapper - z-10 to stay above backgrounds */}
+      <div className="relative z-10 flex flex-col items-center">
+        <GameHeader
         score={score}
         highScore={highScore}
         gameMode={gameMode}
@@ -128,10 +130,11 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
 
       <GameControls onDirectionChange={moveSnake} disabled={gameOver} />
 
-      <LazyGameSettingsPanel 
-        isOpen={showSettings} 
-        onClose={handleCloseSettings} 
-      />
+        <LazyGameSettingsPanel 
+          isOpen={showSettings} 
+          onClose={handleCloseSettings} 
+        />
+      </div>
     </div>
   );
 };

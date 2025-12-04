@@ -218,11 +218,26 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
     );
   };
 
-  // Using design system tokens for consistent theming
-  const boardStyles = 'bg-card border-border';
+  // Theme-specific board styles
+  const getBoardStyles = () => {
+    switch (theme) {
+      case 'ocean':
+        return 'bg-[hsl(200,80%,30%)]/60 border-[hsl(200,100%,60%)] shadow-[0_0_15px_hsl(200,100%,60%,0.5)]';
+      case 'matrix':
+        return 'bg-black border-[hsl(120,100%,50%)] shadow-[0_0_10px_hsl(120,100%,50%),inset_0_0_5px_hsl(120,100%,50%,0.3)]';
+      case 'gameboy':
+        return 'bg-[hsl(75,70%,50%)] border-[hsl(120,60%,15%)] border-4';
+      case 'pastel':
+        return 'bg-white/80 border-[hsl(270,80%,80%)] border-2';
+      case 'dark':
+        return 'bg-[hsl(0,0%,10%)] border-[hsl(120,70%,40%)]';
+      default:
+        return 'bg-card border-border';
+    }
+  };
 
   return (
-    <div className={`relative border-2 ${boardStyles} rounded-lg overflow-hidden`} 
+    <div className={`relative border-2 ${getBoardStyles()} rounded-lg overflow-hidden`} 
          style={{ width: gameWidth, height: gameHeight }}>
       
       {/* Snake */}

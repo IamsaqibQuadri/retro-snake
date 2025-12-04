@@ -2,18 +2,18 @@ import React from 'react';
 
 const OceanBackground = () => {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
       {/* Ocean gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-[hsl(200,70%,85%)] via-[hsl(200,80%,70%)] to-[hsl(200,90%,50%)]" />
       
       {/* Animated waves at bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-32">
-        <div className="absolute bottom-0 w-[200%] h-24 bg-gradient-to-t from-[hsl(200,90%,40%)] to-transparent opacity-60 animate-[wave_8s_ease-in-out_infinite]" 
+        <div className="absolute bottom-0 w-[200%] h-24 bg-gradient-to-t from-[hsl(200,90%,40%)] to-transparent opacity-60" 
              style={{ 
                borderRadius: '100% 100% 0 0',
                animation: 'wave 8s ease-in-out infinite'
              }} />
-        <div className="absolute bottom-0 w-[200%] h-20 bg-gradient-to-t from-[hsl(200,80%,50%)] to-transparent opacity-40 animate-[wave_6s_ease-in-out_infinite_0.5s]"
+        <div className="absolute bottom-0 w-[200%] h-20 bg-gradient-to-t from-[hsl(200,80%,50%)] to-transparent opacity-40"
              style={{ 
                borderRadius: '100% 100% 0 0',
                animation: 'wave 6s ease-in-out infinite 0.5s'
@@ -35,7 +35,7 @@ const OceanBackground = () => {
         />
       ))}
 
-      {/* Swimming fish - right to left */}
+      {/* Swimming fish - right to left (facing left) */}
       {[...Array(5)].map((_, i) => (
         <div
           key={`fish-${i}`}
@@ -45,11 +45,11 @@ const OceanBackground = () => {
             animation: `swim-left ${18 + i * 3}s linear ${i * 2}s infinite`,
           }}
         >
-          🐠
+          🐟
         </div>
       ))}
 
-      {/* Additional fish swimming left to right */}
+      {/* Swimming fish - left to right (facing right) */}
       {[...Array(3)].map((_, i) => (
         <div
           key={`fish-reverse-${i}`}
@@ -59,7 +59,7 @@ const OceanBackground = () => {
             animation: `swim-right ${15 + i * 4}s linear ${i * 3}s infinite`,
           }}
         >
-          🐟
+          🐠
         </div>
       ))}
 
@@ -104,9 +104,15 @@ const OceanBackground = () => {
             left: 105%;
             transform: translateY(0) scaleX(-1);
           }
-          25% { transform: translateY(-15px) scaleX(-1); }
-          50% { transform: translateY(0) scaleX(-1); }
-          75% { transform: translateY(-10px) scaleX(-1); }
+          25% { 
+            transform: translateY(-15px) scaleX(-1);
+          }
+          50% { 
+            transform: translateY(0) scaleX(-1);
+          }
+          75% { 
+            transform: translateY(-10px) scaleX(-1);
+          }
           100% { 
             left: -10%;
             transform: translateY(0) scaleX(-1);
@@ -118,9 +124,15 @@ const OceanBackground = () => {
             left: -10%;
             transform: translateY(0) scaleX(1);
           }
-          25% { transform: translateY(-10px) scaleX(1); }
-          50% { transform: translateY(0) scaleX(1); }
-          75% { transform: translateY(-15px) scaleX(1); }
+          25% { 
+            transform: translateY(-10px) scaleX(1);
+          }
+          50% { 
+            transform: translateY(0) scaleX(1);
+          }
+          75% { 
+            transform: translateY(-15px) scaleX(1);
+          }
           100% { 
             left: 105%;
             transform: translateY(0) scaleX(1);
