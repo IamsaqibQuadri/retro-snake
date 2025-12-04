@@ -35,32 +35,28 @@ const OceanBackground = () => {
         />
       ))}
 
-      {/* Swimming fish */}
+      {/* Swimming fish - right to left */}
       {[...Array(5)].map((_, i) => (
         <div
           key={`fish-${i}`}
           className="absolute text-2xl"
           style={{
-            top: `${20 + Math.random() * 60}%`,
-            left: `-5%`,
-            animation: `swim ${15 + Math.random() * 10}s linear ${Math.random() * 10}s infinite`,
-            transform: i % 2 === 0 ? 'scaleX(1)' : 'scaleX(-1)',
+            top: `${20 + i * 12}%`,
+            animation: `swim-left ${18 + i * 3}s linear ${i * 2}s infinite`,
           }}
         >
           🐠
         </div>
       ))}
 
-      {/* Additional fish swimming opposite direction */}
+      {/* Additional fish swimming left to right */}
       {[...Array(3)].map((_, i) => (
         <div
           key={`fish-reverse-${i}`}
           className="absolute text-2xl"
           style={{
-            top: `${30 + Math.random() * 50}%`,
-            right: `-5%`,
-            animation: `swim-reverse ${12 + Math.random() * 8}s linear ${Math.random() * 8}s infinite`,
-            transform: 'scaleX(-1)',
+            top: `${35 + i * 15}%`,
+            animation: `swim-right ${15 + i * 4}s linear ${i * 3}s infinite`,
           }}
         >
           🐟
@@ -103,20 +99,32 @@ const OceanBackground = () => {
           }
         }
 
-        @keyframes swim {
-          0% { transform: translateX(0) translateY(0) scaleX(1); }
-          25% { transform: translateX(25vw) translateY(-20px) scaleX(1); }
-          50% { transform: translateX(50vw) translateY(0) scaleX(1); }
-          75% { transform: translateX(75vw) translateY(-15px) scaleX(1); }
-          100% { transform: translateX(110vw) translateY(0) scaleX(1); }
+        @keyframes swim-left {
+          0% { 
+            left: 105%;
+            transform: translateY(0) scaleX(-1);
+          }
+          25% { transform: translateY(-15px) scaleX(-1); }
+          50% { transform: translateY(0) scaleX(-1); }
+          75% { transform: translateY(-10px) scaleX(-1); }
+          100% { 
+            left: -10%;
+            transform: translateY(0) scaleX(-1);
+          }
         }
 
-        @keyframes swim-reverse {
-          0% { transform: translateX(0) translateY(0) scaleX(-1); }
-          25% { transform: translateX(-25vw) translateY(-15px) scaleX(-1); }
-          50% { transform: translateX(-50vw) translateY(0) scaleX(-1); }
-          75% { transform: translateX(-75vw) translateY(-20px) scaleX(-1); }
-          100% { transform: translateX(-110vw) translateY(0) scaleX(-1); }
+        @keyframes swim-right {
+          0% { 
+            left: -10%;
+            transform: translateY(0) scaleX(1);
+          }
+          25% { transform: translateY(-10px) scaleX(1); }
+          50% { transform: translateY(0) scaleX(1); }
+          75% { transform: translateY(-15px) scaleX(1); }
+          100% { 
+            left: 105%;
+            transform: translateY(0) scaleX(1);
+          }
         }
 
         @keyframes ripple {

@@ -14,6 +14,8 @@ const themes: { value: Theme; label: string; description: string; preview: strin
   { value: 'dark', label: 'Dark', description: 'Easy on the eyes', preview: '🌙' },
   { value: 'pastel', label: 'Pastel Dreams', description: 'Soft and dreamy colors', preview: '🌸' },
   { value: 'gameboy', label: 'Game Boy Retro', description: 'Classic LCD green', preview: '🎮' },
+  { value: 'ocean', label: 'Ocean Blue', description: 'Deep sea adventure', preview: '🌊' },
+  { value: 'matrix', label: 'Matrix', description: 'Terminal hacker mode', preview: '💻' },
 ];
 
 const snakeSkins: { value: SnakeSkin; label: string; description: string; preview: string }[] = [
