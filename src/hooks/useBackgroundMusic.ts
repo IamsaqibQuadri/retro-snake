@@ -95,7 +95,10 @@ export const useBackgroundMusic = (shouldPlay: boolean = false) => {
   };
 
   const createMenuTune = () => {
-    if (!settings.soundEnabled || !audioContextRef.current || isPlayingRef.current) return;
+    if (!settings.soundEnabled || !audioContextRef.current) return;
+    
+    // Stop any existing tune first to allow theme changes
+    stopTune();
 
     const context = audioContextRef.current;
     const oscillator = context.createOscillator();
