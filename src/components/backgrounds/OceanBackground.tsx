@@ -35,11 +35,11 @@ const OceanBackground = () => {
         />
       ))}
 
-      {/* Swimming fish - right to left (facing left) */}
+      {/* Swimming fish - right to left */}
       {[...Array(5)].map((_, i) => (
         <div
           key={`fish-${i}`}
-          className="absolute text-2xl"
+          className="absolute text-2xl left-0"
           style={{
             top: `${20 + i * 12}%`,
             animation: `swim-left ${18 + i * 3}s linear ${i * 2}s infinite`,
@@ -49,11 +49,11 @@ const OceanBackground = () => {
         </div>
       ))}
 
-      {/* Swimming fish - left to right (facing right) */}
+      {/* Swimming fish - left to right */}
       {[...Array(3)].map((_, i) => (
         <div
           key={`fish-reverse-${i}`}
-          className="absolute text-2xl"
+          className="absolute text-2xl left-0"
           style={{
             top: `${35 + i * 15}%`,
             animation: `swim-right ${15 + i * 4}s linear ${i * 3}s infinite`,
@@ -101,41 +101,37 @@ const OceanBackground = () => {
 
         @keyframes swim-left {
           0% { 
-            left: 105%;
-            transform: translateY(0) scaleX(-1);
+            transform: translateX(100vw) translateY(0);
           }
           25% { 
-            transform: translateY(-15px) scaleX(-1);
+            transform: translateX(75vw) translateY(-15px);
           }
           50% { 
-            transform: translateY(0) scaleX(-1);
+            transform: translateX(50vw) translateY(0);
           }
           75% { 
-            transform: translateY(-10px) scaleX(-1);
+            transform: translateX(25vw) translateY(-10px);
           }
           100% { 
-            left: -10%;
-            transform: translateY(0) scaleX(-1);
+            transform: translateX(-50px) translateY(0);
           }
         }
 
         @keyframes swim-right {
           0% { 
-            left: -10%;
-            transform: translateY(0) scaleX(1);
+            transform: translateX(-50px) translateY(0) scaleX(-1);
           }
           25% { 
-            transform: translateY(-10px) scaleX(1);
+            transform: translateX(25vw) translateY(-10px) scaleX(-1);
           }
           50% { 
-            transform: translateY(0) scaleX(1);
+            transform: translateX(50vw) translateY(0) scaleX(-1);
           }
           75% { 
-            transform: translateY(-15px) scaleX(1);
+            transform: translateX(75vw) translateY(-15px) scaleX(-1);
           }
           100% { 
-            left: 105%;
-            transform: translateY(0) scaleX(1);
+            transform: translateX(100vw) translateY(0) scaleX(-1);
           }
         }
 

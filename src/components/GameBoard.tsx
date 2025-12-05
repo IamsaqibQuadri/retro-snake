@@ -74,23 +74,6 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
           border: '1px solid #000',
           boxShadow: foodEaten ? `0 0 8px ${settings.snakeColor}` : 'inset 2px 2px 0 rgba(255,255,255,0.6), inset -2px -2px 0 rgba(0,0,0,0.6)',
         };
-      } else if (snakeSkin === 'neon') {
-        // Neon glow electric style
-        return {
-          left: segment.x * gridSize,
-          top: segment.y * gridSize,
-          width: gridSize,
-          height: gridSize,
-          backgroundColor: '#00ffff',
-          position: 'relative' as const,
-          border: '2px solid #ffffff',
-          borderRadius: '4px',
-          boxShadow: foodEaten 
-            ? `0 0 20px #00ffff, 0 0 40px #00ffff, inset 0 0 20px #ffffff, 0 0 60px #ff00ff`
-            : `0 0 15px #00ffff, 0 0 30px #00ffff, inset 0 0 10px #ffffff`,
-          background: 'linear-gradient(45deg, #00ffff 0%, #ffffff 50%, #00ffff 100%)',
-          animation: 'neon-pulse 2s ease-in-out infinite',
-        };
       } else {
         // Modern remix snake - gradient design
         return {
@@ -134,11 +117,6 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
 
   // Snake body with tattoo pattern and eating wiggle
   const renderSnakeBody = (segment: Position, index: number) => {
-    const getNeonColor = (index: number) => {
-      const colors = ['#ff0080', '#00ff80', '#8000ff', '#ff8000', '#0080ff', '#ff0040'];
-      return colors[index % colors.length];
-    };
-
     const getSnakeBodyStyle = () => {
       if (snakeSkin === 'classic') {
         // Dice snake body - each segment shows a different dice number
@@ -172,23 +150,6 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
           border: '1px solid #000',
           boxShadow: 'inset 2px 2px 0 rgba(255,255,255,0.4), inset -2px -2px 0 rgba(0,0,0,0.4)',
           animationDelay: `${index * 50}ms`,
-        };
-      } else if (snakeSkin === 'neon') {
-        // Neon body with cycling colors
-        const neonColor = getNeonColor(index);
-        return {
-          left: segment.x * gridSize,
-          top: segment.y * gridSize,
-          width: gridSize,
-          height: gridSize,
-          backgroundColor: neonColor,
-          position: 'relative' as const,
-          border: '1px solid #ffffff',
-          borderRadius: '2px',
-          boxShadow: `0 0 10px ${neonColor}, 0 0 20px ${neonColor}, inset 0 0 5px #ffffff`,
-          background: `linear-gradient(135deg, ${neonColor} 0%, #ffffff 50%, ${neonColor} 100%)`,
-          animationDelay: `${index * 100}ms`,
-          animation: 'neon-flicker 3s ease-in-out infinite',
         };
       } else {
         // Modern remix snake body - gradient pattern

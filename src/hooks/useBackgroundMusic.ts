@@ -1,9 +1,10 @@
-
 import { useEffect, useRef } from 'react';
 import { useGameSettings } from '../contexts/GameSettingsContext';
+import { useTheme, Theme } from '../contexts/ThemeContext';
 
 export const useBackgroundMusic = (shouldPlay: boolean = false) => {
   const { settings } = useGameSettings();
+  const { theme } = useTheme();
   const audioContextRef = useRef<AudioContext | null>(null);
   const oscillatorRef = useRef<OscillatorNode | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
@@ -15,6 +16,84 @@ export const useBackgroundMusic = (shouldPlay: boolean = false) => {
     }
   }, []);
 
+  const getThemeConfig = (theme: Theme) => {
+    switch (theme) {
+      case 'ocean':
+        return {
+          notes: [
+            // Ocean wave melody - calm, flowing
+            261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25,
+            493.88, 440.00, 392.00, 349.23, 329.63, 293.66, 261.63, 246.94,
+            261.63, 311.13, 349.23, 392.00, 440.00, 392.00, 349.23, 311.13,
+          ],
+          waveType: 'sine' as OscillatorType,
+          tempo: 450,
+          volume: 0.06,
+        };
+      case 'matrix':
+        return {
+          notes: [
+            // Digital/glitchy electronic melody
+            130.81, 164.81, 196.00, 130.81, 261.63, 196.00, 164.81, 130.81,
+            155.56, 185.00, 220.00, 155.56, 311.13, 220.00, 185.00, 155.56,
+            130.81, 196.00, 261.63, 311.13, 261.63, 196.00, 130.81, 98.00,
+          ],
+          waveType: 'sawtooth' as OscillatorType,
+          tempo: 200,
+          volume: 0.04,
+        };
+      case 'gameboy':
+        return {
+          notes: [
+            // Classic 8-bit chiptune melody
+            262, 294, 330, 349, 392, 392, 392, 349,
+            330, 294, 262, 262, 294, 330, 294, 262,
+            349, 330, 294, 330, 349, 392, 440, 392,
+            349, 330, 294, 262, 294, 262, 247, 262,
+          ],
+          waveType: 'square' as OscillatorType,
+          tempo: 280,
+          volume: 0.05,
+        };
+      case 'pastel':
+        return {
+          notes: [
+            // Soft, gentle melody
+            392.00, 440.00, 493.88, 523.25, 587.33, 523.25, 493.88, 440.00,
+            392.00, 349.23, 329.63, 349.23, 392.00, 440.00, 392.00, 349.23,
+            329.63, 293.66, 329.63, 349.23, 392.00, 349.23, 329.63, 293.66,
+          ],
+          waveType: 'sine' as OscillatorType,
+          tempo: 500,
+          volume: 0.05,
+        };
+      case 'dark':
+        return {
+          notes: [
+            // Mysterious dark melody
+            130.81, 146.83, 164.81, 174.61, 196.00, 185.00, 164.81, 146.83,
+            130.81, 123.47, 110.00, 123.47, 130.81, 146.83, 130.81, 110.00,
+            98.00, 110.00, 130.81, 146.83, 164.81, 146.83, 130.81, 110.00,
+          ],
+          waveType: 'triangle' as OscillatorType,
+          tempo: 400,
+          volume: 0.05,
+        };
+      default: // light
+        return {
+          notes: [
+            // Arabian Nights melody using Hijaz scale
+            293.66, 311.13, 349.23, 369.99, 392.00, 415.30, 466.16, 440.00,
+            415.30, 392.00, 369.99, 349.23, 311.13, 293.66, 277.18, 293.66,
+            329.63, 369.99, 415.30, 466.16, 523.25, 466.16, 440.00, 415.30,
+          ],
+          waveType: 'square' as OscillatorType,
+          tempo: 350,
+          volume: 0.06,
+        };
+    }
+  };
+
   const createMenuTune = () => {
     if (!settings.soundEnabled || !audioContextRef.current || isPlayingRef.current) return;
 
@@ -25,54 +104,24 @@ export const useBackgroundMusic = (shouldPlay: boolean = false) => {
     oscillator.connect(gainNode);
     gainNode.connect(context.destination);
 
-    // Authentic Arabian Nights melody using Hijaz scale (Middle Eastern mode)
-    // Starting from D4 as root note, creating an exotic mystical atmosphere
-    const notes = [
-      // Opening mystical phrase - rising like desert wind
-      293.66, 311.13, 349.23, 369.99, // D4, Eb4, F4, F#4
-      392.00, 415.30, 466.16, 440.00, // G4, Ab4, Bb4, A4 (characteristic Hijaz intervals)
-      
-      // Mysterious descent - like shadows in moonlight  
-      415.30, 392.00, 369.99, 349.23, // Ab4, G4, F#4, F4
-      311.13, 293.66, 277.18, 293.66, // Eb4, D4, Db4, D4
-      
-      // Ornamental climb - Arabian flourish
-      329.63, 369.99, 415.30, 466.16, // E4, F#4, Ab4, Bb4
-      523.25, 466.16, 440.00, 415.30, // C5, Bb4, A4, Ab4
-      
-      // Exotic bridge - quarter-tone feeling simulation
-      392.00, 405.00, 415.30, 440.00, // G4, slight bend, Ab4, A4
-      466.16, 440.00, 415.30, 392.00, // Bb4, A4, Ab4, G4
-      
-      // Grand finale - soaring like a magic carpet
-      523.25, 554.37, 587.33, 622.25, // C5, Db5, D5, Eb5
-      659.25, 622.25, 587.33, 554.37, // E5, Eb5, D5, Db5
-      523.25, 466.16, 415.30, 369.99, // C5, Bb4, Ab4, F#4
-      349.23, 311.13, 293.66, 293.66  // F4, Eb4, D4, D4 (return home)
-    ];
-    
+    const config = getThemeConfig(theme);
     let noteIndex = 0;
-    let beatCount = 0;
 
-    oscillator.type = 'square'; // Classic 8-bit style
-    oscillator.frequency.value = notes[0];
-    gainNode.gain.value = 0.08; // Softer, more mystical volume
+    oscillator.type = config.waveType;
+    oscillator.frequency.value = config.notes[0];
+    gainNode.gain.value = config.volume;
 
     const playNote = () => {
       if (oscillator && gainNode && audioContextRef.current) {
         const now = audioContextRef.current.currentTime;
-        oscillator.frequency.setValueAtTime(notes[noteIndex], now);
+        oscillator.frequency.setValueAtTime(config.notes[noteIndex], now);
         
-        // Dynamic volume envelope for authentic Arabian feel
-        // Some notes held longer, others quick and ornamental
-        const noteDuration = [0.8, 0.4, 0.6, 0.4, 0.8, 0.6, 0.4, 0.8][beatCount % 8];
+        // Volume envelope
+        gainNode.gain.setValueAtTime(config.volume, now);
+        gainNode.gain.exponentialRampToValueAtTime(config.volume * 1.5, now + 0.05);
+        gainNode.gain.exponentialRampToValueAtTime(config.volume * 0.3, now + 0.3);
         
-        gainNode.gain.setValueAtTime(0.08, now);
-        gainNode.gain.exponentialRampToValueAtTime(0.12, now + noteDuration * 0.1);
-        gainNode.gain.exponentialRampToValueAtTime(0.02, now + noteDuration * 0.9);
-        
-        noteIndex = (noteIndex + 1) % notes.length;
-        beatCount++;
+        noteIndex = (noteIndex + 1) % config.notes.length;
       }
     };
 
@@ -81,23 +130,16 @@ export const useBackgroundMusic = (shouldPlay: boolean = false) => {
     oscillatorRef.current = oscillator;
     gainNodeRef.current = gainNode;
 
-    // Arabian rhythm - slightly irregular timing like traditional Middle Eastern music
-    let currentInterval = 350; // Base tempo
     let intervalId: NodeJS.Timeout;
     
     const scheduleNextNote = () => {
       playNote();
-      
-      // Vary the timing slightly for more organic Arabian feel
-      const rhythmVariations = [320, 380, 340, 360, 330, 370, 350, 340];
-      currentInterval = rhythmVariations[beatCount % rhythmVariations.length];
-      
-      intervalId = setTimeout(scheduleNextNote, currentInterval);
+      intervalId = setTimeout(scheduleNextNote, config.tempo);
     };
     
     scheduleNextNote();
 
-    // Play for 12 seconds (longer Arabian experience)
+    // Play for 12 seconds
     setTimeout(() => {
       clearTimeout(intervalId);
       if (oscillatorRef.current) {
@@ -120,13 +162,12 @@ export const useBackgroundMusic = (shouldPlay: boolean = false) => {
 
   useEffect(() => {
     if (shouldPlay && settings.soundEnabled) {
-      // Small delay to prevent immediate playback
       const timer = setTimeout(createMenuTune, 1000);
       return () => clearTimeout(timer);
     } else {
       stopTune();
     }
-  }, [shouldPlay, settings.soundEnabled]);
+  }, [shouldPlay, settings.soundEnabled, theme]);
 
   return { createMenuTune, stopTune };
 };
