@@ -39,13 +39,13 @@ const OceanBackground = () => {
       {[...Array(5)].map((_, i) => (
         <div
           key={`fish-${i}`}
-          className="absolute text-2xl left-0"
+          className="absolute text-2xl"
           style={{
             top: `${20 + i * 12}%`,
             animation: `swim-left ${18 + i * 3}s linear ${i * 2}s infinite`,
           }}
         >
-          🐟
+          <span style={{ display: 'inline-block' }}>🐟</span>
         </div>
       ))}
 
@@ -53,13 +53,13 @@ const OceanBackground = () => {
       {[...Array(3)].map((_, i) => (
         <div
           key={`fish-reverse-${i}`}
-          className="absolute text-2xl left-0"
+          className="absolute text-2xl"
           style={{
             top: `${35 + i * 15}%`,
             animation: `swim-right ${15 + i * 4}s linear ${i * 3}s infinite`,
           }}
         >
-          🐠
+          <span style={{ display: 'inline-block', transform: 'scaleX(-1)' }}>🐠</span>
         </div>
       ))}
 
@@ -119,19 +119,19 @@ const OceanBackground = () => {
 
         @keyframes swim-right {
           0% { 
-            transform: translateX(-50px) translateY(0) scaleX(-1);
+            transform: translateX(-50px) translateY(0);
           }
           25% { 
-            transform: translateX(25vw) translateY(-10px) scaleX(-1);
+            transform: translateX(25vw) translateY(-10px);
           }
           50% { 
-            transform: translateX(50vw) translateY(0) scaleX(-1);
+            transform: translateX(50vw) translateY(0);
           }
           75% { 
-            transform: translateX(75vw) translateY(-15px) scaleX(-1);
+            transform: translateX(75vw) translateY(-15px);
           }
           100% { 
-            transform: translateX(100vw) translateY(0) scaleX(-1);
+            transform: translateX(100vw) translateY(0);
           }
         }
 
