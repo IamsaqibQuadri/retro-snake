@@ -46,16 +46,21 @@ export const useGlobalLeaderboard = () => {
     speed: 'slow' | 'normal' | 'fast'
   ) => {
     try {
-      const { error } = await supabase
-        .from('leaderboard')
-        .insert({
+      const { data, error } = await supabase.functions.invoke('submit-score', {
+        body: {
           player_name: playerName,
           score,
           game_mode: gameMode,
           speed
-        });
+        }
+      });
 
       if (error) throw error;
+      
+      // Check for rate limit or validation errors from the edge function
+      if (data?.error) {
+        return { success: false, error: data.error };
+      }
       
       // Reload leaderboard after adding new score
       await loadLeaderboard();
