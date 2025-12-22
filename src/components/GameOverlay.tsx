@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useGlobalLeaderboard } from '../hooks/useGlobalLeaderboard';
+import { GameMode, GameSpeed } from '../types/gameTypes';
 import ShareScoreCard from './ShareScoreCard';
 
 // Lazy load PlayerNameDialog for better performance
@@ -10,8 +11,8 @@ interface GameOverlayProps {
   gameOver: boolean;
   score: number;
   highScore: number;
-  gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival';
-  speed: 'slow' | 'normal' | 'fast';
+  gameMode: GameMode;
+  speed: GameSpeed;
   onNewGame: () => void;
   onBackToMenu: () => void;
   onTakeScreenshot: () => void;
