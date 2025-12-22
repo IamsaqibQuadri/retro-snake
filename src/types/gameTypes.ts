@@ -2,7 +2,7 @@
 export type Position = { x: number; y: number };
 export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
 export type GameSpeed = 'slow' | 'normal' | 'fast';
-export type GameMode = 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival';
+export type GameMode = 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival' | 'chaos';
 
 export interface GameState {
   snake: Position[];

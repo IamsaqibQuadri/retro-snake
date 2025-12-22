@@ -2,13 +2,14 @@ import React, { useRef } from 'react';
 import { Download, X, Share2 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { toast } from '@/hooks/use-toast';
+import { GameMode, GameSpeed } from '../types/gameTypes';
 
 interface ShareScoreCardProps {
   isOpen: boolean;
   playerName: string;
   score: number;
-  gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival';
-  speed: 'slow' | 'normal' | 'fast';
+  gameMode: GameMode;
+  speed: GameSpeed;
   onClose: () => void;
 }
 
@@ -24,6 +25,7 @@ const ShareScoreCard = ({ isOpen, playerName, score, gameMode, speed, onClose }:
       case 'obstacles': return '🧱';
       case 'timeattack': return '⏱️';
       case 'survival': return '🔥';
+      case 'chaos': return '🌀';
       default: return '🎮';
     }
   };
@@ -35,6 +37,7 @@ const ShareScoreCard = ({ isOpen, playerName, score, gameMode, speed, onClose }:
       case 'obstacles': return 'Obstacles';
       case 'timeattack': return 'Time Attack';
       case 'survival': return 'Survival';
+      case 'chaos': return 'Chaos';
       default: return 'Game';
     }
   };

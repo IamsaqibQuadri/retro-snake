@@ -13,7 +13,7 @@ const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 
 // Valid game modes and speeds
-const VALID_GAME_MODES = ['classic', 'modern', 'obstacles', 'timeattack', 'survival'];
+const VALID_GAME_MODES = ['classic', 'modern', 'obstacles', 'timeattack', 'survival', 'chaos'];
 const VALID_SPEEDS = ['slow', 'normal', 'fast'];
 
 // Basic profanity filter (extendable)

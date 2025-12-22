@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
+import { GameMode, GameSpeed } from '../types/gameTypes';
 
 const LEADERBOARD_KEY = 'snake-leaderboard-global';
 
 export interface LeaderboardEntry {
   score: number;
   date: string;
-  gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival';
-  speed: 'slow' | 'normal' | 'fast';
+  gameMode: GameMode;
+  speed: GameSpeed;
   timestamp: number;
   playerId: string;
 }
@@ -74,7 +75,7 @@ export const useLeaderboard = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [loadLeaderboard]);
 
-  const addScore = useCallback((score: number, gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival', speed: 'slow' | 'normal' | 'fast') => {
+  const addScore = useCallback((score: number, gameMode: GameMode, speed: GameSpeed) => {
     
     // Generate or get persistent player ID
     let playerId = localStorage.getItem('snake-player-id');

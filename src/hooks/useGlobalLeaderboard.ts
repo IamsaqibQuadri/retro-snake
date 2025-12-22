@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { GameMode, GameSpeed } from '../types/gameTypes';
 
 export interface GlobalLeaderboardEntry {
   id: string;
   player_name: string;
   score: number;
-  game_mode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival';
-  speed: 'slow' | 'normal' | 'fast';
+  game_mode: GameMode;
+  speed: GameSpeed;
   created_at: string;
 }
 
@@ -42,8 +43,8 @@ export const useGlobalLeaderboard = () => {
   const addScore = useCallback(async (
     playerName: string,
     score: number, 
-    gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival', 
-    speed: 'slow' | 'normal' | 'fast'
+    gameMode: GameMode, 
+    speed: GameSpeed
   ) => {
     try {
       const { data, error } = await supabase.functions.invoke('submit-score', {

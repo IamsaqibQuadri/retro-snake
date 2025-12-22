@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useSnakeGame } from '../hooks/useSnakeGame';
 import { useTheme } from '../contexts/ThemeContext';
+import { GameMode, GameSpeed } from '../types/gameTypes';
 import GameControls from './GameControls';
 import LazyGameSettingsPanel from './LazyGameSettingsPanel';
 import GameHeader from './GameHeader';
@@ -13,8 +14,8 @@ import html2canvas from 'html2canvas';
 import { toast } from '@/hooks/use-toast';
 
 interface SnakeGameProps {
-  speed: 'slow' | 'normal' | 'fast';
-  gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival';
+  speed: GameSpeed;
+  gameMode: GameMode;
   onBackToMenu: () => void;
 }
 
@@ -24,7 +25,20 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
   const [foodEaten, setFoodEaten] = useState(false);
   const { theme } = useTheme();
   
-  const { gameState, score, highScore, direction, gameOver, moveSnake, resetGame, timeRemaining, speedLevel } = useSnakeGame(speed, gameMode);
+  const { 
+    gameState, 
+    score, 
+    highScore, 
+    direction, 
+    gameOver, 
+    moveSnake, 
+    resetGame, 
+    timeRemaining, 
+    speedLevel,
+    chaosPhase,
+    chaosElapsedTime,
+    chaosPhaseNumber 
+  } = useSnakeGame(speed, gameMode);
 
   const GRID_SIZE = 20;
   const GAME_WIDTH = 300;
@@ -93,42 +107,44 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
       {/* Game content wrapper - z-10 to stay above backgrounds */}
       <div className="relative z-10 flex flex-col items-center">
         <GameHeader
-        score={score}
-        highScore={highScore}
-        gameMode={gameMode}
-        onBackToMenu={handleBackToMenu}
-        onShowSettings={handleShowSettings}
-        timeRemaining={timeRemaining}
-        speedLevel={speedLevel}
-      />
-
-      <div className="relative">
-        <GameBoard
-          snake={gameState.snake}
-          food={gameState.food}
-          direction={direction}
-          foodEaten={foodEaten}
-          gameWidth={GAME_WIDTH}
-          gameHeight={GAME_HEIGHT}
-          gridSize={GRID_SIZE}
-          obstacles={gameState.obstacles || []}
-        />
-        
-        <GameOverlay
-          gameOver={gameOver}
           score={score}
           highScore={highScore}
           gameMode={gameMode}
-          speed={speed}
-          onNewGame={handleNewGame}
           onBackToMenu={handleBackToMenu}
-          onTakeScreenshot={takeScreenshot}
+          onShowSettings={handleShowSettings}
+          timeRemaining={timeRemaining}
+          speedLevel={speedLevel}
+          chaosPhase={chaosPhase}
+          chaosElapsedTime={chaosElapsedTime}
         />
-      </div>
 
-      <GameInfo speed={speed} gameMode={gameMode} />
+        <div className="relative">
+          <GameBoard
+            snake={gameState.snake}
+            food={gameState.food}
+            direction={direction}
+            foodEaten={foodEaten}
+            gameWidth={GAME_WIDTH}
+            gameHeight={GAME_HEIGHT}
+            gridSize={GRID_SIZE}
+            obstacles={gameState.obstacles || []}
+          />
+          
+          <GameOverlay
+            gameOver={gameOver}
+            score={score}
+            highScore={highScore}
+            gameMode={gameMode}
+            speed={speed}
+            onNewGame={handleNewGame}
+            onBackToMenu={handleBackToMenu}
+            onTakeScreenshot={takeScreenshot}
+          />
+        </div>
 
-      <GameControls onDirectionChange={moveSnake} disabled={gameOver} />
+        <GameInfo speed={speed} gameMode={gameMode} chaosPhase={chaosPhaseNumber} />
+
+        <GameControls onDirectionChange={moveSnake} disabled={gameOver} />
 
         <LazyGameSettingsPanel 
           isOpen={showSettings} 
