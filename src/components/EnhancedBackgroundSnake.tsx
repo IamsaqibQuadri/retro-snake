@@ -17,6 +17,7 @@ const EnhancedBackgroundSnake = () => {
     { x: 10, y: 10 },
     { x: 9, y: 10 },
     { x: 8, y: 10 },
+    { x: 7, y: 10 },
   ]);
   const [direction, setDirection] = useState<'up' | 'down' | 'left' | 'right'>('right');
   const [food, setFood] = useState<Food>({ x: 15, y: 15 });

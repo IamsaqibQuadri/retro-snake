@@ -8,11 +8,11 @@ import GlobalLeaderboardSection from './GlobalLeaderboardSection';
 interface SetupScreenProps {
   highScore: number;
   showLeaderboard: boolean;
-  gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival';
+  gameMode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival' | 'chaos';
   selectedSpeed: 'slow' | 'normal' | 'fast' | null;
   onBackToWelcome: () => void;
   onToggleLeaderboard: () => void;
-  onModeSelect: (mode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival') => void;
+  onModeSelect: (mode: 'classic' | 'modern' | 'obstacles' | 'timeattack' | 'survival' | 'chaos') => void;
   onSpeedSelect: (speed: 'slow' | 'normal' | 'fast') => void;
   onStartGame: () => void;
 }
