@@ -102,8 +102,8 @@ const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
     };
   }, [onDirectionChange, disabled]);
 
-  const buttonClass = `w-16 h-16 border-2 border-primary bg-primary/10 text-primary rounded-lg flex items-center justify-center active:bg-primary/20 transition-colors ${
-    disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/15'
+  const buttonClass = `w-16 h-16 border-2 border-primary bg-card text-primary rounded-lg flex items-center justify-center active:bg-primary/20 transition-colors shadow-md ${
+    disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted'
   }`;
 
   return (

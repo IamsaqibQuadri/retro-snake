@@ -16,9 +16,9 @@ interface ChaosState {
 }
 
 // Phase timing constants (in seconds)
-const PHASE_1_END = 60;      // 0-60s: Modern mode
-const PHASE_2_END = 180;     // 60-180s: Obstacles appear
-// Phase 3: 180s+: Speed ramps up
+const PHASE_1_END = 40;      // 0-40s: Modern mode
+const PHASE_2_END = 120;     // 40-120s: Obstacles appear
+// Phase 3: 120s+: Speed ramps up
 
 export const useChaosMode = (
   isPlaying: boolean,
@@ -32,20 +32,24 @@ export const useChaosMode = (
   const [phase, setPhase] = useState<ChaosPhase>(1);
   const [speedMultiplier, setSpeedMultiplier] = useState(1);
   const obstaclesGeneratedRef = useRef(false);
+  const snakeRef = useRef(snake);
+  const foodRef = useRef(food);
   const baseSpeed = SPEED_INTERVALS[speed];
+
+  // Keep refs updated
+  useEffect(() => {
+    snakeRef.current = snake;
+    foodRef.current = food;
+  }, [snake, food]);
 
   // Calculate current phase based on elapsed time
   useEffect(() => {
     if (elapsedTime < PHASE_1_END) {
       setPhase(1);
+      setSpeedMultiplier(1);
     } else if (elapsedTime < PHASE_2_END) {
       setPhase(2);
-      // Generate obstacles when entering phase 2
-      if (!obstaclesGeneratedRef.current) {
-        const newObstacles = generateObstacles(snake, food);
-        setObstacles(newObstacles);
-        obstaclesGeneratedRef.current = true;
-      }
+      setSpeedMultiplier(1);
     } else {
       setPhase(3);
       // Calculate speed multiplier for phase 3 (increases every 60 seconds after phase 2)
@@ -53,7 +57,16 @@ export const useChaosMode = (
       const multiplier = Math.floor(timeInPhase3 / 60) + 2; // Starts at 2x, increases every minute
       setSpeedMultiplier(Math.min(multiplier, 10)); // Cap at 10x
     }
-  }, [elapsedTime, snake, food]);
+  }, [elapsedTime]);
+
+  // Generate obstacles when entering phase 2 (separate effect)
+  useEffect(() => {
+    if (phase === 2 && !obstaclesGeneratedRef.current) {
+      const newObstacles = generateObstacles(snakeRef.current, foodRef.current);
+      setObstacles(newObstacles);
+      obstaclesGeneratedRef.current = true;
+    }
+  }, [phase]);
 
   // Timer for elapsed time
   useEffect(() => {
