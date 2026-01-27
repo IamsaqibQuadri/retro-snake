@@ -92,3 +92,7 @@ export const getOppositeDirection = (direction: Direction): Direction => {
   } as const;
   return opposites[direction];
 };
+
+export const checkObstacleCollision = (head: Position, obstacles: Position[]): boolean => {
+  return obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y);
+};

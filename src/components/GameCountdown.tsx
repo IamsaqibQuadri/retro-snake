@@ -2,11 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import { Settings } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { GameMode } from '../types/gameTypes';
 import GameSettingsPanel from './GameSettingsPanel';
 
 interface GameCountdownProps {
   onCountdownComplete: () => void;
-  gameMode: 'classic' | 'modern';
+  gameMode: GameMode;
   speed: 'slow' | 'normal' | 'fast';
 }
 
@@ -15,22 +16,16 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
   const [showSettings, setShowSettings] = useState(false);
   const { theme } = useTheme();
 
-  console.log('GameCountdown: Starting countdown with:', { gameMode, speed });
-
   // Using design system tokens for consistent theming
   const backgroundClass = 'bg-background/95 text-foreground';
   const buttonClasses = "p-2 rounded-lg border border-border bg-card text-card-foreground hover:bg-muted transition-all duration-200";
 
   useEffect(() => {
-    console.log('GameCountdown: Starting countdown timer');
     const timer = setInterval(() => {
       setCount(prev => {
-        console.log('GameCountdown: Count:', prev);
         if (prev <= 1) {
-          console.log('GameCountdown: Countdown complete!');
           clearInterval(timer);
           setTimeout(() => {
-            console.log('GameCountdown: Calling onCountdownComplete');
             onCountdownComplete();
           }, 500);
           return 0;
@@ -40,7 +35,6 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
     }, 1000);
 
     return () => {
-      console.log('GameCountdown: Cleaning up timer');
       clearInterval(timer);
     };
   }, [onCountdownComplete]);
@@ -54,8 +48,12 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
     }
   };
 
-  const getModeEmoji = (mode: string) => {
-    return mode === 'classic' ? '🏛️' : '🌐';
+  const getModeEmoji = (mode: GameMode) => {
+    switch (mode) {
+      case 'classic': return '🏛️';
+      case 'modern': return '🌐';
+      case 'chaos': return '🌀';
+    }
   };
 
   if (count === 0) {

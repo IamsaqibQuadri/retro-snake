@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
+import { GameMode } from '../types/gameTypes';
 import PlayerNameDialog from './PlayerNameDialog';
 import { useGlobalLeaderboard } from '../hooks/useGlobalLeaderboard';
 
@@ -8,7 +9,7 @@ interface GameOverlayProps {
   gameOver: boolean;
   score: number;
   highScore: number;
-  gameMode: 'classic' | 'modern';
+  gameMode: GameMode;
   speed: 'slow' | 'normal' | 'fast';
   onNewGame: () => void;
   onBackToMenu: () => void;

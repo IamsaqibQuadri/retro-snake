@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { GameMode } from '../types/gameTypes';
 
 export interface GlobalLeaderboardEntry {
   id: string;
   player_name: string;
   score: number;
-  game_mode: 'classic' | 'modern';
+  game_mode: GameMode;
   speed: 'slow' | 'normal' | 'fast';
   created_at: string;
 }
@@ -42,7 +43,7 @@ export const useGlobalLeaderboard = () => {
   const addScore = useCallback(async (
     playerName: string,
     score: number, 
-    gameMode: 'classic' | 'modern', 
+    gameMode: GameMode, 
     speed: 'slow' | 'normal' | 'fast'
   ) => {
     try {
