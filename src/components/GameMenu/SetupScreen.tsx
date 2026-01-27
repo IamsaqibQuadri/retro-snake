@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowLeft, Gamepad2 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { GameMode } from '../../types/gameTypes';
 import GameModeSelector from './GameModeSelector';
 import SpeedSelector from './SpeedSelector';
 import GlobalLeaderboardSection from './GlobalLeaderboardSection';
@@ -8,11 +9,11 @@ import GlobalLeaderboardSection from './GlobalLeaderboardSection';
 interface SetupScreenProps {
   highScore: number;
   showLeaderboard: boolean;
-  gameMode: 'classic' | 'modern';
+  gameMode: GameMode;
   selectedSpeed: 'slow' | 'normal' | 'fast' | null;
   onBackToWelcome: () => void;
   onToggleLeaderboard: () => void;
-  onModeSelect: (mode: 'classic' | 'modern') => void;
+  onModeSelect: (mode: GameMode) => void;
   onSpeedSelect: (speed: 'slow' | 'normal' | 'fast') => void;
   onStartGame: () => void;
 }

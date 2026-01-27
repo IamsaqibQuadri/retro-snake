@@ -5,14 +5,15 @@ import GameMenu from '../components/GameMenu';
 import GameCountdown from '../components/GameCountdown';
 import { GameSettingsProvider } from '../contexts/GameSettingsContext';
 import { ThemeProvider, useTheme } from '../contexts/ThemeContext';
+import { GameMode } from '../types/gameTypes';
 
 const GameContent = () => {
   const [gameState, setGameState] = useState<'menu' | 'countdown' | 'playing'>('menu');
   const [gameSpeed, setGameSpeed] = useState<'slow' | 'normal' | 'fast'>('normal');
-  const [gameMode, setGameMode] = useState<'classic' | 'modern'>('classic');
+  const [gameMode, setGameMode] = useState<GameMode>('chaos');
   const { theme } = useTheme();
 
-  const handleStartGame = (speed: 'slow' | 'normal' | 'fast', mode: 'classic' | 'modern') => {
+  const handleStartGame = (speed: 'slow' | 'normal' | 'fast', mode: GameMode) => {
     setGameSpeed(speed);
     setGameMode(mode);
     setGameState('countdown');

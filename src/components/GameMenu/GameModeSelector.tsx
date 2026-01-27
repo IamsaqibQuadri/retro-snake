@@ -1,44 +1,67 @@
 import React from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { GameMode } from '../../types/gameTypes';
 
 interface GameModeSelectorProps {
-  gameMode: 'classic' | 'modern';
-  onModeSelect: (mode: 'classic' | 'modern') => void;
+  gameMode: GameMode;
+  onModeSelect: (mode: GameMode) => void;
 }
 
 const GameModeSelector = ({ gameMode, onModeSelect }: GameModeSelectorProps) => {
   const { theme } = useTheme();
 
-  const themeColors = {
-    primary: theme === 'light' ? 'text-green-600' : 'text-green-400',
-    border: theme === 'light' ? 'border-green-600' : 'border-green-400',
-    background: theme === 'light' ? 'bg-green-600/10' : 'bg-green-400/10',
+  const getModeButtonClass = (mode: GameMode) => {
+    const isSelected = gameMode === mode;
+    
+    if (mode === 'chaos') {
+      return isSelected
+        ? 'border-purple-500 bg-purple-500/20 text-purple-400 ring-2 ring-purple-400/50'
+        : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-purple-400/50';
+    }
+    
+    if (mode === 'modern') {
+      return isSelected
+        ? 'border-blue-400 bg-blue-400/20 text-blue-400'
+        : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-blue-400/50';
+    }
+    
+    // Classic mode
+    return isSelected
+      ? 'border-primary bg-primary/20 text-primary'
+      : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-primary/50';
   };
 
   return (
     <div className="mb-6">
-      <h2 className={`text-lg font-bold ${themeColors.primary} mb-4`}>GAME MODE</h2>
-      <div className="flex justify-center gap-2">
+      <h2 className="text-lg font-bold text-primary mb-4">GAME MODE</h2>
+      <div className="flex flex-col gap-3">
+        {/* Chaos Mode - Featured */}
         <button
-          onClick={() => onModeSelect('classic')}
-          className={`px-4 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${
-            gameMode === 'classic'
-              ? `${themeColors.border} ${themeColors.background.replace('/10', '/20')} ${themeColors.primary}`
-              : `border-gray-600 bg-gray-600/10 text-gray-400 hover:border-green-400/50`
-          }`}
+          onClick={() => onModeSelect('chaos')}
+          className={`relative px-4 py-3 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${getModeButtonClass('chaos')}`}
         >
-          🏛️ CLASSIC
+          <div className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded">
+            ⭐ RECOMMENDED
+          </div>
+          <span className="text-lg">🌀</span> CHAOS
+          <div className="text-xs opacity-70 mt-1">Ultimate challenge - 3 phases!</div>
         </button>
-        <button
-          onClick={() => onModeSelect('modern')}
-          className={`px-4 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${
-            gameMode === 'modern'
-              ? 'border-blue-400 bg-blue-400/20 text-blue-400'
-              : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-blue-400/50'
-          }`}
-        >
-          🌐 MODERN
-        </button>
+
+        {/* Classic & Modern */}
+        <div className="flex justify-center gap-2">
+          <button
+            onClick={() => onModeSelect('classic')}
+            className={`px-4 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${getModeButtonClass('classic')}`}
+          >
+            🏛️ CLASSIC
+          </button>
+          <button
+            onClick={() => onModeSelect('modern')}
+            className={`px-4 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${getModeButtonClass('modern')}`}
+          >
+            🌐 MODERN
+          </button>
+        </div>
       </div>
     </div>
   );

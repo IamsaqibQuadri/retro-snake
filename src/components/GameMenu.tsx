@@ -4,6 +4,7 @@ import { useGameSettings } from '../contexts/GameSettingsContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import { useLeaderboard } from '../hooks/useLeaderboard';
+import { GameMode } from '../types/gameTypes';
 import EnhancedBackgroundSnake from './EnhancedBackgroundSnake';
 import GameSettingsPanel from './GameSettingsPanel';
 import WelcomeScreen from './GameMenu/WelcomeScreen';
@@ -12,7 +13,7 @@ import TopControls from './GameMenu/TopControls';
 import Watermark from './GameMenu/Watermark';
 
 interface GameMenuProps {
-  onStartGame: (speed: 'slow' | 'normal' | 'fast', gameMode: 'classic' | 'modern') => void;
+  onStartGame: (speed: 'slow' | 'normal' | 'fast', gameMode: GameMode) => void;
 }
 
 const GameMenu = ({ onStartGame }: GameMenuProps) => {
@@ -21,7 +22,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
   const [showSettings, setShowSettings] = useState(false);
   const [currentStep, setCurrentStep] = useState<'welcome' | 'setup'>('welcome');
   const [selectedSpeed, setSelectedSpeed] = useState<'slow' | 'normal' | 'fast' | null>(null);
-  const [gameMode, setGameMode] = useState<'classic' | 'modern'>('classic');
+  const [gameMode, setGameMode] = useState<GameMode>('chaos'); // Default to chaos
   const { settings, toggleSound } = useGameSettings();
   const { theme, toggleTheme } = useTheme();
   const { leaderboard, clearLeaderboard } = useLeaderboard();
@@ -63,7 +64,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
     setSelectedSpeed(speed);
   };
 
-  const handleModeSelection = (mode: 'classic' | 'modern') => {
+  const handleModeSelection = (mode: GameMode) => {
     console.log('GameMenu: Game mode selected:', mode);
     setGameMode(mode);
   };

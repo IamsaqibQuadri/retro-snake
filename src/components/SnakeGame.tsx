@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useSnakeGame } from '../hooks/useSnakeGame';
 import { useTheme } from '../contexts/ThemeContext';
+import { GameMode } from '../types/gameTypes';
 import GameControls from './GameControls';
 import GameSettingsPanel from './GameSettingsPanel';
 import GameHeader from './GameHeader';
@@ -13,7 +14,7 @@ import { toast } from '@/hooks/use-toast';
 
 interface SnakeGameProps {
   speed: 'slow' | 'normal' | 'fast';
-  gameMode: 'classic' | 'modern';
+  gameMode: GameMode;
   onBackToMenu: () => void;
 }
 
@@ -25,7 +26,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
   const { theme } = useTheme();
   
   // useSnakeGame hook must be called consistently
-  const { gameState, score, highScore, direction, gameOver, moveSnake, resetGame } = useSnakeGame(speed, gameMode);
+  const { gameState, score, highScore, direction, gameOver, moveSnake, resetGame, chaosState } = useSnakeGame(speed, gameMode);
 
   const GRID_SIZE = 20;
   const GAME_WIDTH = 300;
@@ -118,6 +119,9 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
         score={score}
         highScore={highScore}
         gameMode={gameMode}
+        chaosPhase={chaosState?.phase}
+        chaosElapsedTime={chaosState?.elapsedTime}
+        chaosPhaseLabel={chaosState?.phaseLabel}
         onBackToMenu={handleBackToMenu}
         onShowSettings={handleShowSettings}
       />
@@ -132,6 +136,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
           gameWidth={GAME_WIDTH}
           gameHeight={GAME_HEIGHT}
           gridSize={GRID_SIZE}
+          obstacles={chaosState?.obstacles}
         />
         
         <GameOverlay
@@ -146,7 +151,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
         />
       </div>
 
-      <GameInfo speed={speed} gameMode={gameMode} />
+      <GameInfo speed={speed} gameMode={gameMode} chaosPhase={chaosState?.phase} />
 
       {/* Mobile Controls */}
       <GameControls onDirectionChange={moveSnake} disabled={gameOver} />
