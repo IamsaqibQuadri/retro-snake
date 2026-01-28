@@ -85,15 +85,21 @@ const GameModeSelector = ({ gameMode, onModeSelect }: GameModeSelectorProps) => 
         <div className="flex justify-center gap-2">
           <button
             onClick={() => onModeSelect('classic')}
-            className={`px-4 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${getModeButtonClass('classic')}`}
+            className={`flex-1 px-3 py-3 text-sm font-bold border-2 rounded-lg transition-all duration-200 min-h-[60px] ${getModeButtonClass('classic')}`}
           >
-            🏛️ CLASSIC
+            <div className="flex flex-col items-center">
+              <span>🏛️ CLASSIC</span>
+              <span className="text-xs opacity-70">Wall collision</span>
+            </div>
           </button>
           <button
             onClick={() => onModeSelect('modern')}
-            className={`px-4 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${getModeButtonClass('modern')}`}
+            className={`flex-1 px-3 py-3 text-sm font-bold border-2 rounded-lg transition-all duration-200 min-h-[60px] ${getModeButtonClass('modern')}`}
           >
-            🌐 MODERN
+            <div className="flex flex-col items-center">
+              <span>🌐 MODERN</span>
+              <span className="text-xs opacity-70">Wall wrapping</span>
+            </div>
           </button>
         </div>
       </div>
