@@ -6,10 +6,18 @@ interface GameInfoProps {
   speed: 'slow' | 'normal' | 'fast';
   gameMode: GameMode;
   chaosPhase?: ChaosPhase;
+  survivalSpeedMultiplier?: number;
 }
 
-const GameInfo = ({ speed, gameMode, chaosPhase }: GameInfoProps) => {
+const GameInfo = ({ speed, gameMode, chaosPhase, survivalSpeedMultiplier }: GameInfoProps) => {
   const getSpeedLabel = () => {
+    if (gameMode === 'survival' && survivalSpeedMultiplier) {
+      if (survivalSpeedMultiplier >= 4) return '🔥 INSANE';
+      if (survivalSpeedMultiplier >= 3) return '⚡ VERY FAST';
+      if (survivalSpeedMultiplier >= 2) return '🏃 FAST';
+      if (survivalSpeedMultiplier >= 1.5) return '💨 QUICK';
+      return '🐌 NORMAL';
+    }
     return speed === 'slow' ? '🐌 SLOW' : speed === 'normal' ? '🏃 NORMAL' : '🚀 FAST';
   };
 
@@ -19,6 +27,12 @@ const GameInfo = ({ speed, gameMode, chaosPhase }: GameInfoProps) => {
     }
     if (gameMode === 'modern') {
       return 'Wall wrap-around enabled';
+    }
+    if (gameMode === 'timeattack') {
+      return 'Score as much as possible in 60 seconds!';
+    }
+    if (gameMode === 'survival') {
+      return 'Speed increases every 3 foods eaten!';
     }
     // Chaos mode
     if (chaosPhase === 1) {

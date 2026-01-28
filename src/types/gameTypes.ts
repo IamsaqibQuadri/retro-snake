@@ -2,7 +2,7 @@
 export type Position = { x: number; y: number };
 export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
 export type GameSpeed = 'slow' | 'normal' | 'fast';
-export type GameMode = 'classic' | 'modern' | 'chaos';
+export type GameMode = 'classic' | 'modern' | 'chaos' | 'timeattack' | 'survival';
 export type ChaosPhase = 1 | 2 | 3;
 
 export interface GameState {
@@ -24,4 +24,14 @@ export interface ChaosState {
   obstacles: Position[];
   speedMultiplier: number;
   phaseLabel: string;
+}
+
+export interface TimeAttackState {
+  timeRemaining: number;
+  isActive: boolean;
+}
+
+export interface SurvivalState {
+  speedMultiplier: number;
+  foodsEaten: number;
 }
