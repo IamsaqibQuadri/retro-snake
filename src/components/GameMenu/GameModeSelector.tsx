@@ -24,6 +24,18 @@ const GameModeSelector = ({ gameMode, onModeSelect }: GameModeSelectorProps) => 
         ? 'border-blue-400 bg-blue-400/20 text-blue-400'
         : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-blue-400/50';
     }
+
+    if (mode === 'timeattack') {
+      return isSelected
+        ? 'border-orange-400 bg-orange-400/20 text-orange-400'
+        : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-orange-400/50';
+    }
+
+    if (mode === 'survival') {
+      return isSelected
+        ? 'border-red-400 bg-red-400/20 text-red-400'
+        : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-red-400/50';
+    }
     
     // Classic mode
     return isSelected
@@ -46,6 +58,28 @@ const GameModeSelector = ({ gameMode, onModeSelect }: GameModeSelectorProps) => 
           <span className="text-lg">🌀</span> CHAOS
           <div className="text-xs opacity-70 mt-1">Ultimate challenge - 3 phases!</div>
         </button>
+
+        {/* Time Attack & Survival */}
+        <div className="flex justify-center gap-2">
+          <button
+            onClick={() => onModeSelect('timeattack')}
+            className={`flex-1 px-3 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${getModeButtonClass('timeattack')}`}
+          >
+            <div className="flex flex-col items-center">
+              <span>⏱️ TIME ATTACK</span>
+              <span className="text-xs opacity-70">60 seconds!</span>
+            </div>
+          </button>
+          <button
+            onClick={() => onModeSelect('survival')}
+            className={`flex-1 px-3 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${getModeButtonClass('survival')}`}
+          >
+            <div className="flex flex-col items-center">
+              <span>💀 SURVIVAL</span>
+              <span className="text-xs opacity-70">Speed increases!</span>
+            </div>
+          </button>
+        </div>
 
         {/* Classic & Modern */}
         <div className="flex justify-center gap-2">

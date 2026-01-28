@@ -1,11 +1,13 @@
 
 import { useEffect, useCallback, useRef, useMemo } from 'react';
-import { GameSpeed, GameMode, Position, ChaosState } from '../types/gameTypes';
+import { GameSpeed, GameMode, Position, ChaosState, TimeAttackState, SurvivalState } from '../types/gameTypes';
 import { useGameState } from './useGameState';
 import { useGameScore } from './useGameScore';
 import { useGameSounds } from './useGameSounds';
 import { useLeaderboard } from './useLeaderboard';
 import { useChaosMode } from './useChaosMode';
+import { useTimeAttack } from './useTimeAttack';
+import { useSurvivalMode } from './useSurvivalMode';
 import { generateFood, checkWallCollision, checkSelfCollision, getNewHeadPosition, wrapAroundWalls, checkObstacleCollision } from '../utils/gameUtils';
 import { SPEED_INTERVALS } from '../constants/gameConstants';
 
@@ -47,14 +49,37 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: GameMode = 'classic') =
     () => foodRef.current
   );
 
-  // Memoize speed interval with chaos mode speed multiplier
+  // Time Attack mode hook
+  const timeAttack = useTimeAttack(
+    isPlaying && gameMode === 'timeattack',
+    gameOver
+  );
+
+  // Survival mode hook
+  const survivalMode = useSurvivalMode();
+
+  // Handle time attack game end
+  useEffect(() => {
+    if (gameMode === 'timeattack' && timeAttack.isTimeUp && isPlaying) {
+      playGameOverSound();
+      endGame();
+    }
+  }, [gameMode, timeAttack.isTimeUp, isPlaying, playGameOverSound, endGame]);
+
+  // Memoize speed interval with mode-specific speed multipliers
   const speedInterval = useMemo(() => {
     const baseInterval = SPEED_INTERVALS[speed];
+    
     if (gameMode === 'chaos' && chaosMode.speedMultiplier > 1) {
       return Math.max(baseInterval / chaosMode.speedMultiplier, 50); // Min 50ms
     }
+    
+    if (gameMode === 'survival' && survivalMode.speedMultiplier > 1) {
+      return Math.max(baseInterval / survivalMode.speedMultiplier, 50); // Min 50ms
+    }
+    
     return baseInterval;
-  }, [speed, gameMode, chaosMode.speedMultiplier]);
+  }, [speed, gameMode, chaosMode.speedMultiplier, survivalMode.speedMultiplier]);
 
   // Game loop with performance optimizations
   useEffect(() => {
@@ -77,7 +102,7 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: GameMode = 'classic') =
           return;
         }
       } else {
-        // Modern and Chaos modes: walls wrap around
+        // Modern, Chaos, TimeAttack, Survival modes: walls wrap around
         newHead = wrapAroundWalls(newHead);
       }
 
@@ -104,6 +129,12 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: GameMode = 'classic') =
         }
         
         increaseScore();
+        
+        // Track food eaten for survival mode
+        if (gameMode === 'survival') {
+          survivalMode.onFoodEaten();
+        }
+        
         const newFood = generateFood(newSnake);
         
         updateGameState({
@@ -131,7 +162,7 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: GameMode = 'classic') =
 
     const intervalId = setInterval(gameLoop, speedInterval);
     return () => clearInterval(intervalId);
-  }, [isPlaying, gameOver, speedInterval, gameMode, gameState.snake, gameState.food, chaosMode.phase, chaosMode.obstacles, updateGameState, endGame, increaseScore, playEatSound, playGameOverSound]);
+  }, [isPlaying, gameOver, speedInterval, gameMode, gameState.snake, gameState.food, chaosMode.phase, chaosMode.obstacles, updateGameState, endGame, increaseScore, playEatSound, playGameOverSound, survivalMode]);
 
   // Add score to leaderboard when game ends
   useEffect(() => {
@@ -149,15 +180,31 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: GameMode = 'classic') =
     if (gameMode === 'chaos') {
       chaosMode.reset();
     }
-  }, [resetGameState, resetScore, gameMode, chaosMode]);
+    if (gameMode === 'timeattack') {
+      timeAttack.reset();
+    }
+    if (gameMode === 'survival') {
+      survivalMode.reset();
+    }
+  }, [resetGameState, resetScore, gameMode, chaosMode, timeAttack, survivalMode]);
 
-  // Prepare chaos state for UI
+  // Prepare mode-specific state for UI
   const chaosState: ChaosState | undefined = gameMode === 'chaos' ? {
     phase: chaosMode.phase,
     elapsedTime: chaosMode.elapsedTime,
     obstacles: chaosMode.obstacles,
     speedMultiplier: chaosMode.speedMultiplier,
     phaseLabel: chaosMode.phaseLabel,
+  } : undefined;
+
+  const timeAttackState: TimeAttackState | undefined = gameMode === 'timeattack' ? {
+    timeRemaining: timeAttack.timeRemaining,
+    isActive: timeAttack.isActive,
+  } : undefined;
+
+  const survivalState: SurvivalState | undefined = gameMode === 'survival' ? {
+    speedMultiplier: survivalMode.speedMultiplier,
+    foodsEaten: survivalMode.foodsEaten,
   } : undefined;
 
   return {
@@ -171,5 +218,7 @@ export const useSnakeGame = (speed: GameSpeed, gameMode: GameMode = 'classic') =
     resetGame,
     togglePause,
     chaosState,
+    timeAttackState,
+    survivalState,
   };
 };

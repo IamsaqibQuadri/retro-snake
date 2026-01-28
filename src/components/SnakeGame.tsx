@@ -26,7 +26,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
   const { theme } = useTheme();
   
   // useSnakeGame hook must be called consistently
-  const { gameState, score, highScore, direction, gameOver, moveSnake, resetGame, chaosState } = useSnakeGame(speed, gameMode);
+  const { gameState, score, highScore, direction, gameOver, moveSnake, resetGame, chaosState, timeAttackState, survivalState } = useSnakeGame(speed, gameMode);
 
   const GRID_SIZE = 20;
   const GAME_WIDTH = 300;
@@ -122,6 +122,9 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
         chaosPhase={chaosState?.phase}
         chaosElapsedTime={chaosState?.elapsedTime}
         chaosPhaseLabel={chaosState?.phaseLabel}
+        timeAttackRemaining={timeAttackState?.timeRemaining}
+        survivalSpeedMultiplier={survivalState?.speedMultiplier}
+        survivalFoodsEaten={survivalState?.foodsEaten}
         onBackToMenu={handleBackToMenu}
         onShowSettings={handleShowSettings}
       />
@@ -151,7 +154,12 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
         />
       </div>
 
-      <GameInfo speed={speed} gameMode={gameMode} chaosPhase={chaosState?.phase} />
+      <GameInfo 
+        speed={speed} 
+        gameMode={gameMode} 
+        chaosPhase={chaosState?.phase}
+        survivalSpeedMultiplier={survivalState?.speedMultiplier}
+      />
 
       {/* Mobile Controls */}
       <GameControls onDirectionChange={moveSnake} disabled={gameOver} />

@@ -11,6 +11,9 @@ interface GameHeaderProps {
   chaosPhase?: ChaosPhase;
   chaosElapsedTime?: number;
   chaosPhaseLabel?: string;
+  timeAttackRemaining?: number;
+  survivalSpeedMultiplier?: number;
+  survivalFoodsEaten?: number;
   onBackToMenu: () => void;
   onShowSettings: () => void;
 }
@@ -22,6 +25,9 @@ const GameHeader = ({
   chaosPhase,
   chaosElapsedTime,
   chaosPhaseLabel,
+  timeAttackRemaining,
+  survivalSpeedMultiplier,
+  survivalFoodsEaten,
   onBackToMenu, 
   onShowSettings 
 }: GameHeaderProps) => {
@@ -45,6 +51,10 @@ const GameHeader = ({
         return '🌐 MODERN MODE';
       case 'chaos':
         return '🌀 CHAOS MODE';
+      case 'timeattack':
+        return '⏱️ TIME ATTACK';
+      case 'survival':
+        return '💀 SURVIVAL';
     }
   };
 
@@ -55,7 +65,22 @@ const GameHeader = ({
     if (gameMode === 'modern') {
       return 'border-secondary text-secondary-foreground bg-secondary/10';
     }
+    if (gameMode === 'timeattack') {
+      return 'border-orange-400 text-orange-400 bg-orange-400/10';
+    }
+    if (gameMode === 'survival') {
+      return 'border-red-400 text-red-400 bg-red-400/10';
+    }
     return 'border-primary text-primary bg-primary/10';
+  };
+
+  const getSurvivalSpeedLabel = () => {
+    if (!survivalSpeedMultiplier) return '';
+    if (survivalSpeedMultiplier >= 4) return '🔥 INSANE';
+    if (survivalSpeedMultiplier >= 3) return '⚡ VERY FAST';
+    if (survivalSpeedMultiplier >= 2) return '🏃 FAST';
+    if (survivalSpeedMultiplier >= 1.5) return '💨 QUICK';
+    return '🐌 NORMAL';
   };
 
   return (
@@ -96,6 +121,21 @@ const GameHeader = ({
           <div className="flex items-center gap-2 text-xs">
             <span className="font-bold text-purple-400">{chaosPhaseLabel}</span>
             <span className="text-muted-foreground">⏱️ {formatTime(chaosElapsedTime)}</span>
+          </div>
+        )}
+
+        {/* Time Attack Countdown */}
+        {gameMode === 'timeattack' && timeAttackRemaining !== undefined && (
+          <div className={`flex items-center gap-2 text-sm font-bold ${timeAttackRemaining <= 10 ? 'text-red-500 animate-pulse' : 'text-orange-400'}`}>
+            <span>⏱️ {formatTime(timeAttackRemaining)}</span>
+          </div>
+        )}
+
+        {/* Survival Mode Speed Indicator */}
+        {gameMode === 'survival' && survivalSpeedMultiplier !== undefined && (
+          <div className="flex items-center gap-2 text-xs">
+            <span className="font-bold text-red-400">{getSurvivalSpeedLabel()}</span>
+            <span className="text-muted-foreground">🍎 {survivalFoodsEaten || 0} eaten</span>
           </div>
         )}
       </div>
