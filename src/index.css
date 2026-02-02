@@ -132,44 +132,66 @@
     --ring: 280 100% 25%;
   }
 
-  /* Gameboy Retro Theme - Black text everywhere for maximum readability */
-  .gameboy {
-    /* Classic Gameboy LCD background */
-    --background: 74 61% 56%; /* #9bbc0f - LCD green */
-    --foreground: 0 0% 0%; /* Pure black text for maximum contrast */
+  /* Matrix Theme - Falling code aesthetic */
+  .matrix {
+    --background: 0 0% 0%; /* Pure black */
+    --foreground: 120 100% 50%; /* Phosphor green */
     
-    /* Card styling - lighter green with black text */
-    --card: 74 45% 65%; /* Lighter green for cards */
-    --card-foreground: 0 0% 0%; /* Pure black text */
+    --card: 120 100% 5%; /* Very dark green */
+    --card-foreground: 120 100% 50%;
     
-    /* Popup styling */
-    --popover: 74 45% 65%;
-    --popover-foreground: 0 0% 0%; /* Pure black text */
+    --popover: 120 100% 5%;
+    --popover-foreground: 120 100% 50%;
     
-    /* Primary: Very dark green for snake and buttons */
-    --primary: 74 100% 10%; /* Very dark green */
-    --primary-foreground: 0 0% 100%;
+    --primary: 120 100% 40%;
+    --primary-foreground: 0 0% 0%;
     
-    /* Secondary: Medium dark green */
-    --secondary: 74 60% 20%; /* Dark green */
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 120 100% 15%;
+    --secondary-foreground: 120 100% 50%;
     
-    /* Muted tones with black text */
-    --muted: 74 40% 50%;
-    --muted-foreground: 0 0% 0%; /* Pure black text for readability */
+    --muted: 120 50% 10%;
+    --muted-foreground: 120 80% 40%;
     
-    /* Accent using very dark green */
-    --accent: 74 100% 15%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 120 100% 30%;
+    --accent-foreground: 0 0% 0%;
     
-    /* Error in high contrast */
-    --destructive: 0 100% 20%; /* Very dark red */
+    --destructive: 0 100% 40%;
     --destructive-foreground: 0 0% 100%;
     
-    /* Borders and inputs - black for visibility */
-    --border: 0 0% 0%; /* Pure black borders for visibility */
-    --input: 74 45% 60%;
-    --ring: 0 0% 0%;
+    --border: 120 100% 20%;
+    --input: 120 50% 10%;
+    --ring: 120 100% 50%;
+  }
+
+  /* Ocean Theme - Deep sea vibes */
+  .ocean {
+    --background: 210 80% 15%; /* Deep ocean blue */
+    --foreground: 190 90% 80%; /* Light cyan */
+    
+    --card: 210 70% 20%; /* Darker blue for cards */
+    --card-foreground: 190 90% 85%;
+    
+    --popover: 210 70% 20%;
+    --popover-foreground: 190 90% 85%;
+    
+    --primary: 190 100% 50%; /* Bright cyan */
+    --primary-foreground: 210 80% 10%;
+    
+    --secondary: 210 60% 30%;
+    --secondary-foreground: 190 90% 85%;
+    
+    --muted: 210 50% 25%;
+    --muted-foreground: 190 70% 60%;
+    
+    --accent: 180 100% 40%; /* Teal accent */
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 80% 50%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 190 60% 35%;
+    --input: 210 50% 25%;
+    --ring: 190 100% 50%;
   }
 }
 

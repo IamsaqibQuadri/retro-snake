@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface SnakeSegment {
   x: number;
@@ -11,7 +12,17 @@ interface Food {
   y: number;
 }
 
+interface MatrixChar {
+  id: number;
+  x: number;
+  y: number;
+  char: string;
+  speed: number;
+  opacity: number;
+}
+
 const EnhancedBackgroundSnake = () => {
+  const { theme } = useTheme();
   const [snake, setSnake] = useState<SnakeSegment[]>([
     { x: 10, y: 10 },
     { x: 9, y: 10 },
@@ -22,10 +33,58 @@ const EnhancedBackgroundSnake = () => {
   const [direction, setDirection] = useState<'up' | 'down' | 'left' | 'right'>('right');
   const [food, setFood] = useState<Food>({ x: 15, y: 15 });
   const [score, setScore] = useState(0);
+  const [matrixChars, setMatrixChars] = useState<MatrixChar[]>([]);
 
   // Grid dimensions for better coverage
   const GRID_WIDTH = 50;
   const GRID_HEIGHT = 40;
+
+  // Matrix characters - katakana, numbers, symbols
+  const MATRIX_CHARS = 'ァアィイゥウェエォオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789';
+
+  // Initialize matrix rain
+  useEffect(() => {
+    if (theme === 'matrix') {
+      const columns = Math.floor(window.innerWidth / 20);
+      const initialChars: MatrixChar[] = [];
+      
+      for (let i = 0; i < columns * 2; i++) {
+        initialChars.push({
+          id: i,
+          x: Math.floor(Math.random() * columns) * 20,
+          y: Math.random() * window.innerHeight - window.innerHeight,
+          char: MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)],
+          speed: 2 + Math.random() * 4,
+          opacity: 0.3 + Math.random() * 0.7,
+        });
+      }
+      setMatrixChars(initialChars);
+    }
+  }, [theme]);
+
+  // Matrix rain animation
+  useEffect(() => {
+    if (theme !== 'matrix') return;
+
+    const interval = setInterval(() => {
+      setMatrixChars(prev => prev.map(char => {
+        let newY = char.y + char.speed;
+        if (newY > window.innerHeight) {
+          return {
+            ...char,
+            y: -20,
+            x: Math.floor(Math.random() * Math.floor(window.innerWidth / 20)) * 20,
+            char: MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)],
+            speed: 2 + Math.random() * 4,
+            opacity: 0.3 + Math.random() * 0.7,
+          };
+        }
+        return { ...char, y: newY };
+      }));
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, [theme]);
 
   // Generate new food position
   const generateFood = useCallback((currentSnake: SnakeSegment[]) => {
@@ -38,9 +97,6 @@ const EnhancedBackgroundSnake = () => {
     } while (currentSnake.some(segment => segment.x === newFood.x && segment.y === newFood.y));
     return newFood;
   }, [GRID_WIDTH, GRID_HEIGHT]);
-
-  // Memoized direction changes to reduce frequency
-  const shouldChangeDirection = useMemo(() => Math.random() < 0.05, []);
 
   // Snake movement logic with food eating
   useEffect(() => {
@@ -92,29 +148,73 @@ const EnhancedBackgroundSnake = () => {
     return () => clearInterval(interval);
   }, [direction, food, generateFood, GRID_WIDTH, GRID_HEIGHT]);
 
-  // Direction change logic - more frequent and smarter
+  // Direction change logic
   useEffect(() => {
     const directionInterval = setInterval(() => {
-      // Change direction more frequently for dynamic movement
-      if (Math.random() < 0.3) { // 30% chance to change direction
+      if (Math.random() < 0.3) {
         const directions: ('up' | 'down' | 'left' | 'right')[] = ['up', 'down', 'left', 'right'];
         const currentDirection = direction;
         const oppositeDirection = currentDirection === 'up' ? 'down' : 
                                 currentDirection === 'down' ? 'up' :
                                 currentDirection === 'left' ? 'right' : 'left';
         
-        // Avoid immediate reverse direction for smoother movement
         const availableDirections = directions.filter(dir => dir !== oppositeDirection);
         const randomDirection = availableDirections[Math.floor(Math.random() * availableDirections.length)];
         setDirection(randomDirection);
       }
-    }, 2000); // More frequent changes for dynamic movement
+    }, 2000);
 
     return () => clearInterval(directionInterval);
   }, [direction]);
 
+  // Get theme-specific snake colors
+  const getSnakeColors = () => {
+    switch (theme) {
+      case 'matrix':
+        return { head: '#00ff00', body: '#00cc00', glow: '#00ff00' };
+      case 'ocean':
+        return { head: '#00d4ff', body: '#0099cc', glow: '#00d4ff' };
+      case 'pastel':
+        return { head: '#a855f7', body: '#7c3aed', glow: '#a855f7' };
+      case 'dark':
+        return { head: '#22c55e', body: '#16a34a', glow: '#22c55e' };
+      default:
+        return { head: '#22c55e', body: '#16a34a', glow: '#22c55e' };
+    }
+  };
+
+  const colors = getSnakeColors();
+
   return (
     <div className="fixed inset-0 opacity-50 pointer-events-none overflow-hidden z-0">
+      {/* Matrix falling code effect */}
+      {theme === 'matrix' && (
+        <div className="absolute inset-0">
+          {matrixChars.map(char => (
+            <div
+              key={char.id}
+              className="absolute font-mono text-sm"
+              style={{
+                left: char.x,
+                top: char.y,
+                color: `hsl(120, 100%, ${50 + char.opacity * 30}%)`,
+                opacity: char.opacity,
+                textShadow: `0 0 10px #00ff00, 0 0 20px #00ff00`,
+              }}
+            >
+              {char.char}
+            </div>
+          ))}
+          {/* Scanline overlay */}
+          <div 
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)',
+            }}
+          />
+        </div>
+      )}
+
       <div className="relative w-full h-full">
         {/* Snake */}
         {snake.map((segment, index) => (
@@ -127,13 +227,13 @@ const EnhancedBackgroundSnake = () => {
               left: `${(segment.x * 100) / GRID_WIDTH}%`,
               top: `${(segment.y * 100) / GRID_HEIGHT}%`,
               transform: 'translate(-50%, -50%)',
-              backgroundColor: index === 0 ? '#22c55e' : '#16a34a',
+              backgroundColor: index === 0 ? colors.head : colors.body,
               background: index === 0 
-                ? 'linear-gradient(45deg, #22c55e 0%, #22c55e 40%, #000 45%, #22c55e 50%, #000 55%, #22c55e 60%, #22c55e 100%)'
-                : 'linear-gradient(45deg, #16a34a 0%, #16a34a 30%, #000 35%, #16a34a 40%, #000 45%, #16a34a 50%, #000 55%, #16a34a 60%, #000 65%, #16a34a 70%, #16a34a 100%)',
+                ? `linear-gradient(45deg, ${colors.head} 0%, ${colors.head} 40%, #000 45%, ${colors.head} 50%, #000 55%, ${colors.head} 60%, ${colors.head} 100%)`
+                : `linear-gradient(45deg, ${colors.body} 0%, ${colors.body} 30%, #000 35%, ${colors.body} 40%, #000 45%, ${colors.body} 50%, #000 55%, ${colors.body} 60%, #000 65%, ${colors.body} 70%, ${colors.body} 100%)`,
               boxShadow: index === 0 
-                ? '0 0 6px #22c55e' 
-                : '0 0 3px #16a34a',
+                ? `0 0 6px ${colors.glow}` 
+                : `0 0 3px ${colors.glow}`,
             }}
           />
         ))}
@@ -150,7 +250,7 @@ const EnhancedBackgroundSnake = () => {
         />
 
         {/* Score display */}
-        <div className="absolute top-4 left-4 text-green-400 text-xs opacity-50">
+        <div className="absolute top-4 left-4 text-xs opacity-50" style={{ color: colors.head }}>
           Snake Score: {score}
         </div>
       </div>
