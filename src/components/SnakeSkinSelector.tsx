@@ -11,6 +11,11 @@ const snakeSkins: { value: SnakeSkin; label: string; description: string }[] = [
   { value: 'remix', label: 'Remix', description: 'Modern gradient design' },
   { value: 'classic', label: 'Dice', description: 'Pixelated with dice numbers' },
   { value: 'tetris', label: 'Tetris', description: 'Block-style Tetris theme' },
+  { value: 'neon', label: 'Neon', description: 'Glowing neon outline' },
+  { value: 'rainbow', label: 'Rainbow', description: 'Color cycling segments' },
+  { value: 'pixel', label: 'Pixel', description: '8-bit retro style' },
+  { value: 'fire', label: 'Fire', description: 'Flame gradient effect' },
+  { value: 'ice', label: 'Ice', description: 'Frozen blue frost' },
 ];
 
 const SnakeSkinSelector = ({ isOpen, onClose }: SnakeSkinSelectorProps) => {

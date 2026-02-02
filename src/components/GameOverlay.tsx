@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { GameMode } from '../types/gameTypes';
 import PlayerNameDialog from './PlayerNameDialog';
+import ShareScoreCard from './ShareScoreCard';
 import { useGlobalLeaderboard } from '../hooks/useGlobalLeaderboard';
 
 interface GameOverlayProps {
@@ -20,6 +21,8 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
   const { theme } = useTheme();
   const { addScore } = useGlobalLeaderboard();
   const [showNameDialog, setShowNameDialog] = useState(false);
+  const [showShareCard, setShowShareCard] = useState(false);
+  const [savedPlayerName, setSavedPlayerName] = useState('Player');
   
   if (!gameOver) return null;
 
@@ -28,8 +31,9 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
     switch (theme) {
       case 'light': return 'bg-white/95 backdrop-blur-md';
       case 'dark': return 'bg-black/90 backdrop-blur-md';
-      case 'pastel': return 'bg-white/95 backdrop-blur-md'; // White overlay for pastel
-      case 'gameboy': return 'bg-card/95 backdrop-blur-md'; // Use card background for gameboy
+      case 'pastel': return 'bg-white/95 backdrop-blur-md';
+      case 'matrix': return 'bg-black/95 backdrop-blur-md';
+      case 'ocean': return 'bg-blue-900/95 backdrop-blur-md';
       default: return 'bg-background/90 backdrop-blur-md';
     }
   };
@@ -39,12 +43,17 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
   };
 
   const handleNameSave = async (playerName: string) => {
+    setSavedPlayerName(playerName);
     await addScore(playerName, score, gameMode, speed);
     setShowNameDialog(false);
   };
 
   const handleNameCancel = () => {
     setShowNameDialog(false);
+  };
+
+  const handleShareScore = () => {
+    setShowShareCard(true);
   };
 
   return (
@@ -76,10 +85,10 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
             🌐 SAVE TO GLOBAL LEADERBOARD
           </button>
           <button
-            onClick={onTakeScreenshot}
+            onClick={handleShareScore}
             className="block w-full px-4 py-2 border border-accent text-accent-foreground font-bold rounded hover:bg-accent/10 transition-colors text-sm"
           >
-            📸 TAKE SCREENSHOT
+            📤 SHARE SCORE
           </button>
         </div>
       </div>
@@ -89,6 +98,15 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
         score={score}
         onSave={handleNameSave}
         onCancel={handleNameCancel}
+      />
+      
+      <ShareScoreCard
+        isOpen={showShareCard}
+        onClose={() => setShowShareCard(false)}
+        score={score}
+        playerName={savedPlayerName}
+        gameMode={gameMode}
+        speed={speed}
       />
     </>
   );

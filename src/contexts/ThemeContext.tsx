@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-export type Theme = 'light' | 'dark' | 'pastel' | 'gameboy';
+export type Theme = 'light' | 'dark' | 'pastel' | 'matrix' | 'ocean';
 
 interface ThemeContextType {
   theme: Theme;
@@ -33,8 +33,9 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       switch (prev) {
         case 'light': return 'dark';
         case 'dark': return 'pastel';
-        case 'pastel': return 'gameboy';
-        case 'gameboy': return 'light';
+        case 'pastel': return 'matrix';
+        case 'matrix': return 'ocean';
+        case 'ocean': return 'light';
         default: return 'light';
       }
     });

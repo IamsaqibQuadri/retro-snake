@@ -13,13 +13,19 @@ const themes: { value: Theme; label: string; description: string; preview: strin
   { value: 'light', label: 'Light', description: 'Clean and bright', preview: '☀️' },
   { value: 'dark', label: 'Dark', description: 'Easy on the eyes', preview: '🌙' },
   { value: 'pastel', label: 'Pastel Dreams', description: 'Soft and dreamy colors', preview: '🌸' },
-  { value: 'gameboy', label: 'Game Boy Retro', description: 'Classic LCD green', preview: '🎮' },
+  { value: 'matrix', label: 'Matrix', description: 'Falling code vibes', preview: '💻' },
+  { value: 'ocean', label: 'Ocean', description: 'Water ripple effects', preview: '🌊' },
 ];
 
 const snakeSkins: { value: SnakeSkin; label: string; description: string; preview: string }[] = [
   { value: 'remix', label: 'Remix', description: 'Modern gradient design', preview: '🌈' },
   { value: 'classic', label: 'Dice', description: 'Pixelated with dice numbers', preview: '🎲' },
   { value: 'tetris', label: 'Tetris', description: 'Block-style Tetris theme', preview: '🧱' },
+  { value: 'neon', label: 'Neon', description: 'Glowing neon outline', preview: '✨' },
+  { value: 'rainbow', label: 'Rainbow', description: 'Color cycling segments', preview: '🏳️‍🌈' },
+  { value: 'pixel', label: 'Pixel', description: '8-bit retro style', preview: '👾' },
+  { value: 'fire', label: 'Fire', description: 'Flame gradient effect', preview: '🔥' },
+  { value: 'ice', label: 'Ice', description: 'Frozen blue frost', preview: '❄️' },
 ];
 
 const snakeColors = [

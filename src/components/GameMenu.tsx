@@ -6,6 +6,7 @@ import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import { useLeaderboard } from '../hooks/useLeaderboard';
 import { GameMode } from '../types/gameTypes';
 import EnhancedBackgroundSnake from './EnhancedBackgroundSnake';
+import OceanRippleEffect from './OceanRippleEffect';
 import GameSettingsPanel from './GameSettingsPanel';
 import WelcomeScreen from './GameMenu/WelcomeScreen';
 import SetupScreen from './GameMenu/SetupScreen';
@@ -73,6 +74,9 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
     <div className={`flex flex-col items-center justify-center h-full px-4 py-4 text-center relative transition-colors duration-300 ${backgroundClass}`}>
       {/* Enhanced Background Snake */}
       <EnhancedBackgroundSnake />
+      
+      {/* Ocean Ripple Effect - Only on welcome screen */}
+      <OceanRippleEffect isActive={theme === 'ocean' && currentStep === 'welcome'} />
 
       <TopControls onShowSettings={() => setShowSettings(true)} />
       <Watermark />
