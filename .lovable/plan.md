@@ -1,89 +1,194 @@
 
 
-# Fix Uneven Game Mode Buttons Layout
+# Feature Enhancements Plan
 
-## Problem
-The five game mode buttons have inconsistent sizing and descriptions:
-- CHAOS is large with full-width and a description
-- TIME ATTACK & SURVIVAL are medium-sized with descriptions
-- CLASSIC & MODERN are smaller with no descriptions
+## Summary
+This plan addresses 6 features/fixes:
+1. Logo 360° rotation on tap
+2. Replace Gameboy theme with Matrix theme
+3. Add Ocean theme with ripple water effect
+4. Fix scoreboard (switch to Lovable Cloud)
+5. Add new snake skins
+6. Add shareable score cards
 
-## Solution
-Make all 5 game mode buttons uniform with consistent styling:
+---
 
-**Option 1: Grid Layout (Recommended)**
-All 5 modes in a consistent 2-column grid, with CHAOS spanning full width at the top:
+## 1. Interactive Logo Rotation
 
-```
-┌─────────────────────────────────────┐
-│    🌀 CHAOS (⭐ RECOMMENDED)        │
-│    Ultimate challenge - 3 phases!   │
-├──────────────────┬──────────────────┤
-│  ⏱️ TIME ATTACK  │   💀 SURVIVAL    │
-│    60 seconds!   │  Speed increases!│
-├──────────────────┼──────────────────┤
-│   🏛️ CLASSIC    │    🌐 MODERN     │
-│  Wall collision  │   Wall wrapping  │
-└──────────────────┴──────────────────┘
-```
+### Problem
+The logo used to rotate 360° when tapped but this functionality is missing in WelcomeScreen.tsx
 
-## Changes Required
+### Solution
+Add click/tap handler with rotation animation state
 
-**File:** `src/components/GameMenu/GameModeSelector.tsx`
+### Changes
+**File:** `src/components/GameMenu/WelcomeScreen.tsx`
+- Add `isRotating` state
+- Add `onClick` handler to logo image
+- Apply CSS `rotate-360` animation class when active
+- Works on both mobile (tap) and desktop (click)
 
-1. **Add descriptions to CLASSIC and MODERN buttons:**
-   - CLASSIC: "Wall collision"
-   - MODERN: "Wall wrapping"
+---
 
-2. **Make all side-by-side buttons the same height and structure:**
-   - Add `flex-1` to all paired buttons
-   - Ensure consistent padding: `px-3 py-3` for all
-   - Add `flex flex-col items-center` wrapper to all
+## 2. Replace Gameboy with Matrix Theme
 
-3. **Standardize the button internal structure:**
-   All non-CHAOS buttons should follow this pattern:
-   ```jsx
-   <button className="flex-1 px-3 py-3 ...">
-     <div className="flex flex-col items-center">
-       <span>🏛️ CLASSIC</span>
-       <span className="text-xs opacity-70">Wall collision</span>
-     </div>
-   </button>
-   ```
+### Problem
+Replace the Gameboy LCD theme with a Matrix falling code theme
 
-4. **Add `min-h-[60px]`** to ensure consistent button heights
+### Changes
 
-## Technical Implementation
+**File:** `src/contexts/ThemeContext.tsx`
+- Change type from `'gameboy'` to `'matrix'`
+- Update toggle logic
 
-Lines 84-98 need to be updated to match the pattern used for TIME ATTACK and SURVIVAL (lines 62-82):
+**File:** `src/index.css`
+- Replace `.gameboy` CSS variables with `.matrix` theme:
+  - Black background (`--background: 0 0% 0%`)
+  - Phosphor green text (`--foreground: 120 100% 50%`)
+  - Dark green accents for cards
+  - Glowing green effects
 
-```jsx
-{/* Classic & Modern */}
-<div className="flex justify-center gap-2">
-  <button
-    onClick={() => onModeSelect('classic')}
-    className={`flex-1 px-3 py-3 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${getModeButtonClass('classic')}`}
-  >
-    <div className="flex flex-col items-center">
-      <span>🏛️ CLASSIC</span>
-      <span className="text-xs opacity-70">Wall collision</span>
-    </div>
-  </button>
-  <button
-    onClick={() => onModeSelect('modern')}
-    className={`flex-1 px-3 py-3 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${getModeButtonClass('modern')}`}
-  >
-    <div className="flex flex-col items-center">
-      <span>🌐 MODERN</span>
-      <span className="text-xs opacity-70">Wall wrapping</span>
-    </div>
-  </button>
-</div>
-```
+**File:** `src/components/ThemeSelector.tsx`
+- Update theme option from "Gameboy LCD" to "Matrix" with description "Falling code vibes"
 
-## Result
-All 5 game mode buttons will have:
-- Consistent padding and height
-- Descriptive subtitles explaining what each mode does
-- Uniform visual appearance while maintaining the featured CHAOS mode at the top
+**File:** `src/components/EnhancedBackgroundSnake.tsx`
+- Add Matrix falling code animation when theme is 'matrix'
+- Random Katakana/symbols falling vertically
+- Green phosphor glow effects
+
+---
+
+## 3. Add Ocean Theme with Ripple Effect
+
+### Problem
+Add new ocean theme with water ripple effect on mouse hover (home screen only)
+
+### Changes
+
+**File:** `src/contexts/ThemeContext.tsx`
+- Add `'ocean'` to Theme type: `'light' | 'dark' | 'pastel' | 'matrix' | 'ocean'`
+
+**File:** `src/index.css`
+- Add `.ocean` CSS variables:
+  - Deep blue background
+  - Light cyan text
+  - Wave-like accent colors
+  - Water ripple keyframe animation
+
+**File:** `src/components/ThemeSelector.tsx`
+- Add Ocean theme option with description "Water ripples"
+
+**New File:** `src/components/OceanRippleEffect.tsx`
+- Create ripple effect component
+- Track mouse position
+- Render expanding circular ripples on hover/move
+- Only render on home screen (via prop)
+
+**File:** `src/components/GameMenu.tsx`
+- Import and render OceanRippleEffect when theme is 'ocean' and on welcome screen
+
+---
+
+## 4. Fix Scoreboard - Switch to Lovable Cloud
+
+### Problem
+The Supabase client points to wrong project (old external Supabase). Need to use Lovable Cloud.
+
+### Solution
+The `src/integrations/supabase/client.ts` file is auto-generated and will be updated automatically when I trigger a sync. The Lovable Cloud project already has the `leaderboard` table.
+
+### Verification
+- Lovable Cloud project ID: `jmrbjwlkywapnofmyllv`
+- Current client points to: `ggdazdzgopinvgdtoqrl` (wrong!)
+- Table exists in Lovable Cloud with correct schema
+
+### Action
+Regenerate the Supabase client to point to the Lovable Cloud project. No code changes needed - it's auto-managed.
+
+---
+
+## 5. New Snake Skins
+
+### Current Skins
+- Remix (gradient)
+- Dice (pixelated with numbers)
+- Tetris (block-style)
+
+### New Skins to Add
+
+**File:** `src/contexts/SnakeSkinContext.tsx`
+- Expand `SnakeSkin` type to include:
+  - `'neon'` - Glowing neon outline style
+  - `'rainbow'` - Color cycling segments
+  - `'pixel'` - 8-bit pixelated retro style
+  - `'fire'` - Flame gradient (orange to red)
+  - `'ice'` - Frozen blue gradient with frost effect
+
+**File:** `src/components/SnakeSkinSelector.tsx`
+- Add new skin options with descriptions
+
+**File:** `src/components/GameBoard.tsx`
+- Implement rendering logic for each new skin style
+
+---
+
+## 6. Shareable Score Cards
+
+### Problem
+Currently only screenshot functionality exists. Need beautiful shareable score cards.
+
+### Solution
+Create styled score card component with share options
+
+**New File:** `src/components/ShareScoreCard.tsx`
+- Beautiful card design with:
+  - Player name
+  - Score prominently displayed
+  - Game mode badge
+  - Speed indicator
+  - Theme-appropriate styling
+  - Game logo
+  - Date/time stamp
+- Share buttons:
+  - Download as PNG (using html2canvas)
+  - Copy to clipboard
+  - Share via Web Share API (mobile)
+- QR code linking to game URL
+
+**File:** `src/components/GameOverlay.tsx`
+- Replace "TAKE SCREENSHOT" with "SHARE SCORE"
+- Open ShareScoreCard modal instead
+- Pass score data to card component
+
+---
+
+## Files Summary
+
+| Action | File |
+|--------|------|
+| Modify | `src/components/GameMenu/WelcomeScreen.tsx` |
+| Modify | `src/contexts/ThemeContext.tsx` |
+| Modify | `src/index.css` |
+| Modify | `src/components/ThemeSelector.tsx` |
+| Modify | `src/components/EnhancedBackgroundSnake.tsx` |
+| Create | `src/components/OceanRippleEffect.tsx` |
+| Modify | `src/components/GameMenu.tsx` |
+| Modify | `src/contexts/SnakeSkinContext.tsx` |
+| Modify | `src/components/SnakeSkinSelector.tsx` |
+| Modify | `src/components/GameBoard.tsx` |
+| Create | `src/components/ShareScoreCard.tsx` |
+| Modify | `src/components/GameOverlay.tsx` |
+
+Total: **2 new files, 10 modified files**
+
+---
+
+## Implementation Order
+
+1. **Fix Scoreboard** - Critical fix, enable Lovable Cloud sync
+2. **Logo Rotation** - Quick win, simple state addition
+3. **Theme Changes** - Replace Gameboy with Matrix, add Ocean
+4. **Ripple Effect** - Create ocean ripple component
+5. **New Skins** - Add 5 new snake skins
+6. **Share Cards** - Create shareable score card modal
 
