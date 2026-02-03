@@ -1,164 +1,182 @@
 
 
-# Feature Enhancements Plan
+# UI/UX Improvements Plan
 
 ## Summary
-This plan addresses 6 features/fixes:
-1. Logo 360° rotation on tap
-2. Replace Gameboy theme with Matrix theme
-3. Add Ocean theme with ripple water effect
-4. Fix scoreboard (switch to Lovable Cloud)
-5. Add new snake skins
-6. Add shareable score cards
+6 changes to implement:
+1. Fidget spinner logo rotation
+2. Improved Matrix theme
+3. Fix scoreboard (regenerate Supabase client)
+4. Remove pixel skin
+5. Grid layout for skin/theme selectors
+6. Move Chaos mode below other options
 
 ---
 
-## 1. Interactive Logo Rotation
+## 1. Fidget Spinner Logo Rotation
 
-### Problem
-The logo used to rotate 360° when tapped but this functionality is missing in WelcomeScreen.tsx
+### Current Behavior
+- Logo rotates once at a fixed 1-second duration
+- Uses `animate-spin` class with fixed timing
 
-### Solution
-Add click/tap handler with rotation animation state
+### New Behavior
+- Click/tap gives the logo momentum
+- Spins multiple times and gradually slows down (deceleration effect)
+- Multiple taps add more momentum (like a real fidget spinner)
 
 ### Changes
 **File:** `src/components/GameMenu/WelcomeScreen.tsx`
-- Add `isRotating` state
-- Add `onClick` handler to logo image
-- Apply CSS `rotate-360` animation class when active
-- Works on both mobile (tap) and desktop (click)
+- Replace boolean `isRotating` with `rotationSpeed` number state
+- Track current rotation angle with `rotation` state
+- Use `requestAnimationFrame` for smooth physics-based animation
+- Each click adds rotational velocity
+- Apply friction to gradually slow down
+- Use inline `transform: rotate(${rotation}deg)` style
+
+### Technical Implementation
+```
+State:
+- rotation: number (current angle in degrees)
+- velocity: number (rotational speed, degrees per frame)
+
+Physics:
+- On click: velocity += 30 (add momentum)
+- Each frame: rotation += velocity, velocity *= 0.98 (friction)
+- Stop animating when velocity < 0.1
+```
 
 ---
 
-## 2. Replace Gameboy with Matrix Theme
+## 2. Improved Matrix Theme
 
-### Problem
-Replace the Gameboy LCD theme with a Matrix falling code theme
+### Current Issue
+- Matrix falling code is simple single characters
+- Doesn't match the iconic Matrix movie look
 
-### Changes
-
-**File:** `src/contexts/ThemeContext.tsx`
-- Change type from `'gameboy'` to `'matrix'`
-- Update toggle logic
-
-**File:** `src/index.css`
-- Replace `.gameboy` CSS variables with `.matrix` theme:
-  - Black background (`--background: 0 0% 0%`)
-  - Phosphor green text (`--foreground: 120 100% 50%`)
-  - Dark green accents for cards
-  - Glowing green effects
-
-**File:** `src/components/ThemeSelector.tsx`
-- Update theme option from "Gameboy LCD" to "Matrix" with description "Falling code vibes"
-
+### Improvements
 **File:** `src/components/EnhancedBackgroundSnake.tsx`
-- Add Matrix falling code animation when theme is 'matrix'
-- Random Katakana/symbols falling vertically
-- Green phosphor glow effects
+- Create vertical "streams" of characters (not isolated chars)
+- Characters in each stream fade from bright green (head) to dark (tail)
+- Varying stream lengths and speeds
+- Add subtle CRT flicker effect
+- More dense character coverage
 
----
-
-## 3. Add Ocean Theme with Ripple Effect
-
-### Problem
-Add new ocean theme with water ripple effect on mouse hover (home screen only)
-
-### Changes
-
-**File:** `src/contexts/ThemeContext.tsx`
-- Add `'ocean'` to Theme type: `'light' | 'dark' | 'pastel' | 'matrix' | 'ocean'`
+### Visual Effect
+```
+Stream structure (top to bottom):
+- Head character: bright green (#00ff00), full opacity
+- Body characters: gradually darker green
+- Tail: fades to nearly transparent
+- Continuous vertical flow
+```
 
 **File:** `src/index.css`
-- Add `.ocean` CSS variables:
-  - Deep blue background
-  - Light cyan text
-  - Wave-like accent colors
-  - Water ripple keyframe animation
-
-**File:** `src/components/ThemeSelector.tsx`
-- Add Ocean theme option with description "Water ripples"
-
-**New File:** `src/components/OceanRippleEffect.tsx`
-- Create ripple effect component
-- Track mouse position
-- Render expanding circular ripples on hover/move
-- Only render on home screen (via prop)
-
-**File:** `src/components/GameMenu.tsx`
-- Import and render OceanRippleEffect when theme is 'ocean' and on welcome screen
+- Add subtle CRT scanline overlay for Matrix theme
+- Green phosphor glow on text elements
 
 ---
 
-## 4. Fix Scoreboard - Switch to Lovable Cloud
+## 3. Fix Scoreboard - Regenerate Supabase Client
 
 ### Problem
-The Supabase client points to wrong project (old external Supabase). Need to use Lovable Cloud.
+The Supabase client file points to wrong project:
+- **Current:** `ggdazdzgopinvgdtoqrl.supabase.co` (old external project)
+- **Should be:** `jmrbjwlkywapnofmyllv.supabase.co` (Lovable Cloud)
 
 ### Solution
-The `src/integrations/supabase/client.ts` file is auto-generated and will be updated automatically when I trigger a sync. The Lovable Cloud project already has the `leaderboard` table.
+The `src/integrations/supabase/client.ts` file is auto-generated. I need to trigger a sync to regenerate it with the correct Lovable Cloud credentials.
 
 ### Verification
-- Lovable Cloud project ID: `jmrbjwlkywapnofmyllv`
-- Current client points to: `ggdazdzgopinvgdtoqrl` (wrong!)
-- Table exists in Lovable Cloud with correct schema
+Lovable Cloud database already has leaderboard data:
+- Saqib: 160 points (timeattack)
+- Saqib 1: 140 points (modern)
 
-### Action
-Regenerate the Supabase client to point to the Lovable Cloud project. No code changes needed - it's auto-managed.
+### Note
+The RLS policy currently only allows `service_role` to insert scores. We may need to either:
+1. Create a submit-score edge function
+2. Or update the RLS policy to allow anonymous inserts
 
 ---
 
-## 5. New Snake Skins
+## 4. Remove Pixel Snake Skin
 
-### Current Skins
-- Remix (gradient)
-- Dice (pixelated with numbers)
-- Tetris (block-style)
-
-### New Skins to Add
-
+### Changes
 **File:** `src/contexts/SnakeSkinContext.tsx`
-- Expand `SnakeSkin` type to include:
-  - `'neon'` - Glowing neon outline style
-  - `'rainbow'` - Color cycling segments
-  - `'pixel'` - 8-bit pixelated retro style
-  - `'fire'` - Flame gradient (orange to red)
-  - `'ice'` - Frozen blue gradient with frost effect
+- Remove `'pixel'` from `SnakeSkin` type
 
 **File:** `src/components/SnakeSkinSelector.tsx`
-- Add new skin options with descriptions
+- Remove pixel skin from the list (line 16)
 
 **File:** `src/components/GameBoard.tsx`
-- Implement rendering logic for each new skin style
+- Remove pixel skin rendering logic
+
+### Result
+7 skins remain: Remix, Dice, Tetris, Neon, Rainbow, Fire, Ice
 
 ---
 
-## 6. Shareable Score Cards
+## 5. Grid Layout for Skin & Theme Selectors
 
-### Problem
-Currently only screenshot functionality exists. Need beautiful shareable score cards.
+### Current Layout
+- Theme selector: 2-column grid ✓ (already good)
+- Skin selector: 1-column list (needs change)
 
-### Solution
-Create styled score card component with share options
+### Changes
+**File:** `src/components/SnakeSkinSelector.tsx`
+- Change `grid-cols-1` to `grid-cols-2`
+- Reduce padding from `p-4` to `p-3`
+- Make buttons more compact
 
-**New File:** `src/components/ShareScoreCard.tsx`
-- Beautiful card design with:
-  - Player name
-  - Score prominently displayed
-  - Game mode badge
-  - Speed indicator
-  - Theme-appropriate styling
-  - Game logo
-  - Date/time stamp
-- Share buttons:
-  - Download as PNG (using html2canvas)
-  - Copy to clipboard
-  - Share via Web Share API (mobile)
-- QR code linking to game URL
+### Visual Result
+```
+┌─────────────┬─────────────┐
+│   Remix     │    Dice     │
+│  (gradient) │  (numbers)  │
+├─────────────┼─────────────┤
+│   Tetris    │    Neon     │
+│   (blocks)  │  (outline)  │
+├─────────────┼─────────────┤
+│   Rainbow   │    Fire     │
+│  (cycling)  │   (flame)   │
+├─────────────┴─────────────┤
+│           Ice             │
+│     (frozen frost)        │
+└───────────────────────────┘
+```
 
-**File:** `src/components/GameOverlay.tsx`
-- Replace "TAKE SCREENSHOT" with "SHARE SCORE"
-- Open ShareScoreCard modal instead
-- Pass score data to card component
+---
+
+## 6. Move Chaos Mode Below Other Options
+
+### Current Layout
+```
+┌─────────────────────────────┐
+│  🌀 CHAOS (⭐ RECOMMENDED)  │  ← Currently at top
+├──────────────┬──────────────┤
+│  TIME ATTACK │   SURVIVAL   │
+├──────────────┼──────────────┤
+│   CLASSIC    │    MODERN    │
+└──────────────┴──────────────┘
+```
+
+### New Layout
+```
+┌──────────────┬──────────────┐
+│   CLASSIC    │    MODERN    │  ← Standard modes first
+├──────────────┼──────────────┤
+│  TIME ATTACK │   SURVIVAL   │
+├──────────────┴──────────────┤
+│  🌀 CHAOS (⭐ RECOMMENDED)  │  ← Featured at bottom
+│   Ultimate challenge!       │
+└─────────────────────────────┘
+```
+
+### Changes
+**File:** `src/components/GameMenu/GameModeSelector.tsx`
+- Reorder the button groups:
+  1. Classic & Modern (first row)
+  2. Time Attack & Survival (second row)
+  3. Chaos Mode (last, full width, featured)
 
 ---
 
@@ -167,28 +185,13 @@ Create styled score card component with share options
 | Action | File |
 |--------|------|
 | Modify | `src/components/GameMenu/WelcomeScreen.tsx` |
-| Modify | `src/contexts/ThemeContext.tsx` |
-| Modify | `src/index.css` |
-| Modify | `src/components/ThemeSelector.tsx` |
 | Modify | `src/components/EnhancedBackgroundSnake.tsx` |
-| Create | `src/components/OceanRippleEffect.tsx` |
-| Modify | `src/components/GameMenu.tsx` |
+| Modify | `src/index.css` |
+| Regenerate | `src/integrations/supabase/client.ts` |
 | Modify | `src/contexts/SnakeSkinContext.tsx` |
 | Modify | `src/components/SnakeSkinSelector.tsx` |
 | Modify | `src/components/GameBoard.tsx` |
-| Create | `src/components/ShareScoreCard.tsx` |
-| Modify | `src/components/GameOverlay.tsx` |
+| Modify | `src/components/GameMenu/GameModeSelector.tsx` |
 
-Total: **2 new files, 10 modified files**
-
----
-
-## Implementation Order
-
-1. **Fix Scoreboard** - Critical fix, enable Lovable Cloud sync
-2. **Logo Rotation** - Quick win, simple state addition
-3. **Theme Changes** - Replace Gameboy with Matrix, add Ocean
-4. **Ripple Effect** - Create ocean ripple component
-5. **New Skins** - Add 5 new snake skins
-6. **Share Cards** - Create shareable score card modal
+Total: **7 modified files, 1 regenerated file**
 
