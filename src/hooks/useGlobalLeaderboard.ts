@@ -47,16 +47,26 @@ export const useGlobalLeaderboard = () => {
     speed: 'slow' | 'normal' | 'fast'
   ) => {
     try {
-      const { error } = await supabase
-        .from('leaderboard')
-        .insert({
+      // Use edge function to submit score (service role inserts only)
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-score`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({
           player_name: playerName,
           score,
           game_mode: gameMode,
           speed
-        });
+        }),
+      });
 
-      if (error) throw error;
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to save score');
+      }
       
       // Reload leaderboard after adding new score
       await loadLeaderboard();

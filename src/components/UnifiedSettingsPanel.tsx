@@ -23,7 +23,6 @@ const snakeSkins: { value: SnakeSkin; label: string; description: string; previe
   { value: 'tetris', label: 'Tetris', description: 'Block-style Tetris theme', preview: '🧱' },
   { value: 'neon', label: 'Neon', description: 'Glowing neon outline', preview: '✨' },
   { value: 'rainbow', label: 'Rainbow', description: 'Color cycling segments', preview: '🏳️‍🌈' },
-  { value: 'pixel', label: 'Pixel', description: '8-bit retro style', preview: '👾' },
   { value: 'fire', label: 'Fire', description: 'Flame gradient effect', preview: '🔥' },
   { value: 'ice', label: 'Ice', description: 'Frozen blue frost', preview: '❄️' },
 ];
