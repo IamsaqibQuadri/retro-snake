@@ -12,13 +12,13 @@ interface Food {
   y: number;
 }
 
-interface MatrixChar {
+interface MatrixStream {
   id: number;
   x: number;
   y: number;
-  char: string;
+  chars: string[];
   speed: number;
-  opacity: number;
+  length: number;
 }
 
 const EnhancedBackgroundSnake = () => {
@@ -33,55 +33,71 @@ const EnhancedBackgroundSnake = () => {
   const [direction, setDirection] = useState<'up' | 'down' | 'left' | 'right'>('right');
   const [food, setFood] = useState<Food>({ x: 15, y: 15 });
   const [score, setScore] = useState(0);
-  const [matrixChars, setMatrixChars] = useState<MatrixChar[]>([]);
+  const [matrixStreams, setMatrixStreams] = useState<MatrixStream[]>([]);
 
   // Grid dimensions for better coverage
   const GRID_WIDTH = 50;
   const GRID_HEIGHT = 40;
 
   // Matrix characters - katakana, numbers, symbols
-  const MATRIX_CHARS = 'ァアィイゥウェエォオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789';
+  const MATRIX_CHARS = 'ァアィイゥウェエォオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789アイウエオカキクケコ';
 
-  // Initialize matrix rain
+  // Generate random characters for a stream
+  const generateStreamChars = (length: number) => {
+    return Array.from({ length }, () => 
+      MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)]
+    );
+  };
+
+  // Initialize matrix rain streams
   useEffect(() => {
     if (theme === 'matrix') {
-      const columns = Math.floor(window.innerWidth / 20);
-      const initialChars: MatrixChar[] = [];
+      const columns = Math.floor(window.innerWidth / 18);
+      const streams: MatrixStream[] = [];
       
-      for (let i = 0; i < columns * 2; i++) {
-        initialChars.push({
+      for (let i = 0; i < columns; i++) {
+        const length = 8 + Math.floor(Math.random() * 20);
+        streams.push({
           id: i,
-          x: Math.floor(Math.random() * columns) * 20,
-          y: Math.random() * window.innerHeight - window.innerHeight,
-          char: MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)],
-          speed: 2 + Math.random() * 4,
-          opacity: 0.3 + Math.random() * 0.7,
+          x: i * 18,
+          y: Math.random() * window.innerHeight * 2 - window.innerHeight,
+          chars: generateStreamChars(length),
+          speed: 1 + Math.random() * 3,
+          length,
         });
       }
-      setMatrixChars(initialChars);
+      setMatrixStreams(streams);
     }
   }, [theme]);
 
-  // Matrix rain animation
+  // Matrix rain animation with character changes
   useEffect(() => {
     if (theme !== 'matrix') return;
 
     const interval = setInterval(() => {
-      setMatrixChars(prev => prev.map(char => {
-        let newY = char.y + char.speed;
-        if (newY > window.innerHeight) {
+      setMatrixStreams(prev => prev.map(stream => {
+        let newY = stream.y + stream.speed;
+        
+        // Reset stream when it goes off screen
+        if (newY > window.innerHeight + stream.length * 18) {
+          const newLength = 8 + Math.floor(Math.random() * 20);
           return {
-            ...char,
-            y: -20,
-            x: Math.floor(Math.random() * Math.floor(window.innerWidth / 20)) * 20,
-            char: MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)],
-            speed: 2 + Math.random() * 4,
-            opacity: 0.3 + Math.random() * 0.7,
+            ...stream,
+            y: -newLength * 18,
+            chars: generateStreamChars(newLength),
+            speed: 1 + Math.random() * 3,
+            length: newLength,
           };
         }
-        return { ...char, y: newY };
+        
+        // Randomly change some characters in the stream
+        const newChars = stream.chars.map(c => 
+          Math.random() < 0.02 ? MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)] : c
+        );
+        
+        return { ...stream, y: newY, chars: newChars };
       }));
-    }, 50);
+    }, 40);
 
     return () => clearInterval(interval);
   }, [theme]);
@@ -187,29 +203,53 @@ const EnhancedBackgroundSnake = () => {
 
   return (
     <div className="fixed inset-0 opacity-50 pointer-events-none overflow-hidden z-0">
-      {/* Matrix falling code effect */}
+      {/* Matrix falling code effect - authentic streams */}
       {theme === 'matrix' && (
-        <div className="absolute inset-0">
-          {matrixChars.map(char => (
+        <div className="absolute inset-0 overflow-hidden">
+          {matrixStreams.map(stream => (
             <div
-              key={char.id}
-              className="absolute font-mono text-sm"
+              key={stream.id}
+              className="absolute"
               style={{
-                left: char.x,
-                top: char.y,
-                color: `hsl(120, 100%, ${50 + char.opacity * 30}%)`,
-                opacity: char.opacity,
-                textShadow: `0 0 10px #00ff00, 0 0 20px #00ff00`,
+                left: stream.x,
+                top: stream.y,
               }}
             >
-              {char.char}
+              {stream.chars.map((char, idx) => {
+                const isHead = idx === 0;
+                const tailFade = Math.max(0.1, 1 - (idx / stream.length) * 0.9);
+                return (
+                  <div
+                    key={idx}
+                    className="font-mono text-sm leading-tight"
+                    style={{
+                      color: isHead ? '#ffffff' : `rgba(0, 255, 0, ${tailFade})`,
+                      textShadow: isHead 
+                        ? '0 0 10px #fff, 0 0 20px #00ff00, 0 0 30px #00ff00' 
+                        : `0 0 ${8 * tailFade}px #00ff00`,
+                      fontSize: '14px',
+                      lineHeight: '18px',
+                    }}
+                  >
+                    {char}
+                  </div>
+                );
+              })}
             </div>
           ))}
-          {/* Scanline overlay */}
+          {/* CRT scanline overlay */}
           <div 
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)',
+              background: 'repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(0,0,0,0.15) 1px, rgba(0,0,0,0.15) 2px)',
+              mixBlendMode: 'overlay',
+            }}
+          />
+          {/* Slight vignette effect */}
+          <div 
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%)',
             }}
           />
         </div>

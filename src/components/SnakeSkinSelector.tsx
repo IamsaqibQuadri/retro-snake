@@ -7,15 +7,14 @@ interface SnakeSkinSelectorProps {
   onClose: () => void;
 }
 
-const snakeSkins: { value: SnakeSkin; label: string; description: string }[] = [
-  { value: 'remix', label: 'Remix', description: 'Modern gradient design' },
-  { value: 'classic', label: 'Dice', description: 'Pixelated with dice numbers' },
-  { value: 'tetris', label: 'Tetris', description: 'Block-style Tetris theme' },
-  { value: 'neon', label: 'Neon', description: 'Glowing neon outline' },
-  { value: 'rainbow', label: 'Rainbow', description: 'Color cycling segments' },
-  { value: 'pixel', label: 'Pixel', description: '8-bit retro style' },
-  { value: 'fire', label: 'Fire', description: 'Flame gradient effect' },
-  { value: 'ice', label: 'Ice', description: 'Frozen blue frost' },
+const snakeSkins: { value: SnakeSkin; label: string; description: string; emoji: string }[] = [
+  { value: 'remix', label: 'Remix', description: 'Modern gradient', emoji: '🎨' },
+  { value: 'classic', label: 'Dice', description: 'Dice numbers', emoji: '🎲' },
+  { value: 'tetris', label: 'Tetris', description: 'Block style', emoji: '🧱' },
+  { value: 'neon', label: 'Neon', description: 'Glowing outline', emoji: '💡' },
+  { value: 'rainbow', label: 'Rainbow', description: 'Color cycling', emoji: '🌈' },
+  { value: 'fire', label: 'Fire', description: 'Flame effect', emoji: '🔥' },
+  { value: 'ice', label: 'Ice', description: 'Frozen frost', emoji: '❄️' },
 ];
 
 const SnakeSkinSelector = ({ isOpen, onClose }: SnakeSkinSelectorProps) => {
@@ -41,18 +40,19 @@ const SnakeSkinSelector = ({ isOpen, onClose }: SnakeSkinSelectorProps) => {
           </button>
         </div>
         
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-2 gap-2">
           {snakeSkins.map((skinOption) => (
             <button
               key={skinOption.value}
               onClick={() => handleSkinSelect(skinOption.value)}
-              className={`p-4 rounded-lg border-2 transition-all text-left ${
+              className={`p-3 rounded-lg border-2 transition-all text-center ${
                 snakeSkin === skinOption.value
                   ? 'border-primary bg-primary/10'
                   : 'border-border hover:border-primary/50 hover:bg-muted/50'
               }`}
             >
-              <div className="font-semibold text-foreground">{skinOption.label}</div>
+              <div className="text-xl mb-1">{skinOption.emoji}</div>
+              <div className="font-semibold text-foreground text-sm">{skinOption.label}</div>
               <div className="text-xs text-muted-foreground">{skinOption.description}</div>
             </button>
           ))}

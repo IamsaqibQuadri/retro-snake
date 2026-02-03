@@ -87,14 +87,6 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
             background: `linear-gradient(45deg, hsl(${hue}, 100%, 50%), hsl(${(hue + 60) % 360}, 100%, 50%))`,
             boxShadow: foodEaten ? `0 0 15px hsl(${hue}, 100%, 50%)` : `0 0 8px hsl(${hue}, 100%, 50%)`,
           };
-        case 'pixel':
-          return {
-            ...baseStyle,
-            backgroundColor: settings.snakeColor,
-            imageRendering: 'pixelated' as const,
-            border: '2px solid #000',
-            boxShadow: 'inset -2px -2px 0 rgba(0,0,0,0.5), inset 2px 2px 0 rgba(255,255,255,0.3)',
-          };
         case 'fire':
           return {
             ...baseStyle,
@@ -192,14 +184,6 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
             ...baseStyle,
             background: `linear-gradient(45deg, hsl(${hue}, 100%, 50%), hsl(${(hue + 60) % 360}, 100%, 50%))`,
             boxShadow: `0 0 5px hsl(${hue}, 100%, 50%)`,
-          };
-        case 'pixel':
-          return {
-            ...baseStyle,
-            backgroundColor: settings.snakeBodyColor,
-            imageRendering: 'pixelated' as const,
-            border: '2px solid #000',
-            boxShadow: 'inset -2px -2px 0 rgba(0,0,0,0.5), inset 2px 2px 0 rgba(255,255,255,0.3)',
           };
         case 'fire':
           const fireIntensity = Math.max(0.4, 1 - index * 0.1);
