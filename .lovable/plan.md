@@ -1,181 +1,250 @@
 
-Goals (what will change)
-1) Setup screen: make the “High score” tile and the “Global leaderboard” (globe) tile the same size and feel like two matching tabs.
-2) Global scoreboard: reliably save scores for all testers and immediately show updated results.
-3) Top-right “paint palette” customization panel: change theme/skin lists into a grid layout (to match the other settings UI).
-4) Game over UI: reduce clutter/jammed feeling (especially on mobile).
-5) After saving a name: automatically return to the home screen once the score is saved successfully.
-6) Add an 8th snake skin: “Wind” with a white smoky, continuous snake body (not box segments).
-7) Share score card: replace the generic logo/text with the real Rattle Rush logo used on the home screen.
 
-What I found (root causes)
-A) Scoreboard issue is caused by a backend mismatch in the current code:
-- The app’s runtime environment variables point to Lovable Cloud.
-- But the auto-generated client file used for reading the leaderboard still points to an old backend project.
-- The submit-score backend function also appears not deployed to the Lovable Cloud project you’re actually calling (which explains “save score” failing for testers).
+# Comprehensive Fixes Plan
 
-B) The top-right palette panel is the UnifiedSettingsPanel component, and it still renders themes/skins as full-width list rows (not grid).
+## Summary
+5 issues to fix:
+1. Set light as default theme
+2. Fix Wind skin crash and rendering
+3. Fix uneven game over buttons
+4. Make share card logo bigger
+5. Navigate home after save (already working - verify)
 
-C) The game-over screen feels cluttered because:
-- GameOverlay stacks 4 large full-width buttons inside a full-screen overlay.
-- Mobile controls + help text are still rendered underneath (even though disabled), making the whole screen feel packed.
+---
 
-Implementation plan (ordered)
-1) Fix the global scoreboard end-to-end (saving + reading)
-1.1 Deploy the submit-score backend function to the Lovable Cloud backend actually used by the app
-- Use the deployment flow so submit-score exists on the Lovable Cloud project.
-- Confirm it is reachable at /functions/v1/submit-score and appears in backend logs.
+## 1. Set Light as Base Theme
 
-1.2 Make leaderboard READs use the same backend as the app (Lovable Cloud)
-- Update src/hooks/useGlobalLeaderboard.ts to stop importing the auto-generated client (which currently points to the wrong backend).
-- Instead, create a client using import.meta.env.VITE_SUPABASE_URL and import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY (Lovable Cloud values) inside the hook (or via a small shared helper module).
-- Keep the UI behavior the same (top 50 ordering, top 5 display in menu).
+### Current Behavior
+The theme defaults to `'light'` only if nothing is saved in localStorage (line 15-17 in ThemeContext.tsx). This is already correct, but we should verify the fallback.
 
-1.3 Make leaderboard WRITEs robust and debuggable
-- Update src/hooks/useGlobalLeaderboard.ts addScore to:
-  - Send both Authorization and apikey headers (some environments require both).
-  - Return detailed error messages from the backend function to the UI.
-- Update supabase/functions/submit-score/index.ts:
-  - Expand CORS allow-headers to the recommended list for web apps.
-  - Improve error logging and return messages (keep user-safe errors, log full server-side errors).
-- Update GameOverlay to show a toast or inline message when saving fails, instead of silently closing.
+### Changes
+**File:** `src/contexts/ThemeContext.tsx`
+- Keep the default as `'light'` (already set correctly)
+- No code change needed - just verification
 
-Acceptance criteria
-- A tester can finish a game, save a name, and their score appears in the global leaderboard list on the setup screen within a few seconds.
-- Backend function logs show successful inserts.
-- No “Failed to save score” silent failures.
+---
 
-Files touched
-- src/hooks/useGlobalLeaderboard.ts
-- supabase/functions/submit-score/index.ts
-- (optional) src/lib/backendClient.ts (new helper; only if we prefer not to duplicate createClient logic)
+## 2. Fix Wind Skin Crash
 
-2) Setup screen “High score” vs “Globe” tabs same size
-2.1 Update GlobalLeaderboardSection layout
-- Change the container to a 2-column grid so both tiles are identical width/height.
-- Make the globe tile a button with label text (example: “Global”) so it visually matches the “High score” tile.
-- Keep current behavior: clicking the globe tile toggles the global leaderboard section.
+### Root Cause Analysis
+The Wind skin canvas rendering in `GameBoard.tsx` has several issues:
 
-2.2 Handle highScore = 0 gracefully
-- Still render the high score tile (show “HIGH: 0” or “HIGH: —”) so the two-tab layout stays balanced.
+1. **Boundary condition bug (lines 63-66):** The loop `for (let i = 1; i < points.length - 1; i++)` doesn't execute when there are exactly 2 points, but then line 70-71 tries to draw to the last point - this can cause visual glitches
 
-Acceptance criteria
-- Both tiles are the same size on mobile and desktop.
-- The globe tile is no longer a tiny square next to a long rectangle.
+2. **Canvas context race condition:** The useEffect runs on every snake position change, but canvas operations can be interrupted by React's render cycle
 
-Files touched
-- src/components/GameMenu/GlobalLeaderboardSection.tsx
+3. **Missing error handling:** No try-catch around canvas operations
 
-3) Top-right palette “Customization Panel” grid layout (themes/skins)
-3.1 Convert list rows to a grid for Themes and Snake Skins
-- In UnifiedSettingsPanel.tsx:
-  - Replace the map rendering for Themes and Skins tabs from vertical full-width buttons to a responsive grid (1 column on very small screens, 2 columns on most screens).
-  - Use the same “emoji preview + label + description” layout as your other selectors for consistency.
+### Fix
+**File:** `src/components/GameBoard.tsx`
 
-3.2 Add Wind skin option to the grid
-- Add Wind to the snakeSkins array in UnifiedSettingsPanel.tsx.
+Replace the Wind skin rendering logic with a more robust implementation:
 
-Acceptance criteria
-- Themes and Skins appear as compact cards in a grid (not stacked long rows).
-- The look matches the other settings grid UI.
+```text
+Changes:
+1. Add proper boundary checks for snake length
+2. Handle edge case when snake has exactly 2 segments
+3. Wrap canvas operations in try-catch
+4. Add requestAnimationFrame for smoother rendering
+5. Clear canvas properly before each draw
+6. Ensure canvas ref is valid before operations
+```
 
-Files touched
-- src/components/UnifiedSettingsPanel.tsx
+### Technical Implementation
+```
+- Check if snake.length < 2: return early (already done, keep)
+- If snake.length === 2: draw a simple line instead of curve
+- If snake.length >= 3: use quadraticCurveTo for smooth curves
+- Wrap all ctx operations in try-catch
+- Add null checks for canvas and context
+```
 
-4) Game over UI cleanup (reduce clutter)
-4.1 Re-layout the buttons
-- Redesign GameOverlay to a centered card with:
-  - Score and (optional) “New high score” line.
-  - Primary actions in a 2-column row: “Try again” and “Home”.
-  - Secondary actions in a second row: “Save” and “Share” (smaller buttons).
-- Reduce redundant text (“Try again or give up?”) and tighten spacing.
-- Ensure consistent max width and padding for mobile.
+---
 
-4.2 Hide mobile controls + help text while gameOver is true
-- In SnakeGame.tsx:
-  - Conditionally render GameControls and the “Use WASD…” hint only when not gameOver.
-- Optionally hide GameInfo while gameOver to reduce stacked content.
+## 3. Fix Uneven Game Over Buttons
 
-Acceptance criteria
-- The game-over state looks clean on mobile and does not feel jammed.
-- No large control pad showing under the overlay.
+### Current Issue
+Looking at `GameOverlay.tsx`:
+- Primary buttons (lines 91-102): `px-4 py-3` padding, `text-sm` font
+- Secondary buttons (lines 107-118): `px-3 py-2` padding, `text-xs` font
 
-Files touched
-- src/components/GameOverlay.tsx
-- src/components/SnakeGame.tsx
-- (optional) src/components/GameInfo.tsx (only if we add a prop to hide while gameOver)
+This creates visual inconsistency where the top row is larger than the bottom.
 
-5) After saving name, return to home screen
-5.1 Treat save as an async flow with success/failure
-- Update GameOverlay.handleNameSave:
-  - Call addScore and check its result.
-  - On success: close dialog and call onBackToMenu to return home.
-  - On failure: keep dialog open and show an error state (and/or toast).
+### Solution
+Make all 4 buttons the same size and style for a clean 2x2 grid.
 
-5.2 Improve PlayerNameDialog UX
-- Add a loading state (disable buttons while saving).
-- Add an error message area if saving fails.
+**File:** `src/components/GameOverlay.tsx`
 
-Acceptance criteria
-- After a successful save, the app returns to the home screen automatically.
-- If saving fails, the user is told why and can retry.
+Changes:
+- Use consistent padding: `px-4 py-3` for all buttons
+- Use consistent font size: `text-sm` for all buttons
+- Keep the visual distinction through colors (primary vs secondary styles)
+- Ensure all buttons have the same min-height
 
-Files touched
-- src/components/GameOverlay.tsx
-- src/components/PlayerNameDialog.tsx
+### New Layout
+```
+┌────────────────┬────────────────┐
+│   🔄 RETRY     │    🏠 HOME     │  (same size)
+├────────────────┼────────────────┤
+│   🌐 SAVE      │    📤 SHARE    │  (same size)
+└────────────────┴────────────────┘
+```
 
-6) Add Wind snake skin (white smoky continuous body)
-6.1 Add the new skin to types and selectors
-- Update SnakeSkinContext.tsx to include 'wind' in the SnakeSkin union type.
-- Add Wind to:
-  - src/components/SnakeSkinSelector.tsx
-  - src/components/UnifiedSettingsPanel.tsx
+---
 
-6.2 Implement Wind rendering in GameBoard without box segments
-Recommended approach (for a true “snake-shaped” look):
-- When snakeSkin === 'wind':
-  - Render the snake using a canvas overlay that draws a continuous stroked path through the segment centers:
-    - Thick white stroke with round caps and joins.
-    - Multiple passes with different alpha + shadowBlur to create a smoky glow.
-    - Slight time-based noise/jitter (subtle) to make it feel alive without affecting gameplay.
-  - Keep food and obstacles as normal DOM elements.
-- For all other skins, keep current DOM segment rendering.
+## 4. Make Share Card Logo Bigger
 
-Acceptance criteria
-- Wind looks like a continuous smoky snake (not a chain of squares).
-- Performance remains smooth on mobile.
+### Current Issue
+In `ShareScoreCard.tsx` line 141-145, the logo has:
+```jsx
+<img 
+  src={LOGO_PATH} 
+  alt="Rattle Rush" 
+  className="h-12 w-auto mb-2 drop-shadow-lg"  // h-12 = 48px - too small
+  crossOrigin="anonymous"
+/>
+```
 
-Files touched
-- src/contexts/SnakeSkinContext.tsx
-- src/components/SnakeSkinSelector.tsx
-- src/components/UnifiedSettingsPanel.tsx
-- src/components/GameBoard.tsx
+### Solution
+**File:** `src/components/ShareScoreCard.tsx`
 
-7) Share score card uses real Rattle Rush logo
-7.1 Reuse the same logo asset as the home screen
-- WelcomeScreen already uses: /lovable-uploads/fac2201e-f8a2-4cac-8ebc-c735a61174d1.png
-- Update ShareScoreCard to display that image prominently in the card (instead of the generic snake emoji + “SNAKE RETRO” text).
-- Update share text/title to “Rattle Rush” as well.
+Change logo size from `h-12` to `h-20` or `h-24` for better visibility:
+- Current: `h-12` (48px height)
+- New: `h-20` (80px height) - significantly larger while fitting the card
 
-7.2 Ensure html2canvas captures the logo reliably
-- Ensure the <img> is fully loaded before generating the canvas (or use html2canvas options like useCORS and proper local asset path).
+Also adjust margins to accommodate larger logo.
 
-Acceptance criteria
-- The generated downloadable image shows the correct logo.
-- The share modal no longer looks generic.
+---
 
-Files touched
-- src/components/ShareScoreCard.tsx
-- (optional) src/components/GameMenu/WelcomeScreen.tsx (only if we centralize the logo path constant)
+## 5. Auto-Navigate Home After Save (Verification)
 
-Testing checklist (end-to-end)
-1) Open menu -> setup screen: verify High and Global tiles are same size and aligned.
-2) Toggle Global: leaderboard loads and displays top scores.
-3) Play a quick game -> Game Over screen: verify layout is cleaner and controls are hidden.
-4) Save to global leaderboard:
-   - Enter a name, save, see success feedback.
-   - Confirm the app returns to home screen.
-   - Re-open Global leaderboard and confirm the new score is present.
-5) Open top-right palette panel: verify Themes and Skins are grids.
-6) Select Wind skin and start a game: verify smoky continuous snake rendering.
-7) Share Score: verify score card shows the correct Rattle Rush logo and downloads correctly.
+### Current Implementation
+Looking at `GameOverlay.tsx` lines 46-68, the `handleNameSave` function already calls `onBackToMenu()` on success (line 61).
+
+This should already work. If it's not working, we need to check:
+1. Is `addScore` returning `success: true`?
+2. Is the toast showing success message?
+3. Is `onBackToMenu` being called?
+
+### Verification Steps
+- Check the global leaderboard hook's `addScore` function
+- Ensure it properly returns `{ success: true }` on successful save
+- Add console logging if needed
+
+---
+
+## Files to Modify
+
+| Action | File | Changes |
+|--------|------|---------|
+| Modify | `src/components/GameBoard.tsx` | Fix Wind skin canvas rendering with proper boundary checks |
+| Modify | `src/components/GameOverlay.tsx` | Make all 4 buttons equal size |
+| Modify | `src/components/ShareScoreCard.tsx` | Increase logo size from h-12 to h-20 |
+
+Total: **3 files modified**
+
+---
+
+## Technical Details
+
+### Wind Skin Fix (GameBoard.tsx)
+
+The corrected useEffect for Wind skin:
+
+```typescript
+useEffect(() => {
+  if (snakeSkin !== 'wind' || !canvasRef.current) return;
+  
+  const canvas = canvasRef.current;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  try {
+    ctx.clearRect(0, 0, gameWidth, gameHeight);
+    
+    // Need at least 2 points to draw
+    if (snake.length < 2) {
+      // Draw single point as a circle
+      const point = snake[0];
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = 'rgba(255, 255, 255, 1)';
+      ctx.beginPath();
+      ctx.arc(
+        point.x * gridSize + gridSize / 2,
+        point.y * gridSize + gridSize / 2,
+        gridSize * 0.5,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+      return;
+    }
+
+    const points = snake.map(seg => ({
+      x: seg.x * gridSize + gridSize / 2,
+      y: seg.y * gridSize + gridSize / 2,
+    }));
+
+    // Multiple passes for glow effect
+    const passes = [
+      { blur: 20, alpha: 0.15, width: gridSize * 1.8 },
+      { blur: 12, alpha: 0.25, width: gridSize * 1.4 },
+      { blur: 6, alpha: 0.4, width: gridSize * 1.0 },
+      { blur: 2, alpha: 0.7, width: gridSize * 0.7 },
+    ];
+
+    passes.forEach(pass => {
+      ctx.save();
+      ctx.shadowBlur = pass.blur;
+      ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+      ctx.strokeStyle = `rgba(255, 255, 255, ${pass.alpha})`;
+      ctx.lineWidth = pass.width;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+
+      // Handle exactly 2 points (straight line)
+      if (points.length === 2) {
+        ctx.lineTo(points[1].x, points[1].y);
+      } else {
+        // 3+ points: use smooth curves
+        for (let i = 1; i < points.length - 1; i++) {
+          const xc = (points[i].x + points[i + 1].x) / 2;
+          const yc = (points[i].y + points[i + 1].y) / 2;
+          ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+        }
+        // Connect to last point
+        ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+      }
+
+      ctx.stroke();
+      ctx.restore();
+    });
+
+    // Draw head glow
+    ctx.save();
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = 'rgba(255, 255, 255, 1)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.beginPath();
+    ctx.arc(points[0].x, points[0].y, gridSize * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+  } catch (error) {
+    console.error('Wind skin rendering error:', error);
+  }
+}, [snake, snakeSkin, gridSize, gameWidth, gameHeight]);
+```
+
+### Button Uniformity (GameOverlay.tsx)
+
+All buttons will use:
+- `px-4 py-3` padding
+- `text-sm` font size
+- Same border width and radius
+- Only colors differentiate primary from secondary
+
