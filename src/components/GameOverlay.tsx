@@ -86,8 +86,8 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
             <p className="text-accent text-sm mb-4">🏆 NEW HIGH SCORE!</p>
           )}
           
-          {/* Primary actions - 2 column grid */}
-          <div className="grid grid-cols-2 gap-2 mb-2">
+          {/* All actions - uniform 2x2 grid */}
+          <div className="grid grid-cols-2 gap-2">
             <button
               onClick={onNewGame}
               className="px-4 py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-primary/90 transition-colors text-sm"
@@ -100,19 +100,15 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
             >
               🏠 HOME
             </button>
-          </div>
-          
-          {/* Secondary actions - 2 column grid */}
-          <div className="grid grid-cols-2 gap-2">
             <button
               onClick={handleSaveScore}
-              className="px-3 py-2 border border-accent bg-accent/10 text-accent font-medium rounded-lg hover:bg-accent/20 transition-colors text-xs"
+              className="px-4 py-3 border border-accent bg-accent/10 text-accent font-bold rounded-lg hover:bg-accent/20 transition-colors text-sm"
             >
               🌐 SAVE
             </button>
             <button
               onClick={handleShareScore}
-              className="px-3 py-2 border border-primary bg-primary/10 text-primary font-medium rounded-lg hover:bg-primary/20 transition-colors text-xs"
+              className="px-4 py-3 border border-primary bg-primary/10 text-primary font-bold rounded-lg hover:bg-primary/20 transition-colors text-sm"
             >
               📤 SHARE
             </button>

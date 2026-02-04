@@ -21,7 +21,7 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
   const { snakeSkin } = useSnakeSkin();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Wind skin canvas rendering
+  // Wind skin canvas rendering with robust error handling
   useEffect(() => {
     if (snakeSkin !== 'wind' || !canvasRef.current) return;
     
@@ -29,62 +29,86 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    ctx.clearRect(0, 0, gameWidth, gameHeight);
-    
-    if (snake.length < 2) return;
+    try {
+      ctx.clearRect(0, 0, gameWidth, gameHeight);
+      
+      // Handle single segment (just a circle)
+      if (snake.length === 1) {
+        const point = snake[0];
+        ctx.save();
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = 'rgba(255, 255, 255, 1)';
+        ctx.beginPath();
+        ctx.arc(
+          point.x * gridSize + gridSize / 2,
+          point.y * gridSize + gridSize / 2,
+          gridSize * 0.5,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+        ctx.restore();
+        return;
+      }
 
-    // Create path through segment centers
-    const points = snake.map(seg => ({
-      x: seg.x * gridSize + gridSize / 2,
-      y: seg.y * gridSize + gridSize / 2,
-    }));
+      // Create path through segment centers
+      const points = snake.map(seg => ({
+        x: seg.x * gridSize + gridSize / 2,
+        y: seg.y * gridSize + gridSize / 2,
+      }));
 
-    // Draw multiple passes for smoky glow effect
-    const passes = [
-      { blur: 20, alpha: 0.15, width: gridSize * 1.8 },
-      { blur: 12, alpha: 0.25, width: gridSize * 1.4 },
-      { blur: 6, alpha: 0.4, width: gridSize * 1.0 },
-      { blur: 2, alpha: 0.7, width: gridSize * 0.7 },
-    ];
+      // Draw multiple passes for smoky glow effect
+      const passes = [
+        { blur: 20, alpha: 0.15, width: gridSize * 1.8 },
+        { blur: 12, alpha: 0.25, width: gridSize * 1.4 },
+        { blur: 6, alpha: 0.4, width: gridSize * 1.0 },
+        { blur: 2, alpha: 0.7, width: gridSize * 0.7 },
+      ];
 
-    passes.forEach(pass => {
+      passes.forEach(pass => {
+        ctx.save();
+        ctx.shadowBlur = pass.blur;
+        ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+        ctx.strokeStyle = `rgba(255, 255, 255, ${pass.alpha})`;
+        ctx.lineWidth = pass.width;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+
+        // Handle exactly 2 points (straight line)
+        if (points.length === 2) {
+          ctx.lineTo(points[1].x, points[1].y);
+        } else {
+          // 3+ points: use smooth curves
+          for (let i = 1; i < points.length - 1; i++) {
+            const xc = (points[i].x + points[i + 1].x) / 2;
+            const yc = (points[i].y + points[i + 1].y) / 2;
+            ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+          }
+          // Connect to last point
+          ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+        }
+
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // Draw head glow
       ctx.save();
-      ctx.shadowBlur = pass.blur;
-      ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
-      ctx.strokeStyle = `rgba(255, 255, 255, ${pass.alpha})`;
-      ctx.lineWidth = pass.width;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = 'rgba(255, 255, 255, 1)';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
       ctx.beginPath();
-      ctx.moveTo(points[0].x, points[0].y);
-
-      // Smooth curve through points
-      for (let i = 1; i < points.length - 1; i++) {
-        const xc = (points[i].x + points[i + 1].x) / 2;
-        const yc = (points[i].y + points[i + 1].y) / 2;
-        ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
-      }
-
-      // Last segment
-      if (points.length > 1) {
-        ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
-      }
-
-      ctx.stroke();
+      ctx.arc(points[0].x, points[0].y, gridSize * 0.5, 0, Math.PI * 2);
+      ctx.fill();
       ctx.restore();
-    });
 
-    // Draw head glow
-    ctx.save();
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = 'rgba(255, 255, 255, 1)';
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-    ctx.beginPath();
-    ctx.arc(points[0].x, points[0].y, gridSize * 0.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
+    } catch (error) {
+      console.error('Wind skin rendering error:', error);
+    }
   }, [snake, snakeSkin, gridSize, gameWidth, gameHeight]);
 
   // Snake head with tongue effect and eating glow
