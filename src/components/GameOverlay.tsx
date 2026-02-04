@@ -96,19 +96,19 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
             </button>
             <button
               onClick={onBackToMenu}
-              className="px-4 py-3 border border-muted-foreground text-foreground font-bold rounded-lg hover:bg-muted transition-colors text-sm"
+              className="px-4 py-3 border-2 border-border bg-card text-foreground font-bold rounded-lg hover:bg-muted transition-colors text-sm"
             >
               🏠 HOME
             </button>
             <button
               onClick={handleSaveScore}
-              className="px-4 py-3 border border-accent bg-accent/10 text-accent font-bold rounded-lg hover:bg-accent/20 transition-colors text-sm"
+              className="px-4 py-3 border-2 border-border bg-card text-foreground font-bold rounded-lg hover:bg-muted transition-colors text-sm"
             >
               🌐 SAVE
             </button>
             <button
               onClick={handleShareScore}
-              className="px-4 py-3 border border-primary bg-primary/10 text-primary font-bold rounded-lg hover:bg-primary/20 transition-colors text-sm"
+              className="px-4 py-3 border-2 border-border bg-card text-foreground font-bold rounded-lg hover:bg-muted transition-colors text-sm"
             >
               📤 SHARE
             </button>
