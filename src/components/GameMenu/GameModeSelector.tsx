@@ -12,35 +12,36 @@ const GameModeSelector = ({ gameMode, onModeSelect }: GameModeSelectorProps) => 
 
   const getModeButtonClass = (mode: GameMode) => {
     const isSelected = gameMode === mode;
+    const unselectedBase = 'border-border bg-card text-muted-foreground';
     
     if (mode === 'chaos') {
       return isSelected
         ? 'border-purple-500 bg-purple-500/20 text-purple-400 ring-2 ring-purple-400/50'
-        : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-purple-400/50';
+        : `${unselectedBase} hover:border-purple-400/50`;
     }
     
     if (mode === 'modern') {
       return isSelected
         ? 'border-blue-400 bg-blue-400/20 text-blue-400'
-        : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-blue-400/50';
+        : `${unselectedBase} hover:border-blue-400/50`;
     }
 
     if (mode === 'timeattack') {
       return isSelected
         ? 'border-orange-400 bg-orange-400/20 text-orange-400'
-        : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-orange-400/50';
+        : `${unselectedBase} hover:border-orange-400/50`;
     }
 
     if (mode === 'survival') {
       return isSelected
         ? 'border-red-400 bg-red-400/20 text-red-400'
-        : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-red-400/50';
+        : `${unselectedBase} hover:border-red-400/50`;
     }
     
     // Classic mode
     return isSelected
       ? 'border-primary bg-primary/20 text-primary'
-      : 'border-gray-600 bg-gray-600/10 text-gray-400 hover:border-primary/50';
+      : `${unselectedBase} hover:border-primary/50`;
   };
 
   return (
