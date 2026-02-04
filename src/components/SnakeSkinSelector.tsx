@@ -15,6 +15,7 @@ const snakeSkins: { value: SnakeSkin; label: string; description: string; emoji:
   { value: 'rainbow', label: 'Rainbow', description: 'Color cycling', emoji: '🌈' },
   { value: 'fire', label: 'Fire', description: 'Flame effect', emoji: '🔥' },
   { value: 'ice', label: 'Ice', description: 'Frozen frost', emoji: '❄️' },
+  { value: 'wind', label: 'Wind', description: 'Smoky flow', emoji: '💨' },
 ];
 
 const SnakeSkinSelector = ({ isOpen, onClose }: SnakeSkinSelectorProps) => {

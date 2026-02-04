@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useSnakeGame } from '../hooks/useSnakeGame';
 import { useTheme } from '../contexts/ThemeContext';
@@ -154,15 +153,20 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
         />
       </div>
 
-      <GameInfo 
-        speed={speed} 
-        gameMode={gameMode} 
-        chaosPhase={chaosState?.phase}
-        survivalSpeedMultiplier={survivalState?.speedMultiplier}
-      />
+      {/* Only show GameInfo and Controls when game is NOT over */}
+      {!gameOver && (
+        <>
+          <GameInfo 
+            speed={speed} 
+            gameMode={gameMode} 
+            chaosPhase={chaosState?.phase}
+            survivalSpeedMultiplier={survivalState?.speedMultiplier}
+          />
 
-      {/* Mobile Controls */}
-      <GameControls onDirectionChange={moveSnake} disabled={gameOver} />
+          {/* Mobile Controls */}
+          <GameControls onDirectionChange={moveSnake} disabled={gameOver} />
+        </>
+      )}
 
       {/* Settings Panel */}
       <GameSettingsPanel 

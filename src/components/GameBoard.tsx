@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useGameSettings } from '../contexts/GameSettingsContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useSnakeSkin } from '../contexts/SnakeSkinContext';
@@ -20,6 +19,73 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
   const { settings } = useGameSettings();
   const { theme } = useTheme();
   const { snakeSkin } = useSnakeSkin();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Wind skin canvas rendering
+  useEffect(() => {
+    if (snakeSkin !== 'wind' || !canvasRef.current) return;
+    
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, gameWidth, gameHeight);
+    
+    if (snake.length < 2) return;
+
+    // Create path through segment centers
+    const points = snake.map(seg => ({
+      x: seg.x * gridSize + gridSize / 2,
+      y: seg.y * gridSize + gridSize / 2,
+    }));
+
+    // Draw multiple passes for smoky glow effect
+    const passes = [
+      { blur: 20, alpha: 0.15, width: gridSize * 1.8 },
+      { blur: 12, alpha: 0.25, width: gridSize * 1.4 },
+      { blur: 6, alpha: 0.4, width: gridSize * 1.0 },
+      { blur: 2, alpha: 0.7, width: gridSize * 0.7 },
+    ];
+
+    passes.forEach(pass => {
+      ctx.save();
+      ctx.shadowBlur = pass.blur;
+      ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+      ctx.strokeStyle = `rgba(255, 255, 255, ${pass.alpha})`;
+      ctx.lineWidth = pass.width;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+
+      // Smooth curve through points
+      for (let i = 1; i < points.length - 1; i++) {
+        const xc = (points[i].x + points[i + 1].x) / 2;
+        const yc = (points[i].y + points[i + 1].y) / 2;
+        ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+      }
+
+      // Last segment
+      if (points.length > 1) {
+        ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+      }
+
+      ctx.stroke();
+      ctx.restore();
+    });
+
+    // Draw head glow
+    ctx.save();
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = 'rgba(255, 255, 255, 1)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.beginPath();
+    ctx.arc(points[0].x, points[0].y, gridSize * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+  }, [snake, snakeSkin, gridSize, gameWidth, gameHeight]);
 
   // Snake head with tongue effect and eating glow
   const renderSnakeHead = (segment: Position, index: number) => {
@@ -99,6 +165,12 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
             background: 'linear-gradient(180deg, #e0f7ff 0%, #87ceeb 30%, #00bfff 60%, #1e90ff 100%)',
             boxShadow: foodEaten ? '0 0 15px #00bfff, 0 0 25px #87ceeb' : '0 0 8px #00bfff',
             border: '1px solid rgba(255,255,255,0.5)',
+          };
+        case 'wind':
+          // Wind skin uses canvas, hide DOM element
+          return {
+            ...baseStyle,
+            opacity: 0,
           };
         default: // remix
           return {
@@ -200,6 +272,12 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
             boxShadow: `0 0 6px rgba(0,191,255,${iceOpacity})`,
             border: '1px solid rgba(255,255,255,0.3)',
           };
+        case 'wind':
+          // Wind skin uses canvas, hide DOM element
+          return {
+            ...baseStyle,
+            opacity: 0,
+          };
         default: // remix
           return {
             ...baseStyle,
@@ -229,6 +307,16 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
   return (
     <div className={`relative border-2 ${boardStyles} rounded-lg overflow-hidden`} 
          style={{ width: gameWidth, height: gameHeight }}>
+      
+      {/* Wind skin canvas overlay */}
+      {snakeSkin === 'wind' && (
+        <canvas
+          ref={canvasRef}
+          width={gameWidth}
+          height={gameHeight}
+          className="absolute inset-0 z-10 pointer-events-none"
+        />
+      )}
       
       {/* Obstacles */}
       {obstacles.map((obstacle, index) => (
