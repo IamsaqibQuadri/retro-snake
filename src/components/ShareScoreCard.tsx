@@ -140,7 +140,7 @@ const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMod
             <img 
               src={LOGO_PATH} 
               alt="Rattle Rush" 
-              className="h-12 w-auto mb-2 drop-shadow-lg"
+              className="h-20 w-auto mb-3 drop-shadow-lg"
               crossOrigin="anonymous"
             />
             <div className="text-5xl font-black mb-3 drop-shadow-lg">{score}</div>
