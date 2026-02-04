@@ -71,14 +71,16 @@ const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMod
     try {
       const canvas = await html2canvas(cardRef.current, {
         backgroundColor: null,
-        scale: 2,
+        scale: 3, // Higher resolution for crisp output
         useCORS: true,
         allowTaint: true,
+        imageTimeout: 0, // Wait for images to fully load
+        logging: false,
       });
       
       const link = document.createElement('a');
       link.download = `rattlerush-score-${score}-${Date.now()}.png`;
-      link.href = canvas.toDataURL('image/png');
+      link.href = canvas.toDataURL('image/png', 1.0); // Max quality
       link.click();
     } catch (error) {
       console.error('Failed to generate image:', error);
@@ -121,35 +123,49 @@ const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMod
           </button>
         </div>
 
-        {/* Score Card for Screenshot */}
+        {/* Score Card for Screenshot - Fixed dimensions for consistent output */}
         <div 
           ref={cardRef}
-          className={`relative overflow-hidden rounded-xl p-6 bg-gradient-to-br ${getThemeGradient()} ${getTextColor()} mb-4`}
-          style={{ aspectRatio: '4/3' }}
+          className={`relative overflow-hidden rounded-xl bg-gradient-to-br ${getThemeGradient()} ${getTextColor()} mb-4`}
+          style={{ 
+            width: '400px', 
+            height: '300px',
+            WebkitFontSmoothing: 'antialiased',
+            MozOsxFontSmoothing: 'grayscale',
+          }}
         >
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }} />
-          </div>
+          {/* Subtle radial glow instead of noisy pattern */}
+          <div 
+            className="absolute inset-0 opacity-30"
+            style={{
+              background: 'radial-gradient(circle at 50% 30%, rgba(255,255,255,0.3) 0%, transparent 60%)',
+            }}
+          />
 
-          {/* Content */}
-          <div className="relative z-10 flex flex-col items-center justify-center h-full text-center">
-            {/* Rattle Rush Logo */}
+          {/* Content - More spacing and larger elements */}
+          <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-8 py-6">
+            {/* Rattle Rush Logo - Larger */}
             <img 
               src={LOGO_PATH} 
               alt="Rattle Rush" 
-              className="h-20 w-auto mb-3 drop-shadow-lg"
+              className="h-16 w-auto mb-4 drop-shadow-lg"
               crossOrigin="anonymous"
             />
-            <div className="text-5xl font-black mb-3 drop-shadow-lg">{score}</div>
-            <div className="text-sm opacity-80 mb-2">{playerName}</div>
-            <div className="flex gap-2 text-xs opacity-70">
-              <span className="px-2 py-1 bg-white/20 rounded-full">{gameModeLabels[gameMode]}</span>
-              <span className="px-2 py-1 bg-white/20 rounded-full">{speedLabels[speed]}</span>
+            
+            {/* Giant Score - Hero element */}
+            <div className="text-7xl font-black mb-2 drop-shadow-lg tracking-tight">{score}</div>
+            
+            {/* Player name */}
+            <div className="text-base opacity-80 mb-4 font-medium">by {playerName}</div>
+            
+            {/* Mode/Speed pills */}
+            <div className="flex gap-3 text-xs opacity-80 mb-4">
+              <span className="px-3 py-1.5 bg-white/20 rounded-full font-medium backdrop-blur-sm">{gameModeLabels[gameMode]}</span>
+              <span className="px-3 py-1.5 bg-white/20 rounded-full font-medium backdrop-blur-sm">{speedLabels[speed]}</span>
             </div>
-            <div className="text-xs opacity-50 mt-4">rattlerush.lovable.app</div>
+            
+            {/* URL watermark */}
+            <div className="text-xs opacity-50 font-medium">rattlerush.lovable.app</div>
           </div>
         </div>
 
