@@ -18,13 +18,14 @@ const themes: { value: Theme; label: string; description: string; preview: strin
 ];
 
 const snakeSkins: { value: SnakeSkin; label: string; description: string; preview: string }[] = [
-  { value: 'remix', label: 'Remix', description: 'Modern gradient design', preview: '🌈' },
-  { value: 'classic', label: 'Dice', description: 'Pixelated with dice numbers', preview: '🎲' },
-  { value: 'tetris', label: 'Tetris', description: 'Block-style Tetris theme', preview: '🧱' },
-  { value: 'neon', label: 'Neon', description: 'Glowing neon outline', preview: '✨' },
-  { value: 'rainbow', label: 'Rainbow', description: 'Color cycling segments', preview: '🏳️‍🌈' },
-  { value: 'fire', label: 'Fire', description: 'Flame gradient effect', preview: '🔥' },
-  { value: 'ice', label: 'Ice', description: 'Frozen blue frost', preview: '❄️' },
+  { value: 'remix', label: 'Remix', description: 'Modern gradient', preview: '🎨' },
+  { value: 'classic', label: 'Dice', description: 'Dice numbers', preview: '🎲' },
+  { value: 'tetris', label: 'Tetris', description: 'Block style', preview: '🧱' },
+  { value: 'neon', label: 'Neon', description: 'Glowing outline', preview: '✨' },
+  { value: 'rainbow', label: 'Rainbow', description: 'Color cycling', preview: '🏳️‍🌈' },
+  { value: 'fire', label: 'Fire', description: 'Flame effect', preview: '🔥' },
+  { value: 'ice', label: 'Ice', description: 'Frozen frost', preview: '❄️' },
+  { value: 'wind', label: 'Wind', description: 'Smoky flow', preview: '💨' },
 ];
 
 const snakeColors = [
@@ -94,7 +95,7 @@ const UnifiedSettingsPanel = ({ isOpen, onClose }: UnifiedSettingsPanelProps) =>
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
-            🐍 Snake Skins
+            🐍 Skins
           </button>
           <button
             onClick={() => setActiveTab('colors')}
@@ -104,65 +105,69 @@ const UnifiedSettingsPanel = ({ isOpen, onClose }: UnifiedSettingsPanelProps) =>
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
-            🎨 Snake Colors
+            🎨 Colors
           </button>
         </div>
 
-        {/* Themes Tab */}
+        {/* Themes Tab - Grid Layout */}
         {activeTab === 'themes' && (
-          <div className="space-y-3">
+          <div>
             <h3 className="font-semibold text-foreground mb-4">Choose Your Theme</h3>
-            {themes.map((themeOption) => (
-              <button
-                key={themeOption.value}
-                onClick={() => handleThemeSelect(themeOption.value)}
-                className={`w-full p-4 rounded-lg border-2 text-left transition-all duration-200 ${
-                  theme === themeOption.value
-                    ? 'border-primary bg-primary/10'
-                    : 'border-border hover:border-muted-foreground bg-card hover:bg-muted'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{themeOption.preview}</span>
-                  <div>
-                    <div className="font-medium text-foreground">{themeOption.label}</div>
-                    <div className="text-sm text-muted-foreground">{themeOption.description}</div>
+            <div className="grid grid-cols-2 gap-3">
+              {themes.map((themeOption) => (
+                <button
+                  key={themeOption.value}
+                  onClick={() => handleThemeSelect(themeOption.value)}
+                  className={`p-3 rounded-lg border-2 text-left transition-all duration-200 ${
+                    theme === themeOption.value
+                      ? 'border-primary bg-primary/10'
+                      : 'border-border hover:border-muted-foreground bg-card hover:bg-muted'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{themeOption.preview}</span>
+                    <div>
+                      <div className="font-medium text-foreground text-sm">{themeOption.label}</div>
+                      <div className="text-xs text-muted-foreground">{themeOption.description}</div>
+                    </div>
                   </div>
-                </div>
-              </button>
-            ))}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Snake Skins Tab */}
+        {/* Snake Skins Tab - Grid Layout */}
         {activeTab === 'skins' && (
-          <div className="space-y-3">
+          <div>
             <h3 className="font-semibold text-foreground mb-4">Choose Snake Skin</h3>
-            {snakeSkins.map((skinOption) => (
-              <button
-                key={skinOption.value}
-                onClick={() => handleSkinSelect(skinOption.value)}
-                className={`w-full p-4 rounded-lg border-2 text-left transition-all duration-200 ${
-                  snakeSkin === skinOption.value
-                    ? 'border-primary bg-primary/10'
-                    : 'border-border hover:border-muted-foreground bg-card hover:bg-muted'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{skinOption.preview}</span>
-                  <div>
-                    <div className="font-medium text-foreground">{skinOption.label}</div>
-                    <div className="text-sm text-muted-foreground">{skinOption.description}</div>
+            <div className="grid grid-cols-2 gap-3">
+              {snakeSkins.map((skinOption) => (
+                <button
+                  key={skinOption.value}
+                  onClick={() => handleSkinSelect(skinOption.value)}
+                  className={`p-3 rounded-lg border-2 text-left transition-all duration-200 ${
+                    snakeSkin === skinOption.value
+                      ? 'border-primary bg-primary/10'
+                      : 'border-border hover:border-muted-foreground bg-card hover:bg-muted'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{skinOption.preview}</span>
+                    <div>
+                      <div className="font-medium text-foreground text-sm">{skinOption.label}</div>
+                      <div className="text-xs text-muted-foreground">{skinOption.description}</div>
+                    </div>
                   </div>
-                </div>
-              </button>
-            ))}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Snake Colors Tab */}
+        {/* Snake Colors Tab - Grid Layout */}
         {activeTab === 'colors' && (
-          <div className="space-y-3">
+          <div>
             <h3 className="font-semibold text-foreground mb-4">Choose Snake Color</h3>
             <div className="grid grid-cols-2 gap-3">
               {snakeColors.map((color) => {
@@ -171,23 +176,23 @@ const UnifiedSettingsPanel = ({ isOpen, onClose }: UnifiedSettingsPanelProps) =>
                   <button
                     key={color.name}
                     onClick={() => handleColorSelect(color.head, color.body)}
-                    className={`p-4 rounded-lg border-2 text-left transition-all duration-200 ${
+                    className={`p-3 rounded-lg border-2 text-left transition-all duration-200 ${
                       isSelected
                         ? 'border-primary bg-primary/10'
                         : 'border-border hover:border-muted-foreground bg-card hover:bg-muted'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{color.preview}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{color.preview}</span>
                       <div>
-                        <div className="font-medium text-foreground">{color.name}</div>
+                        <div className="font-medium text-foreground text-sm">{color.name}</div>
                         <div className="flex gap-1 mt-1">
                           <div 
-                            className="w-4 h-4 rounded border border-border"
+                            className="w-3 h-3 rounded border border-border"
                             style={{ backgroundColor: color.head }}
                           />
                           <div 
-                            className="w-4 h-4 rounded border border-border"
+                            className="w-3 h-3 rounded border border-border"
                             style={{ backgroundColor: color.body }}
                           />
                         </div>

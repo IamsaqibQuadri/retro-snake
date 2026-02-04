@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-export type SnakeSkin = 'remix' | 'classic' | 'tetris' | 'neon' | 'rainbow' | 'fire' | 'ice';
+export type SnakeSkin = 'remix' | 'classic' | 'tetris' | 'neon' | 'rainbow' | 'fire' | 'ice' | 'wind';
 
 interface SnakeSkinContextType {
   snakeSkin: SnakeSkin;

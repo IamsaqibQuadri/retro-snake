@@ -1,27 +1,29 @@
 import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { Loader2 } from 'lucide-react';
 
 interface PlayerNameDialogProps {
   isOpen: boolean;
   score: number;
   onSave: (name: string) => void;
   onCancel: () => void;
+  isLoading?: boolean;
 }
 
-const PlayerNameDialog = ({ isOpen, score, onSave, onCancel }: PlayerNameDialogProps) => {
+const PlayerNameDialog = ({ isOpen, score, onSave, onCancel, isLoading = false }: PlayerNameDialogProps) => {
   const [playerName, setPlayerName] = useState('');
 
   if (!isOpen) return null;
 
   const handleSave = () => {
+    if (isLoading) return;
     const name = playerName.trim() || 'Anonymous';
     onSave(name);
-    setPlayerName('');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !isLoading) {
       handleSave();
     }
   };
@@ -42,19 +44,29 @@ const PlayerNameDialog = ({ isOpen, score, onSave, onCancel }: PlayerNameDialogP
           className="mb-4"
           autoFocus
           maxLength={20}
+          disabled={isLoading}
         />
         
         <div className="flex gap-2">
           <Button 
             onClick={handleSave}
             className="flex-1"
+            disabled={isLoading}
           >
-            Save Score
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              'Save Score'
+            )}
           </Button>
           <Button 
             onClick={onCancel}
             variant="outline"
             className="flex-1"
+            disabled={isLoading}
           >
             Skip
           </Button>

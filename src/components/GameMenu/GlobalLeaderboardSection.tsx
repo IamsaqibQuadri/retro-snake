@@ -54,22 +54,21 @@ const GlobalLeaderboardSection = ({
 
   return (
     <>
-      {/* High Score and Global Leaderboard */}
-      <div className="mb-6 flex gap-2">
-        {highScore > 0 && (
-          <div className={`flex-1 p-3 border-2 ${themeColors.border} ${themeColors.background} rounded-lg`}>
-            <div className="flex items-center justify-center gap-2 text-yellow-400">
-              <Trophy size={16} />
-              <span className="text-sm font-bold">HIGH: {highScore}</span>
-            </div>
+      {/* High Score and Global Leaderboard - Same size tiles */}
+      <div className="mb-6 grid grid-cols-2 gap-2">
+        <div className={`p-3 border-2 ${themeColors.border} ${themeColors.background} rounded-lg`}>
+          <div className="flex items-center justify-center gap-2 text-yellow-400">
+            <Trophy size={16} />
+            <span className="text-sm font-bold">HIGH: {highScore}</span>
           </div>
-        )}
+        </div>
         
         <button
           onClick={onToggleLeaderboard}
-          className="px-3 py-2 border-2 border-purple-400 bg-purple-400/10 text-purple-400 hover:bg-purple-400/20 transition-all duration-200 rounded-lg"
+          className={`p-3 border-2 border-purple-400 bg-purple-400/10 text-purple-400 hover:bg-purple-400/20 transition-all duration-200 rounded-lg flex items-center justify-center gap-2 ${showLeaderboard ? 'ring-2 ring-purple-400' : ''}`}
         >
           <Globe size={16} />
+          <span className="text-sm font-bold">GLOBAL</span>
         </button>
       </div>
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { X, Download, Share2, Copy, Check } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { useTheme } from '../contexts/ThemeContext';
@@ -13,11 +13,23 @@ interface ShareScoreCardProps {
   speed: 'slow' | 'normal' | 'fast';
 }
 
+const LOGO_PATH = '/lovable-uploads/fac2201e-f8a2-4cac-8ebc-c735a61174d1.png';
+
 const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMode, speed }: ShareScoreCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
   const [copied, setCopied] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [logoLoaded, setLogoLoaded] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Preload logo
+      const img = new Image();
+      img.onload = () => setLogoLoaded(true);
+      img.src = LOGO_PATH;
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -53,17 +65,19 @@ const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMod
   };
 
   const handleDownload = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || !logoLoaded) return;
     setIsGenerating(true);
     
     try {
       const canvas = await html2canvas(cardRef.current, {
         backgroundColor: null,
         scale: 2,
+        useCORS: true,
+        allowTaint: true,
       });
       
       const link = document.createElement('a');
-      link.download = `snake-score-${score}-${Date.now()}.png`;
+      link.download = `rattlerush-score-${score}-${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     } catch (error) {
@@ -75,7 +89,7 @@ const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMod
 
   const handleCopyLink = async () => {
     const gameUrl = window.location.origin;
-    await navigator.clipboard.writeText(`I scored ${score} points in Snake Retro Edition! 🐍 Play now: ${gameUrl}`);
+    await navigator.clipboard.writeText(`I scored ${score} points in Rattle Rush! 🐍 Play now: ${gameUrl}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -84,8 +98,8 @@ const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMod
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Snake Retro Edition Score',
-          text: `I scored ${score} points in Snake Retro Edition! 🐍`,
+          title: 'Rattle Rush Score',
+          text: `I scored ${score} points in Rattle Rush! 🐍`,
           url: window.location.origin,
         });
       } catch (error) {
@@ -122,8 +136,13 @@ const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMod
 
           {/* Content */}
           <div className="relative z-10 flex flex-col items-center justify-center h-full text-center">
-            <div className="text-3xl mb-2">🐍</div>
-            <h3 className="text-xl font-bold mb-1 opacity-90">SNAKE RETRO</h3>
+            {/* Rattle Rush Logo */}
+            <img 
+              src={LOGO_PATH} 
+              alt="Rattle Rush" 
+              className="h-12 w-auto mb-2 drop-shadow-lg"
+              crossOrigin="anonymous"
+            />
             <div className="text-5xl font-black mb-3 drop-shadow-lg">{score}</div>
             <div className="text-sm opacity-80 mb-2">{playerName}</div>
             <div className="flex gap-2 text-xs opacity-70">
@@ -138,8 +157,8 @@ const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMod
         <div className="grid grid-cols-3 gap-2">
           <button
             onClick={handleDownload}
-            disabled={isGenerating}
-            className="flex flex-col items-center gap-1 p-3 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition-colors text-xs"
+            disabled={isGenerating || !logoLoaded}
+            className="flex flex-col items-center gap-1 p-3 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition-colors text-xs disabled:opacity-50"
           >
             <Download size={18} />
             {isGenerating ? 'Saving...' : 'Download'}
