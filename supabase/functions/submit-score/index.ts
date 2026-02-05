@@ -22,7 +22,19 @@ Deno.serve(async (req) => {
       );
     }
 
-    if (typeof score !== 'number' || score < 0 || score > 10000) {
+    // Game-mode-specific score caps for better validation
+    const maxScores: Record<string, number> = {
+      classic: 500,    // Wall collision limits max achievable
+      modern: 800,     // More forgiving but still capped
+      chaos: 600,      // Obstacles reduce max score
+      timeattack: 300, // 60-second limit caps score
+      survival: 400,   // Speed increase limits survival
+      obstacles: 500,  // Legacy mode
+    };
+    
+    const maxAllowed = maxScores[game_mode] || 1000;
+    
+    if (typeof score !== 'number' || score < 0 || score > maxAllowed) {
       return new Response(
         JSON.stringify({ error: 'Invalid score' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
