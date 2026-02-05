@@ -115,7 +115,7 @@ const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMod
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-      <div className="bg-card border border-border rounded-lg p-6 max-w-sm w-full">
+      <div className="bg-card border border-border rounded-lg p-4 max-w-md w-full">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-foreground">🎮 Share Your Score</h2>
           <button onClick={onClose} className="p-1 hover:bg-muted rounded">
@@ -153,15 +153,15 @@ const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMod
             />
             
             {/* Giant Score - Hero element */}
-            <div className="text-7xl font-black mb-2 drop-shadow-lg tracking-tight">{score}</div>
+            <div className="text-5xl font-black mb-2 drop-shadow-lg tracking-tight">{score}</div>
             
             {/* Player name */}
             <div className="text-base opacity-80 mb-4 font-medium">by {playerName}</div>
             
             {/* Mode/Speed pills */}
             <div className="flex gap-3 text-xs opacity-80 mb-4">
-              <span className="px-3 py-1.5 bg-white/20 rounded-full font-medium backdrop-blur-sm">{gameModeLabels[gameMode]}</span>
-              <span className="px-3 py-1.5 bg-white/20 rounded-full font-medium backdrop-blur-sm">{speedLabels[speed]}</span>
+              <span className="px-3 py-1.5 bg-white/20 rounded-full font-medium backdrop-blur-sm flex items-center justify-center">{gameModeLabels[gameMode]}</span>
+              <span className="px-3 py-1.5 bg-white/20 rounded-full font-medium backdrop-blur-sm flex items-center justify-center">{speedLabels[speed]}</span>
             </div>
             
             {/* URL watermark */}
