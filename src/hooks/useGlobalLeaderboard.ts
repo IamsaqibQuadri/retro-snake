@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { GameMode } from '../types/gameTypes';
+import { logger } from '@/utils/logger';
 
 // Create a direct client using environment variables to ensure correct backend
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -34,7 +35,7 @@ export const useGlobalLeaderboard = () => {
       setLeaderboard((data || []) as GlobalLeaderboardEntry[]);
       setError(null);
     } catch (err) {
-      console.error('Failed to load global leaderboard:', err);
+      logger.error('Failed to load global leaderboard:', err);
       setError('Failed to load leaderboard');
     } finally {
       setLoading(false);
@@ -77,7 +78,7 @@ export const useGlobalLeaderboard = () => {
       await loadLeaderboard();
       return { success: true };
     } catch (err) {
-      console.error('Failed to add score to global leaderboard:', err);
+      logger.error('Failed to add score to global leaderboard:', err);
       return { success: false, error: 'Failed to save score' };
     }
   }, [loadLeaderboard]);

@@ -1,6 +1,6 @@
-
 import React, { useEffect, useRef } from 'react';
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from 'lucide-react';
+import { logger } from '@/utils/logger';
 
 interface GameControlsProps {
   onDirectionChange: (direction: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT') => void;
@@ -12,7 +12,7 @@ const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
 
   // Keyboard controls
   useEffect(() => {
-    console.log('GameControls: Setting up keyboard controls, disabled:', disabled);
+    logger.log('GameControls: Setting up keyboard controls, disabled:', disabled);
     const handleKeyPress = (e: KeyboardEvent) => {
       if (disabled) return;
       
@@ -46,7 +46,7 @@ const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
       }
       
       if (direction) {
-        console.log('GameControls: Keyboard input detected:', direction);
+        logger.log('GameControls: Keyboard input detected:', direction);
         onDirectionChange(direction);
       }
     };
@@ -86,7 +86,7 @@ const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
       }
       
       if (direction) {
-        console.log('GameControls: Touch swipe detected:', direction);
+        logger.log('GameControls: Touch swipe detected:', direction);
         onDirectionChange(direction);
       }
       
@@ -104,7 +104,7 @@ const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
 
   const handleButtonClick = (direction: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT') => {
     if (!disabled) {
-      console.log('GameControls: Button clicked:', direction);
+      logger.log('GameControls: Button clicked:', direction);
       onDirectionChange(direction);
     }
   };
