@@ -32,13 +32,13 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
     try {
       ctx.clearRect(0, 0, gameWidth, gameHeight);
       
-      // Handle single segment (just a circle)
+      // Handle single segment (just a circle) - smoky gray-blue
       if (snake.length === 1) {
         const point = snake[0];
         ctx.save();
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.fillStyle = 'rgba(180, 200, 220, 0.85)';
         ctx.shadowBlur = 15;
-        ctx.shadowColor = 'rgba(255, 255, 255, 1)';
+        ctx.shadowColor = 'rgba(150, 170, 190, 0.7)';
         ctx.beginPath();
         ctx.arc(
           point.x * gridSize + gridSize / 2,
@@ -69,8 +69,8 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
       passes.forEach(pass => {
         ctx.save();
         ctx.shadowBlur = pass.blur;
-        ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
-        ctx.strokeStyle = `rgba(255, 255, 255, ${pass.alpha})`;
+        ctx.shadowColor = 'rgba(150, 170, 190, 0.5)';  // Soft gray-blue glow
+        ctx.strokeStyle = `rgba(180, 200, 220, ${pass.alpha})`;  // Smoky gray-blue
         ctx.lineWidth = pass.width;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
@@ -96,11 +96,11 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
         ctx.restore();
       });
 
-      // Draw head glow
+      // Draw head glow - softer, smokier
       ctx.save();
       ctx.shadowBlur = 15;
-      ctx.shadowColor = 'rgba(255, 255, 255, 1)';
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.shadowColor = 'rgba(200, 215, 230, 0.7)';
+      ctx.fillStyle = 'rgba(200, 215, 230, 0.85)';
       ctx.beginPath();
       ctx.arc(points[0].x, points[0].y, gridSize * 0.5, 0, Math.PI * 2);
       ctx.fill();
@@ -209,7 +209,7 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
     return (
       <div
         key={index}
-        className={`absolute transition-all duration-300 ${foodEaten ? 'animate-pulse scale-110' : ''}`}
+        className={`absolute transition-all duration-300 ${foodEaten && snakeSkin !== 'wind' ? 'animate-pulse scale-110' : ''}`}
         style={getSnakeHeadStyle()}
       >
         {snakeSkin === 'classic' && '⚀'}
@@ -317,7 +317,7 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
     return (
       <div
         key={index}
-        className={`absolute transition-all duration-200 ${foodEaten ? 'animate-bounce' : ''}`}
+        className={`absolute transition-all duration-200 ${foodEaten && snakeSkin !== 'wind' ? 'animate-bounce' : ''}`}
         style={getSnakeBodyStyle()}
       >
         {snakeSkin === 'classic' && diceSymbols[diceNumber - 1]}
