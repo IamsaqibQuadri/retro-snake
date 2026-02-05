@@ -62,6 +62,9 @@ const WelcomeScreen = ({ onProceedToSetup }: WelcomeScreenProps) => {
           <img 
             src="/lovable-uploads/fac2201e-f8a2-4cac-8ebc-c735a61174d1.png" 
             alt="Snake Game Logo" 
+            width={320}
+            height={320}
+            fetchPriority="high"
             onClick={handleLogoClick}
             className="w-64 md:w-80 h-auto mx-auto relative z-10 drop-shadow-2xl cursor-pointer select-none"
             style={{
