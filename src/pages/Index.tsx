@@ -32,7 +32,7 @@ const GameContent = () => {
 
   return (
     <div className={`min-h-screen font-mono overflow-hidden transition-colors duration-300 ${backgroundClass}`}>
-      <div className="relative w-full h-screen">
+      <main className="relative w-full h-screen">
         {gameState === 'menu' && (
           <GameMenu onStartGame={handleStartGame} />
         )}
@@ -52,7 +52,7 @@ const GameContent = () => {
             onBackToMenu={handleBackToMenu} 
           />
         )}
-      </div>
+      </main>
     </div>
   );
 };
