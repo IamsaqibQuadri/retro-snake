@@ -46,12 +46,13 @@ const WelcomeScreen = ({ onProceedToSetup }: WelcomeScreenProps) => {
   };
 
   // Use design system tokens for consistent theming across all themes
+  // Using darker/solid backgrounds for better contrast (WCAG 4.5:1 ratio)
   const themeColors = {
-    primary: 'text-primary',
+    primary: 'text-primary-foreground',
     secondary: 'text-muted-foreground',
     border: 'border-primary',
-    background: 'bg-primary/10',
-    hover: 'hover:bg-primary/20',
+    background: 'bg-primary',
+    hover: 'hover:bg-primary/90',
   };
 
   return (

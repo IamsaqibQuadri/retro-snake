@@ -289,8 +289,8 @@ const EnhancedBackgroundSnake = () => {
           }}
         />
 
-        {/* Score display */}
-        <div className="absolute top-4 left-4 text-xs opacity-50" style={{ color: colors.head }}>
+        {/* Score display - using darker color for better contrast */}
+        <div className="absolute top-4 left-4 text-xs text-muted-foreground/70">
           Snake Score: {score}
         </div>
       </div>
