@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { HIGH_SCORE_KEY, SCORE_PER_FOOD } from '../constants/gameConstants';
+import { logger } from '../utils/logger';
 
 export const useGameScore = () => {
   const [score, setScore] = useState(0);
@@ -17,7 +18,7 @@ export const useGameScore = () => {
   const increaseScore = () => {
     setScore(prevScore => {
       const newScore = prevScore + SCORE_PER_FOOD;
-      console.log('New score:', newScore);
+      logger.log('New score:', newScore);
       
       // Update high score
       setHighScore(prevHighScore => {

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Settings } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { logger } from '../utils/logger';
 import { GameMode } from '../types/gameTypes';
 import GameSettingsPanel from './GameSettingsPanel';
 
@@ -57,7 +58,7 @@ const GameCountdown = ({ onCountdownComplete, gameMode, speed }: GameCountdownPr
   };
 
   if (count === 0) {
-    console.log('GameCountdown: Displaying GO! message');
+    logger.log('GameCountdown: Displaying GO! message');
     return (
       <div className={`fixed inset-0 flex items-center justify-center z-50 transition-colors duration-300 ${backgroundClass}`}>
         {/* Top-left settings button */}

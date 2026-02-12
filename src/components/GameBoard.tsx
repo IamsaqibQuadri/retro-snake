@@ -3,6 +3,7 @@ import { useGameSettings } from '../contexts/GameSettingsContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useSnakeSkin } from '../contexts/SnakeSkinContext';
 import { Position, Direction } from '../types/gameTypes';
+import { logger } from '../utils/logger';
 
 interface GameBoardProps {
   snake: Position[];
@@ -107,7 +108,7 @@ const GameBoard = ({ snake, food, direction, foodEaten, gameWidth, gameHeight, g
       ctx.restore();
 
     } catch (error) {
-      console.error('Wind skin rendering error:', error);
+      logger.error('Wind skin rendering error:', error);
     }
   }, [snake, snakeSkin, gridSize, gameWidth, gameHeight]);
 

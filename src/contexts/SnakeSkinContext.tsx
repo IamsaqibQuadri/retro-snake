@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { logger } from '../utils/logger';
 
 export type SnakeSkin = 'remix' | 'classic' | 'tetris' | 'neon' | 'rainbow' | 'fire' | 'ice' | 'wind';
 
@@ -17,7 +18,7 @@ export const SnakeSkinProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     localStorage.setItem('snake-skin', snakeSkin);
-    console.log('SnakeSkinContext: Snake skin changed to:', snakeSkin);
+    logger.log('SnakeSkinContext: Snake skin changed to:', snakeSkin);
   }, [snakeSkin]);
 
   return (

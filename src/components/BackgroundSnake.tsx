@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
+import { logger } from '../utils/logger';
 
 interface SnakeSegment {
   x: number;
@@ -17,7 +18,7 @@ const BackgroundSnake = () => {
   const [direction, setDirection] = useState<'up' | 'down' | 'left' | 'right'>('right');
 
   useEffect(() => {
-    console.log('BackgroundSnake: Starting animation');
+    logger.log('BackgroundSnake: Starting animation');
     const interval = setInterval(() => {
       setSnake(prevSnake => {
         const newSnake = [...prevSnake];
@@ -61,7 +62,7 @@ const BackgroundSnake = () => {
     const directionInterval = setInterval(() => {
       const directions: ('up' | 'down' | 'left' | 'right')[] = ['up', 'down', 'left', 'right'];
       const randomDirection = directions[Math.floor(Math.random() * directions.length)];
-      console.log('BackgroundSnake: Changing direction to:', randomDirection);
+      logger.log('BackgroundSnake: Changing direction to:', randomDirection);
       setDirection(randomDirection);
     }, 3500);
 

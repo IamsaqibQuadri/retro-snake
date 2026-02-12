@@ -1,10 +1,11 @@
 
 import { Position, Direction } from '../types/gameTypes';
 import { GRID_WIDTH, GRID_HEIGHT } from '../constants/gameConstants';
+import { logger } from './logger';
 
 export const generateFood = (snake: Position[]): Position => {
-  console.log('Generating food, snake length:', snake.length);
-  console.log('Current snake positions:', snake);
+  logger.log('Generating food, snake length:', snake.length);
+  logger.log('Current snake positions:', snake);
   
   // Create array of all possible positions
   const allPositions: Position[] = [];
@@ -19,11 +20,11 @@ export const generateFood = (snake: Position[]): Position => {
     !snake.some(segment => segment.x === pos.x && segment.y === pos.y)
   );
   
-  console.log('Available positions for food:', availablePositions.length);
+  logger.log('Available positions for food:', availablePositions.length);
   
   // If no positions available (shouldn't happen in normal game), return a position
   if (availablePositions.length === 0) {
-    console.log('No available positions! Game should end.');
+    logger.log('No available positions! Game should end.');
     return { x: 0, y: 0 };
   }
   
@@ -31,7 +32,7 @@ export const generateFood = (snake: Position[]): Position => {
   const randomIndex = Math.floor(Math.random() * availablePositions.length);
   const newFood = availablePositions[randomIndex];
   
-  console.log('New food position generated:', newFood);
+  logger.log('New food position generated:', newFood);
   return newFood;
 };
 
