@@ -1,11 +1,12 @@
 
-import React, { useState } from 'react';
-import SnakeGame from '../components/SnakeGame';
+import React, { useState, lazy, Suspense } from 'react';
 import GameMenu from '../components/GameMenu';
-import GameCountdown from '../components/GameCountdown';
 import { GameSettingsProvider } from '../contexts/GameSettingsContext';
 import { ThemeProvider, useTheme } from '../contexts/ThemeContext';
 import { GameMode } from '../types/gameTypes';
+
+const SnakeGame = lazy(() => import('../components/SnakeGame'));
+const GameCountdown = lazy(() => import('../components/GameCountdown'));
 
 const GameContent = () => {
   const [gameState, setGameState] = useState<'menu' | 'countdown' | 'playing'>('menu');
@@ -37,21 +38,23 @@ const GameContent = () => {
           <GameMenu onStartGame={handleStartGame} />
         )}
         
-        {gameState === 'countdown' && (
-          <GameCountdown 
-            onCountdownComplete={handleCountdownComplete}
-            gameMode={gameMode}
-            speed={gameSpeed}
-          />
-        )}
-        
-        {gameState === 'playing' && (
-          <SnakeGame 
-            speed={gameSpeed} 
-            gameMode={gameMode} 
-            onBackToMenu={handleBackToMenu} 
-          />
-        )}
+        <Suspense fallback={null}>
+          {gameState === 'countdown' && (
+            <GameCountdown 
+              onCountdownComplete={handleCountdownComplete}
+              gameMode={gameMode}
+              speed={gameSpeed}
+            />
+          )}
+          
+          {gameState === 'playing' && (
+            <SnakeGame 
+              speed={gameSpeed} 
+              gameMode={gameMode} 
+              onBackToMenu={handleBackToMenu} 
+            />
+          )}
+        </Suspense>
       </main>
     </div>
   );
