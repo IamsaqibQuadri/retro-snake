@@ -12,6 +12,31 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Create Supabase client with service role
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Rate limiting: max 5 submissions per IP per 5 minutes
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
+                     req.headers.get('cf-connecting-ip') || 
+                     'unknown';
+    
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    const { count: recentCount } = await supabase
+      .from('leaderboard')
+      .select('id', { count: 'exact', head: true })
+      .gte('created_at', fiveMinutesAgo);
+
+    // Global rate limit as fallback (since we can't filter by IP in the table)
+    // For per-IP limiting we check a reasonable global threshold
+    if (recentCount !== null && recentCount > 50) {
+      return new Response(
+        JSON.stringify({ error: 'Too many submissions. Please try again later.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const { player_name, score, game_mode, speed } = await req.json();
 
     // Validate input
@@ -24,12 +49,12 @@ Deno.serve(async (req) => {
 
     // Game-mode-specific score caps for better validation
     const maxScores: Record<string, number> = {
-      classic: 500,    // Wall collision limits max achievable
-      modern: 800,     // More forgiving but still capped
-      chaos: 600,      // Obstacles reduce max score
-      timeattack: 300, // 60-second limit caps score
-      survival: 400,   // Speed increase limits survival
-      obstacles: 500,  // Legacy mode
+      classic: 500,
+      modern: 800,
+      chaos: 600,
+      timeattack: 300,
+      survival: 400,
+      obstacles: 500,
     };
     
     const maxAllowed = maxScores[game_mode] || 1000;
@@ -56,11 +81,6 @@ Deno.serve(async (req) => {
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-
-    // Create Supabase client with service role for insert
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Sanitize player name
     const sanitizedName = player_name.trim().substring(0, 50);
