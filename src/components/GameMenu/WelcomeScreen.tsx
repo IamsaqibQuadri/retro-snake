@@ -85,7 +85,7 @@ const WelcomeScreen = ({ onProceedToSetup }: WelcomeScreenProps) => {
       <div className="mb-8">
         <button
           onClick={onProceedToSetup}
-          className={`w-full flex items-center justify-center gap-3 py-4 px-6 border-2 ${themeColors.border} ${themeColors.background} ${themeColors.primary} ${themeColors.hover} transition-all duration-200 rounded-lg text-lg font-bold animate-pulse relative z-10`}
+          className={`w-full flex items-center justify-center gap-3 py-4 px-6 border-2 ${themeColors.border} ${themeColors.background} ${themeColors.primary} ${themeColors.hover} transition-all duration-200 rounded-lg text-lg font-bold relative z-10`}
         >
           <Play size={20} />
           <span>START GAME</span>
