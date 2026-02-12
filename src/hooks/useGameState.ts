@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { GameState, Direction } from '../types/gameTypes';
 import { generateFood, getOppositeDirection } from '../utils/gameUtils';
 import { INITIAL_SNAKE_POSITION, INITIAL_FOOD_POSITION, INITIAL_DIRECTION } from '../constants/gameConstants';
+import { logger } from '../utils/logger';
 
 export const useGameState = () => {
   const [gameState, setGameState] = useState<GameState>({
@@ -15,11 +16,11 @@ export const useGameState = () => {
   const directionRef = useRef<Direction>(INITIAL_DIRECTION);
 
   const updateGameState = (newState: Partial<GameState>) => {
-    console.log('Updating game state with:', newState);
+    logger.log('Updating game state with:', newState);
     setGameState(prev => {
       const updated = { ...prev, ...newState };
-      console.log('Previous state:', prev);
-      console.log('Updated state:', updated);
+      logger.log('Previous state:', prev);
+      logger.log('Updated state:', updated);
       return updated;
     });
   };
@@ -35,7 +36,7 @@ export const useGameState = () => {
   };
 
   const resetGame = () => {
-    console.log('Resetting game...');
+    logger.log('Resetting game...');
     const initialSnake = [INITIAL_SNAKE_POSITION];
     const initialFood = generateFood(initialSnake);
     

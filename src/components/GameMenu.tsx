@@ -5,6 +5,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import { useLeaderboard } from '../hooks/useLeaderboard';
 import { GameMode } from '../types/gameTypes';
+import { logger } from '../utils/logger';
 import EnhancedBackgroundSnake from './EnhancedBackgroundSnake';
 import OceanRippleEffect from './OceanRippleEffect';
 import GameSettingsPanel from './GameSettingsPanel';
@@ -36,37 +37,37 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
     if (savedHighScore) {
       setHighScore(parseInt(savedHighScore));
     }
-    console.log('GameMenu: High score loaded:', savedHighScore);
+    logger.log('GameMenu: High score loaded:', savedHighScore);
   }, []);
 
   // Using design system tokens for consistent theming
   const backgroundClass = 'bg-background text-foreground';
 
   const handleProceedToSetup = () => {
-    console.log('GameMenu: Proceeding to setup screen');
+    logger.log('GameMenu: Proceeding to setup screen');
     setCurrentStep('setup');
   };
 
   const handleBackToWelcome = () => {
-    console.log('GameMenu: Going back to welcome screen');
+    logger.log('GameMenu: Going back to welcome screen');
     setCurrentStep('welcome');
     setSelectedSpeed(null);
   };
 
   const handleStartGame = () => {
     if (selectedSpeed) {
-      console.log('GameMenu: Starting game with:', { speed: selectedSpeed, mode: gameMode });
+      logger.log('GameMenu: Starting game with:', { speed: selectedSpeed, mode: gameMode });
       onStartGame(selectedSpeed, gameMode);
     }
   };
 
   const handleSpeedSelection = (speed: 'slow' | 'normal' | 'fast') => {
-    console.log('GameMenu: Speed selected:', speed);
+    logger.log('GameMenu: Speed selected:', speed);
     setSelectedSpeed(speed);
   };
 
   const handleModeSelection = (mode: GameMode) => {
-    console.log('GameMenu: Game mode selected:', mode);
+    logger.log('GameMenu: Game mode selected:', mode);
     setGameMode(mode);
   };
 
@@ -93,7 +94,7 @@ const GameMenu = ({ onStartGame }: GameMenuProps) => {
             selectedSpeed={selectedSpeed}
             onBackToWelcome={handleBackToWelcome}
             onToggleLeaderboard={() => {
-              console.log('GameMenu: Toggling leaderboard:', !showLeaderboard);
+              logger.log('GameMenu: Toggling leaderboard:', !showLeaderboard);
               setShowLeaderboard(!showLeaderboard);
             }}
             onModeSelect={handleModeSelection}

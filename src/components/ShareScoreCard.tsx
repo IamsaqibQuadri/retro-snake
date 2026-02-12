@@ -3,6 +3,7 @@ import { X, Download, Share2, Copy, Check } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { useTheme } from '../contexts/ThemeContext';
 import { GameMode } from '../types/gameTypes';
+import { logger } from '../utils/logger';
 
 interface ShareScoreCardProps {
   isOpen: boolean;
@@ -106,7 +107,7 @@ const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMod
         });
       } catch (error) {
         // User cancelled or share failed
-        console.log('Share cancelled');
+        logger.log('Share cancelled');
       }
     } else {
       handleCopyLink();
