@@ -84,7 +84,7 @@ const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMod
       link.href = canvas.toDataURL('image/png', 1.0); // Max quality
       link.click();
     } catch (error) {
-      console.error('Failed to generate image:', error);
+      logger.error('Failed to generate image:', error);
     } finally {
       setIsGenerating(false);
     }
