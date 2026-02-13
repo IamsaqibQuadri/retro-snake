@@ -290,7 +290,7 @@ const EnhancedBackgroundSnake = () => {
         />
 
         {/* Score display - using darker color for better contrast */}
-        <div className="absolute top-4 left-4 text-xs text-muted-foreground">
+        <div className="absolute top-4 left-4 text-xs text-foreground/70">
           Snake Score: {score}
         </div>
       </div>
