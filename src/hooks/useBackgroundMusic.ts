@@ -83,7 +83,7 @@ export const useBackgroundMusic = (shouldPlay: boolean = false) => {
 
     // Arabian rhythm - slightly irregular timing like traditional Middle Eastern music
     let currentInterval = 350; // Base tempo
-    let intervalId: NodeJS.Timeout;
+    let intervalId: any;
     
     const scheduleNextNote = () => {
       playNote();

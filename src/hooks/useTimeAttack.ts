@@ -5,7 +5,7 @@ const TIME_ATTACK_DURATION = 60; // 60 seconds
 export const useTimeAttack = (isPlaying: boolean, gameOver: boolean) => {
   const [timeRemaining, setTimeRemaining] = useState(TIME_ATTACK_DURATION);
   const [isActive, setIsActive] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<any>(null);
 
   // Start timer when game starts
   useEffect(() => {

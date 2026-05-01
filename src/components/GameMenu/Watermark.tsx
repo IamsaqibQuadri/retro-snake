@@ -16,7 +16,7 @@ const Watermark = () => {
   return (
     <div className="absolute bottom-2 right-2 z-20 md:bottom-4 md:right-4">
       <div className={`${themeColors.background} border ${themeColors.border} rounded-lg p-2`}>
-        <p className={`${themeColors.primary} text-xs font-bold`}>Classic Edition</p>
+        <p className={`${themeColors.primary} text-xs font-bold`}>Classic Edition: </p>
         <p className={`${themeColors.secondary} text-xs`}>Made by Saqib!</p>
       </div>
     </div>
