@@ -78,7 +78,7 @@ const WelcomeScreen = ({ onProceedToSetup }: WelcomeScreenProps) => {
         </div>
         
         <p className={`${themeColors.secondary} text-sm tracking-wide mt-2 mb-1`}>🎮 Snake Retro Edition 🎮</p>
-        <p className={`${themeColors.secondary} text-xs tracking-wide`}>Fast. Offline. Classic fun</p>
+        <p className={`${themeColors.secondary} text-xs tracking-wide`}>Fast Offline Classic fun</p>
       </div>
 
       {/* Start Game Button */}
@@ -94,10 +94,10 @@ const WelcomeScreen = ({ onProceedToSetup }: WelcomeScreenProps) => {
 
       {/* Instructions */}
       <div className={`${themeColors.secondary} text-xs space-y-1 mb-4`}>
-        <p>🎮 Use arrow keys or control buttons</p>
-        <p>🍎 Eat food to grow and score</p>
-        <p>💀 Don't hit walls or yourself!</p>
-        <p>📸 Take screenshot to save your score</p>
+        <p>​</p>
+        <p>{"\n"}</p>
+        <p>{"\n"}</p>
+        <p>{"\n"}</p>
       </div>
     </>
   );
