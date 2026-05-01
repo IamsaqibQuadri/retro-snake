@@ -8,7 +8,7 @@ interface SnakeSkinSelectorProps {
 }
 
 const snakeSkins: { value: SnakeSkin; label: string; description: string; emoji: string }[] = [
-  { value: 'remix', label: 'Remix', description: 'Modern gradient', emoji: '🎨' },
+  { value: 'remix', label: 'Remix', description: 'Modern gradient', emoji: '​🎨' },
   { value: 'classic', label: 'Dice', description: 'Dice numbers', emoji: '🎲' },
   { value: 'tetris', label: 'Tetris', description: 'Block style', emoji: '🧱' },
   { value: 'neon', label: 'Neon', description: 'Glowing outline', emoji: '💡' },

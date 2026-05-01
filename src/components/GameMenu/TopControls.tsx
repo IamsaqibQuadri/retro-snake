@@ -48,7 +48,7 @@ const TopControls = ({ onShowSettings }: TopControlsProps) => {
           className={buttonClasses}
           title="Themes, Snake Skins & Colors"
         >
-          🎨
+          ​🎨
         </button>
       </div>
       
