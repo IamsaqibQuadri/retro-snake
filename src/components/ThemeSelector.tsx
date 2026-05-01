@@ -29,7 +29,7 @@ const ThemeSelector = ({ isOpen, onClose }: ThemeSelectorProps) => {
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-card border border-border rounded-lg p-6 max-w-md w-full">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-foreground">🎨 Choose Theme</h2>
+          <h2 className="text-lg font-bold text-foreground">​🎨 Choose Theme</h2>
           <button
             onClick={onClose}
             className="p-1 hover:bg-muted rounded"

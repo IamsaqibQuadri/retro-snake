@@ -18,7 +18,7 @@ const themes: { value: Theme; label: string; description: string; preview: strin
 ];
 
 const snakeSkins: { value: SnakeSkin; label: string; description: string; preview: string }[] = [
-  { value: 'remix', label: 'Remix', description: 'Modern gradient', preview: '🎨' },
+  { value: 'remix', label: 'Remix', description: 'Modern gradient', preview: '​🎨' },
   { value: 'classic', label: 'Dice', description: 'Dice numbers', preview: '🎲' },
   { value: 'tetris', label: 'Tetris', description: 'Block style', preview: '🧱' },
   { value: 'neon', label: 'Neon', description: 'Glowing outline', preview: '✨' },
@@ -85,7 +85,7 @@ const UnifiedSettingsPanel = ({ isOpen, onClose }: UnifiedSettingsPanelProps) =>
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
-            🎨 Themes
+            ​🎨 Themes
           </button>
           <button
             onClick={() => setActiveTab('skins')}
@@ -105,7 +105,7 @@ const UnifiedSettingsPanel = ({ isOpen, onClose }: UnifiedSettingsPanelProps) =>
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
-            🎨 Colors
+            ​🎨 Colors
           </button>
         </div>
 
