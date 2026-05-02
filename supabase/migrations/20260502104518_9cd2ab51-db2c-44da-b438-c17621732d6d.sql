@@ -1,0 +1,1 @@
+DROP FUNCTION IF EXISTS public.submit_leaderboard_score(text, integer, text, text);

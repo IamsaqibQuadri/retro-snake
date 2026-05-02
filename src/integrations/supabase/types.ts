@@ -76,54 +76,30 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      submit_leaderboard_score:
-        | {
-            Args: {
-              _game_mode: string
-              _player_name: string
-              _score: number
-              _speed: string
-            }
-            Returns: {
-              created_at: string
-              game_mode: string
-              id: string
-              player_name: string
-              score: number
-              speed: string
-              updated_at: string
-            }
-            SetofOptions: {
-              from: "*"
-              to: "leaderboard"
-              isOneToOne: true
-              isSetofReturn: false
-            }
-          }
-        | {
-            Args: {
-              _game_mode: string
-              _player_name: string
-              _score: number
-              _session_started_at?: string
-              _speed: string
-            }
-            Returns: {
-              created_at: string
-              game_mode: string
-              id: string
-              player_name: string
-              score: number
-              speed: string
-              updated_at: string
-            }
-            SetofOptions: {
-              from: "*"
-              to: "leaderboard"
-              isOneToOne: true
-              isSetofReturn: false
-            }
-          }
+      submit_leaderboard_score: {
+        Args: {
+          _game_mode: string
+          _player_name: string
+          _score: number
+          _session_started_at?: string
+          _speed: string
+        }
+        Returns: {
+          created_at: string
+          game_mode: string
+          id: string
+          player_name: string
+          score: number
+          speed: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "leaderboard"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       [_ in never]: never
