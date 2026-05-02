@@ -50,9 +50,14 @@ export const useGlobalLeaderboard = () => {
     playerName: string,
     score: number, 
     gameMode: GameMode, 
-    speed: 'slow' | 'normal' | 'fast'
+    speed: 'slow' | 'normal' | 'fast',
+    sessionToken?: string | null
   ) => {
     try {
+      if (!sessionToken) {
+        return { success: false, error: 'Score session expired. Please start a new game.' };
+      }
+
       // Use edge function to submit score (service role inserts only)
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-score`, {
         method: 'POST',
@@ -64,7 +69,8 @@ export const useGlobalLeaderboard = () => {
           player_name: playerName,
           score,
           game_mode: gameMode,
-          speed
+          speed,
+          session_token: sessionToken
         }),
       });
 
@@ -83,11 +89,43 @@ export const useGlobalLeaderboard = () => {
     }
   }, [loadLeaderboard]);
 
+  const startScoreSession = useCallback(async (
+    gameMode: GameMode,
+    speed: 'slow' | 'normal' | 'fast'
+  ) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-score`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({
+          action: 'start',
+          game_mode: gameMode,
+          speed
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || typeof result.session_token !== 'string') {
+        throw new Error(result.error || 'Failed to start score session');
+      }
+
+      return { success: true, sessionToken: result.session_token as string };
+    } catch (err) {
+      logger.error('Failed to start score session:', err);
+      return { success: false, error: 'Failed to start score session' };
+    }
+  }, []);
+
   return {
     leaderboard,
     loading,
     error,
     addScore,
+    startScoreSession,
     reload: loadLeaderboard,
   };
 };

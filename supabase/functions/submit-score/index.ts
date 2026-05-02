@@ -20,6 +20,7 @@ function getCorsHeaders(req: Request) {
 const ipSubmissions = new Map<string, number[]>();
 const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
 const RATE_LIMIT_MAX = 5; // max 5 per IP per window
+const SESSION_TTL_MS = 2 * 60 * 60 * 1000; // 2 hours
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
@@ -28,6 +29,20 @@ function isRateLimited(ip: string): boolean {
   if (timestamps.length >= RATE_LIMIT_MAX) return true;
   timestamps.push(now);
   return false;
+}
+
+async function sha256Hex(value: string): Promise<string> {
+  const bytes = new TextEncoder().encode(value);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', bytes);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+function createSessionToken(): string {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
 Deno.serve(async (req) => {
@@ -42,6 +57,13 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    if (req.method !== 'POST') {
+      return new Response(
+        JSON.stringify({ error: 'Method not allowed' }),
+        { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Per-IP rate limiting
     const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
                      req.headers.get('cf-connecting-ip') ||
@@ -55,7 +77,45 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json();
-    const { player_name, score, game_mode, speed } = body;
+    const { action = 'submit', player_name, score, game_mode, speed, session_token } = body;
+
+    if (action === 'start') {
+      const validModes = ['classic', 'modern', 'chaos', 'timeattack', 'survival'];
+      const validSpeeds = ['slow', 'normal', 'fast'];
+
+      if (!validModes.includes(game_mode) || !validSpeeds.includes(speed)) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid game settings' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const sessionToken = createSessionToken();
+      const tokenHash = await sha256Hex(sessionToken);
+      const expiresAt = new Date(Date.now() + SESSION_TTL_MS).toISOString();
+
+      const { error } = await supabase
+        .from('leaderboard_sessions')
+        .insert({
+          token_hash: tokenHash,
+          game_mode,
+          speed,
+          expires_at: expiresAt,
+        });
+
+      if (error) {
+        console.error('Session creation error:', error);
+        return new Response(
+          JSON.stringify({ error: 'Failed to start score session' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      return new Response(
+        JSON.stringify({ session_token: sessionToken, expires_at: expiresAt }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Validate player name
     if (!player_name || typeof player_name !== 'string' || player_name.trim().length === 0 || player_name.length > 50) {
@@ -79,7 +139,7 @@ Deno.serve(async (req) => {
     }
 
     // Validate game mode
-    const validModes = ['classic', 'modern', 'obstacles', 'timeattack', 'survival', 'chaos'];
+    const validModes = ['classic', 'modern', 'timeattack', 'survival', 'chaos'];
     if (!validModes.includes(game_mode)) {
       return new Response(
         JSON.stringify({ error: 'Invalid game mode' }),
@@ -103,7 +163,6 @@ Deno.serve(async (req) => {
       chaos: 600,
       timeattack: 300,
       survival: 400,
-      obstacles: 500,
     };
 
     const maxAllowed = maxScores[game_mode] || 1000;
@@ -115,17 +174,57 @@ Deno.serve(async (req) => {
       );
     }
 
+    if (!session_token || typeof session_token !== 'string' || session_token.length > 256) {
+      return new Response(
+        JSON.stringify({ error: 'Missing score session' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const tokenHash = await sha256Hex(session_token);
+    const nowIso = new Date().toISOString();
+
+    const { data: session, error: sessionError } = await supabase
+      .from('leaderboard_sessions')
+      .select('token_hash, game_mode, speed, created_at, expires_at, consumed_at')
+      .eq('token_hash', tokenHash)
+      .eq('game_mode', game_mode)
+      .eq('speed', speed)
+      .gt('expires_at', nowIso)
+      .is('consumed_at', null)
+      .maybeSingle();
+
+    if (sessionError || !session) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid or expired score session' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { data: consumedSession, error: consumeError } = await supabase
+      .from('leaderboard_sessions')
+      .update({ consumed_at: nowIso })
+      .eq('token_hash', tokenHash)
+      .is('consumed_at', null)
+      .select('token_hash')
+      .maybeSingle();
+
+    if (consumeError || !consumedSession) {
+      return new Response(
+        JSON.stringify({ error: 'Score session already used' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Insert score
     const { data, error } = await supabase
-      .from('leaderboard')
-      .insert({
-        player_name: sanitizedName,
-        score,
-        game_mode,
-        speed
-      })
-      .select()
-      .single();
+      .rpc('submit_leaderboard_score', {
+        _player_name: sanitizedName,
+        _score: score,
+        _game_mode: game_mode,
+        _speed: speed,
+        _session_started_at: session.created_at,
+      });
 
     if (error) {
       console.error('Database error:', error);

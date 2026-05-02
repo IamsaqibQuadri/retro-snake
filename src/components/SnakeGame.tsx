@@ -11,6 +11,7 @@ import GameInfo from './GameInfo';
 import html2canvas from 'html2canvas';
 import { toast } from '@/hooks/use-toast';
 import { logger } from '@/utils/logger';
+import { useGlobalLeaderboard } from '@/hooks/useGlobalLeaderboard';
 
 interface SnakeGameProps {
   speed: 'slow' | 'normal' | 'fast';
@@ -23,7 +24,9 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
   const gameRef = useRef<HTMLDivElement>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [foodEaten, setFoodEaten] = useState(false);
+  const [scoreSessionToken, setScoreSessionToken] = useState<string | null>(null);
   const { theme } = useTheme();
+  const { startScoreSession } = useGlobalLeaderboard();
   
   // useSnakeGame hook must be called consistently
   const { gameState, score, highScore, direction, gameOver, moveSnake, resetGame, chaosState, timeAttackState, survivalState } = useSnakeGame(speed, gameMode);
@@ -52,11 +55,24 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
     logger.log('SnakeGame: Closing settings panel');
     setShowSettings(false);
   }, []);
+
+  const beginScoreSession = useCallback(async () => {
+    setScoreSessionToken(null);
+    const result = await startScoreSession(gameMode, speed);
+    if (result.success && result.sessionToken) {
+      setScoreSessionToken(result.sessionToken);
+    }
+  }, [gameMode, speed, startScoreSession]);
+
+  useEffect(() => {
+    beginScoreSession();
+  }, [beginScoreSession]);
   
   const handleNewGame = useCallback(() => {
     logger.log('SnakeGame: Starting new game');
     resetGame();
-  }, [resetGame]);
+    beginScoreSession();
+  }, [resetGame, beginScoreSession]);
 
   const handleBackToMenu = useCallback(() => {
     logger.log('SnakeGame: Going back to menu');
@@ -148,6 +164,7 @@ const SnakeGame = ({ speed, gameMode, onBackToMenu }: SnakeGameProps) => {
           highScore={highScore}
           gameMode={gameMode}
           speed={speed}
+          scoreSessionToken={scoreSessionToken}
           onNewGame={handleNewGame}
           onBackToMenu={handleBackToMenu}
           onTakeScreenshot={takeScreenshot}

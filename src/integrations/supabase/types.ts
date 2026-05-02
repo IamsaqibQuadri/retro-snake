@@ -44,12 +44,62 @@ export type Database = {
         }
         Relationships: []
       }
+      leaderboard_sessions: {
+        Row: {
+          consumed_at: string | null
+          created_at: string
+          expires_at: string
+          game_mode: string
+          speed: string
+          token_hash: string
+        }
+        Insert: {
+          consumed_at?: string | null
+          created_at?: string
+          expires_at: string
+          game_mode: string
+          speed: string
+          token_hash: string
+        }
+        Update: {
+          consumed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          game_mode?: string
+          speed?: string
+          token_hash?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      submit_leaderboard_score: {
+        Args: {
+          _game_mode: string
+          _player_name: string
+          _score: number
+          _session_started_at?: string
+          _speed: string
+        }
+        Returns: {
+          created_at: string
+          game_mode: string
+          id: string
+          player_name: string
+          score: number
+          speed: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "leaderboard"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       [_ in never]: never
