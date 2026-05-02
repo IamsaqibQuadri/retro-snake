@@ -139,7 +139,7 @@ Deno.serve(async (req) => {
     }
 
     // Validate game mode
-    const validModes = ['classic', 'modern', 'obstacles', 'timeattack', 'survival', 'chaos'];
+    const validModes = ['classic', 'modern', 'timeattack', 'survival', 'chaos'];
     if (!validModes.includes(game_mode)) {
       return new Response(
         JSON.stringify({ error: 'Invalid game mode' }),
@@ -163,7 +163,6 @@ Deno.serve(async (req) => {
       chaos: 600,
       timeattack: 300,
       survival: 400,
-      obstacles: 500,
     };
 
     const maxAllowed = maxScores[game_mode] || 1000;
@@ -202,6 +201,21 @@ Deno.serve(async (req) => {
       );
     }
 
+    const { data: consumedSession, error: consumeError } = await supabase
+      .from('leaderboard_sessions')
+      .update({ consumed_at: nowIso })
+      .eq('token_hash', tokenHash)
+      .is('consumed_at', null)
+      .select('token_hash')
+      .maybeSingle();
+
+    if (consumeError || !consumedSession) {
+      return new Response(
+        JSON.stringify({ error: 'Score session already used' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Insert score
     const { data, error } = await supabase
       .rpc('submit_leaderboard_score', {
@@ -217,16 +231,6 @@ Deno.serve(async (req) => {
         JSON.stringify({ error: 'Failed to save score' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
-    }
-
-    const { error: consumeError } = await supabase
-      .from('leaderboard_sessions')
-      .update({ consumed_at: nowIso })
-      .eq('token_hash', tokenHash)
-      .is('consumed_at', null);
-
-    if (consumeError) {
-      console.error('Session consume error:', consumeError);
     }
 
     return new Response(
