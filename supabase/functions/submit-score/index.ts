@@ -57,6 +57,13 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    if (req.method !== 'POST') {
+      return new Response(
+        JSON.stringify({ error: 'Method not allowed' }),
+        { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Per-IP rate limiting
     const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
                      req.headers.get('cf-connecting-ip') ||
@@ -70,7 +77,45 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json();
-    const { player_name, score, game_mode, speed } = body;
+    const { action = 'submit', player_name, score, game_mode, speed, session_token } = body;
+
+    if (action === 'start') {
+      const validModes = ['classic', 'modern', 'chaos', 'timeattack', 'survival'];
+      const validSpeeds = ['slow', 'normal', 'fast'];
+
+      if (!validModes.includes(game_mode) || !validSpeeds.includes(speed)) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid game settings' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const sessionToken = createSessionToken();
+      const tokenHash = await sha256Hex(sessionToken);
+      const expiresAt = new Date(Date.now() + SESSION_TTL_MS).toISOString();
+
+      const { error } = await supabase
+        .from('leaderboard_sessions')
+        .insert({
+          token_hash: tokenHash,
+          game_mode,
+          speed,
+          expires_at: expiresAt,
+        });
+
+      if (error) {
+        console.error('Session creation error:', error);
+        return new Response(
+          JSON.stringify({ error: 'Failed to start score session' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      return new Response(
+        JSON.stringify({ session_token: sessionToken, expires_at: expiresAt }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Validate player name
     if (!player_name || typeof player_name !== 'string' || player_name.trim().length === 0 || player_name.length > 50) {
