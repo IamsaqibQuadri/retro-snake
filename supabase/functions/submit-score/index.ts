@@ -186,7 +186,7 @@ Deno.serve(async (req) => {
 
     const { data: session, error: sessionError } = await supabase
       .from('leaderboard_sessions')
-      .select('token_hash, game_mode, speed, expires_at, consumed_at')
+      .select('token_hash, game_mode, speed, created_at, expires_at, consumed_at')
       .eq('token_hash', tokenHash)
       .eq('game_mode', game_mode)
       .eq('speed', speed)
@@ -223,6 +223,7 @@ Deno.serve(async (req) => {
         _score: score,
         _game_mode: game_mode,
         _speed: speed,
+        _session_started_at: session.created_at,
       });
 
     if (error) {
