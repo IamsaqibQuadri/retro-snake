@@ -20,6 +20,7 @@ function getCorsHeaders(req: Request) {
 const ipSubmissions = new Map<string, number[]>();
 const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
 const RATE_LIMIT_MAX = 5; // max 5 per IP per window
+const SESSION_TTL_MS = 2 * 60 * 60 * 1000; // 2 hours
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
@@ -28,6 +29,20 @@ function isRateLimited(ip: string): boolean {
   if (timestamps.length >= RATE_LIMIT_MAX) return true;
   timestamps.push(now);
   return false;
+}
+
+async function sha256Hex(value: string): Promise<string> {
+  const bytes = new TextEncoder().encode(value);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', bytes);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+function createSessionToken(): string {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
 Deno.serve(async (req) => {
