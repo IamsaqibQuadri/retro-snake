@@ -12,12 +12,13 @@ interface GameOverlayProps {
   highScore: number;
   gameMode: GameMode;
   speed: 'slow' | 'normal' | 'fast';
+  scoreSessionToken: string | null;
   onNewGame: () => void;
   onBackToMenu: () => void;
   onTakeScreenshot: () => void;
 }
 
-const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, onBackToMenu, onTakeScreenshot }: GameOverlayProps) => {
+const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, scoreSessionToken, onNewGame, onBackToMenu, onTakeScreenshot }: GameOverlayProps) => {
   const { theme } = useTheme();
   const { addScore } = useGlobalLeaderboard();
   const [showNameDialog, setShowNameDialog] = useState(false);
@@ -47,7 +48,7 @@ const GameOverlay = ({ gameOver, score, highScore, gameMode, speed, onNewGame, o
     setIsSaving(true);
     setSavedPlayerName(playerName);
     
-    const result = await addScore(playerName, score, gameMode, speed);
+    const result = await addScore(playerName, score, gameMode, speed, scoreSessionToken);
     
     setIsSaving(false);
     
