@@ -175,17 +175,41 @@ Deno.serve(async (req) => {
       );
     }
 
+    if (!session_token || typeof session_token !== 'string' || session_token.length > 256) {
+      return new Response(
+        JSON.stringify({ error: 'Missing score session' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const tokenHash = await sha256Hex(session_token);
+    const nowIso = new Date().toISOString();
+
+    const { data: session, error: sessionError } = await supabase
+      .from('leaderboard_sessions')
+      .select('token_hash, game_mode, speed, expires_at, consumed_at')
+      .eq('token_hash', tokenHash)
+      .eq('game_mode', game_mode)
+      .eq('speed', speed)
+      .gt('expires_at', nowIso)
+      .is('consumed_at', null)
+      .maybeSingle();
+
+    if (sessionError || !session) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid or expired score session' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Insert score
     const { data, error } = await supabase
-      .from('leaderboard')
-      .insert({
-        player_name: sanitizedName,
-        score,
-        game_mode,
-        speed
-      })
-      .select()
-      .single();
+      .rpc('submit_leaderboard_score', {
+        _player_name: sanitizedName,
+        _score: score,
+        _game_mode: game_mode,
+        _speed: speed,
+      });
 
     if (error) {
       console.error('Database error:', error);
@@ -193,6 +217,16 @@ Deno.serve(async (req) => {
         JSON.stringify({ error: 'Failed to save score' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+
+    const { error: consumeError } = await supabase
+      .from('leaderboard_sessions')
+      .update({ consumed_at: nowIso })
+      .eq('token_hash', tokenHash)
+      .is('consumed_at', null);
+
+    if (consumeError) {
+      console.error('Session consume error:', consumeError);
     }
 
     return new Response(
