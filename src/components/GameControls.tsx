@@ -157,7 +157,7 @@ const GameControls = ({ onDirectionChange, disabled }: GameControlsProps) => {
       </div>
 
       <div className="text-center mt-4 text-muted-foreground text-xs">
-        Use WASD keys, arrow keys, or swipe anywhere on screen
+        {"\n"}
       </div>
     </div>
   );
