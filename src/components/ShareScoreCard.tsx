@@ -36,10 +36,10 @@ const ShareScoreCard = ({ isOpen, onClose, score, playerName = 'Player', gameMod
 
   const gameModeLabels: Record<GameMode, string> = {
     chaos: '🌀 CHAOS',
-    classic: '🏛️ CLASSIC',
-    modern: '🌐 MODERN',
-    timeattack: '⏱️ TIME ATTACK',
-    survival: '💀 SURVIVAL',
+    classic: 'CLASSIC',
+    modern: ' MODERN',
+    timeattack: ' TIME ATTACK',
+    survival: ' SURVIVAL',
   };
 
   const speedLabels = {

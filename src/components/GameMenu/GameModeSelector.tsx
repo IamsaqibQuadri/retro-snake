@@ -55,7 +55,7 @@ const GameModeSelector = ({ gameMode, onModeSelect }: GameModeSelectorProps) => 
             className={`flex-1 px-3 py-3 text-sm font-bold border-2 rounded-lg transition-all duration-200 min-h-[60px] ${getModeButtonClass('classic')}`}
           >
             <div className="flex flex-col items-center">
-              <span>🏛️ CLASSIC</span>
+              <span>CLASSIC</span>
               <span className="text-xs opacity-70">Wall collision</span>
             </div>
           </button>
@@ -64,7 +64,7 @@ const GameModeSelector = ({ gameMode, onModeSelect }: GameModeSelectorProps) => 
             className={`flex-1 px-3 py-3 text-sm font-bold border-2 rounded-lg transition-all duration-200 min-h-[60px] ${getModeButtonClass('modern')}`}
           >
             <div className="flex flex-col items-center">
-              <span>🌐 MODERN</span>
+              <span> MODERN</span>
               <span className="text-xs opacity-70">Wall wrapping</span>
             </div>
           </button>
@@ -77,7 +77,7 @@ const GameModeSelector = ({ gameMode, onModeSelect }: GameModeSelectorProps) => 
             className={`flex-1 px-3 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${getModeButtonClass('timeattack')}`}
           >
             <div className="flex flex-col items-center">
-              <span>⏱️ TIME ATTACK</span>
+              <span> TIME ATTACK</span>
               <span className="text-xs opacity-70">60 seconds!</span>
             </div>
           </button>
@@ -86,7 +86,7 @@ const GameModeSelector = ({ gameMode, onModeSelect }: GameModeSelectorProps) => 
             className={`flex-1 px-3 py-2 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${getModeButtonClass('survival')}`}
           >
             <div className="flex flex-col items-center">
-              <span>💀 SURVIVAL</span>
+              <span> SURVIVAL</span>
               <span className="text-xs opacity-70">Speed increases!</span>
             </div>
           </button>
