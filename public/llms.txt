@@ -1,0 +1,9 @@
+# Rattle Rush
+
+> A fast browser remake of the classic Nokia Snake game with multiple modes, themes, and a global leaderboard.
+
+Rattle Rush is a free, offline-capable browser game inspired by the classic Nokia Snake. It features multiple game modes (Classic, Modern, Time Attack, Survival, Chaos), themed visuals and sound, customizable snake skins, and a global leaderboard.
+
+## Pages
+
+- [Home](/): Play the game, choose a mode and speed, and view the leaderboard.
