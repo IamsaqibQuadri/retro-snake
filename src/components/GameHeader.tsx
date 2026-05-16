@@ -46,15 +46,15 @@ const GameHeader = ({
   const getModeLabel = () => {
     switch (gameMode) {
       case 'classic':
-        return '🏛️ CLASSIC MODE';
+        return 'CLASSIC MODE';
       case 'modern':
-        return '🌐 MODERN MODE';
+        return ' MODERN MODE';
       case 'chaos':
         return '🌀 CHAOS MODE';
       case 'timeattack':
-        return '⏱️ TIME ATTACK';
+        return ' TIME ATTACK';
       case 'survival':
-        return '💀 SURVIVAL';
+        return ' SURVIVAL';
     }
   };
 
